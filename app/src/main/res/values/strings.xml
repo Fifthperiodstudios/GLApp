@@ -1,3 +1,5 @@
 <resources>
     <string name="app_name">GLApp</string>
+    <string name="connection_error">Es scheint, Sie sind nicht mit dem Internet verbunden.</string>
+    <string name="xml_error">Es gab ein Problem beim Lesen ihres Stundenplans.</string>
 </resources>

@@ -1,4 +1,4 @@
-package com.example.administrator.glapp;
+package com.fifthperiodstudios.glapp;
 
 import android.content.Context;
 import android.support.test.InstrumentationRegistry;

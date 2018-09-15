@@ -1,4 +1,4 @@
-package com.example.administrator.glapp;
+package com.fifthperiodstudios.glapp;
 
 import org.junit.Test;
 
