@@ -1,6 +1,8 @@
 package com.fifthperiodstudios.glapp;
 
-public class Stunde {
+import java.io.Serializable;
+
+public class Stunde implements Serializable{
     private String stunde;
     private String kurs;
     private String raum;

@@ -7,13 +7,14 @@ import org.xmlpull.v1.XmlPullParserException;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
 public class StundenplanParser {     // We don't use namespaces
     private static final String ns = null;
 
-    public static class Wochentag {
+    public static class Wochentag implements Serializable{
         public final ArrayList<Stunde> stunden;
 
         public Wochentag(ArrayList<Stunde> stunden) {

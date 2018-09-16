@@ -15,10 +15,10 @@ import android.widget.TextView;
 
 import java.util.ArrayList;
 
-public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder> {
+public class StundenListAdapter extends RecyclerView.Adapter<StundenListAdapter.MyViewHolder> {
     private StundenplanParser.Wochentag wochentag;
     private ArrayList<String> colors;
-    public MyAdapter(StundenplanParser.Wochentag w) {
+    public StundenListAdapter(StundenplanParser.Wochentag w) {
         wochentag = w;
         initColors();
     }
@@ -55,7 +55,7 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder> {
         TextView symbolView = holder.symbol;
 
         Drawable background = symbolView.getBackground();
-        int rand = (int)Math.random()*colors.size();
+        int rand = (int)(Math.random()*colors.size());
         if (background instanceof ShapeDrawable) {
             ((ShapeDrawable)background).getPaint().setColor(Color.parseColor(colors.get(rand)));
         } else if (background instanceof GradientDrawable) {
@@ -64,8 +64,8 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder> {
             ((ColorDrawable)background).setColor(Color.parseColor(colors.get(rand)));
         }
         colors.remove(rand);
-        symbolView.setText(stunde.getFach());
-        kursnameView.setText(stunde.getKurs());
+        symbolView.setText(stunde.getKurs().contains("LK") ? stunde.getFach() + "LK" : stunde.getFach());
+        kursnameView.setText(stunde.getStunde() + ". " + stunde.getKurs());
         lehrerView.setText(stunde.getLehrer());
         raumView.setText(stunde.getRaum());
 
