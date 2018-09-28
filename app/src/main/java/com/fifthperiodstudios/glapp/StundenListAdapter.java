@@ -17,25 +17,12 @@ import java.util.ArrayList;
 
 public class StundenListAdapter extends RecyclerView.Adapter<StundenListAdapter.MyViewHolder> {
     private StundenplanParser.Wochentag wochentag;
-    private ArrayList<String> colors;
+
     public StundenListAdapter(StundenplanParser.Wochentag w) {
         wochentag = w;
-        initColors();
     }
 
-    private void initColors(){
-        colors = new ArrayList<String>();
-        colors.add("#1abc9c");
-        colors.add("#3498db");
-        colors.add("#2ecc71");
-        colors.add("#9b59b6");
-        colors.add("#34495e");
-        colors.add("#16a085");
-        colors.add("#f1c40f");
-        colors.add("#e74c3c");
-        colors.add("#95a5a6");
-        colors.add("#B33771");
-    }
+
 
     @Override
     public MyViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
@@ -46,6 +33,7 @@ public class StundenListAdapter extends RecyclerView.Adapter<StundenListAdapter.
         return viewHolder;
     }
 
+
     @Override
     public void onBindViewHolder(@NonNull MyViewHolder holder, int position) {
         Stunde stunde = wochentag.getStunden().get(position);
@@ -55,19 +43,17 @@ public class StundenListAdapter extends RecyclerView.Adapter<StundenListAdapter.
         TextView symbolView = holder.symbol;
 
         Drawable background = symbolView.getBackground();
-        int rand = (int)(Math.random()*colors.size());
         if (background instanceof ShapeDrawable) {
-            ((ShapeDrawable)background).getPaint().setColor(Color.parseColor(colors.get(rand)));
+            ((ShapeDrawable)background).getPaint().setColor(Color.parseColor(stunde.getFach().getColor()));
         } else if (background instanceof GradientDrawable) {
-            ((GradientDrawable)background).setColor(Color.parseColor(colors.get(rand)));
+            ((GradientDrawable)background).setColor(Color.parseColor(stunde.getFach().getColor()));
         } else if (background instanceof ColorDrawable) {
-            ((ColorDrawable)background).setColor(Color.parseColor(colors.get(rand)));
+            ((ColorDrawable)background).setColor(Color.parseColor(stunde.getFach().getColor()));
         }
-        colors.remove(rand);
-        symbolView.setText(stunde.getKurs().contains("LK") ? stunde.getFach() + "LK" : stunde.getFach());
-        kursnameView.setText(stunde.getStunde() + ". " + stunde.getKurs());
-        lehrerView.setText(stunde.getLehrer());
-        raumView.setText(stunde.getRaum());
+        symbolView.setText(stunde.getFach().getKurs().contains("LK") ? stunde.getFach().getFach() + "LK" : stunde.getFach().getFach());
+        kursnameView.setText(stunde.getStunde() + ". " + stunde.getFach().getKurs());
+        lehrerView.setText(stunde.getFach().getLehrer());
+        raumView.setText(stunde.getFach().getRaum());
 
     }
 
