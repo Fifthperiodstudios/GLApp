@@ -102,7 +102,7 @@ public class GLAPPActivity extends AppCompatActivity implements UpdateDataSignal
 
     private void logOut(){
         SharedPreferences prefs = getSharedPreferences("com.fifthperiodstudios.glapp", MODE_PRIVATE);
-        prefs.edit().putString("mobilkey", "DEF");
+        prefs.edit().putString("mobilkey", "DEF").commit();
         Intent intent = new Intent(this, MainActivity.class);
         startActivity(intent);
         finish();
