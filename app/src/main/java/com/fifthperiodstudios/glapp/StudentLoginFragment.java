@@ -80,7 +80,7 @@ public class StudentLoginFragment extends Fragment {
 
         protected void onPostExecute(String result) {
             super.onPostExecute(result);
-            if(result.isEmpty()) {
+            if(result.isEmpty() || result.equals("0")) {
                 Toast.makeText(getActivity().getApplicationContext(), "Benutzername oder Passwort falsch", Toast.LENGTH_SHORT).show();
             }else{
                 sharedPreferences.edit().putString("mobilkey", mobilKey).commit();

@@ -1,7 +1,10 @@
 package com.fifthperiodstudios.glapp;
 
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
@@ -36,6 +39,7 @@ public class GLAPPActivity extends AppCompatActivity implements UpdateDataSignal
     private String mobilKey;
     private StundenplanParser.Stundenplan stundenplan;
     private static final String URL = "https://mobil.gymnasium-lohmar.org/XML/stupla.php?mobilKey=";
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -47,7 +51,36 @@ public class GLAPPActivity extends AppCompatActivity implements UpdateDataSignal
         setSupportActionBar(toolbar);
         Intent intent = getIntent();
         mobilKey = (String) intent.getExtras().get("mobilkey");
-        new DownloadXmlTask().execute(URL + mobilKey);
+
+        if(isOnline()) {
+            new DownloadXmlTask().execute(URL + mobilKey);
+        }else {
+            try {
+                File directory = getApplicationContext().getFilesDir();
+                File file = new File(directory, "Stundenplan.xml");
+                StundenplanParser stundenplanParser = new StundenplanParser();
+                stundenplan = (StundenplanParser.Stundenplan) stundenplanParser.parseStundenplan(new FileInputStream(file));
+                setupFragments(stundenplan);
+                Toast.makeText(getApplicationContext(), "Kein Internet, gespeicherter Stundenplan könnte veraltet sein", Toast.LENGTH_SHORT).show();
+            } catch (FileNotFoundException e) {
+                e.printStackTrace();
+            } catch (XmlPullParserException e) {
+                e.printStackTrace();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+
+    }
+
+    protected boolean isOnline() {
+        ConnectivityManager cm = (ConnectivityManager) getApplicationContext().getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo activeNetwork = cm.getActiveNetworkInfo();
+        if (activeNetwork != null) {
+            return true;
+        } else {
+            return false;
+        }
     }
 
     //Fragmente einstellen
@@ -82,9 +115,9 @@ public class GLAPPActivity extends AppCompatActivity implements UpdateDataSignal
         colors.add("#e74c3c");
         colors.add("#95a5a6");
         colors.add("#B33771");
-        colors.add("#c8d6e5");
-        colors.add("#c8d6e5");
-        colors.add("#c8d6e5");
+        colors.add("#A64B48");
+        colors.add("#A0A68B");//s
+        colors.add("#454442");//s
         for (Fach f : stundenplan.getFächer()) {
             int i = (int) (Math.random() * colors.size());
             f.setColor(colors.get(i));
@@ -100,13 +133,14 @@ public class GLAPPActivity extends AppCompatActivity implements UpdateDataSignal
         //svAdapter.updateFragments();
     }
 
-    private void logOut(){
+    private void logOut() {
         SharedPreferences prefs = getSharedPreferences("com.fifthperiodstudios.glapp", MODE_PRIVATE);
         prefs.edit().putString("mobilkey", "DEF").commit();
         Intent intent = new Intent(this, MainActivity.class);
         startActivity(intent);
         finish();
     }
+
     private class DownloadXmlTask extends AsyncTask<String, Void, StundenplanParser.Stundenplan> {
 
         protected StundenplanParser.Stundenplan doInBackground(String... urls) {
@@ -123,7 +157,6 @@ public class GLAPPActivity extends AppCompatActivity implements UpdateDataSignal
 
         protected void onPostExecute(StundenplanParser.Stundenplan result) {
             super.onPostExecute(result);
-
             setupFragments(result);
         }
 
