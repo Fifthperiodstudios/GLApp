@@ -85,9 +85,37 @@ public class MainActivity extends AppCompatActivity{
         setContentView(R.layout.login_screen);
 
         toolbar = (Toolbar) findViewById(R.id.student_teacher_toolbar);
+        tabLayout = (TabLayout) findViewById(R.id.student_teacher_tabs);
         setSupportActionBar(toolbar);
 
         mViewPager = (ViewPager) findViewById(R.id.student_teacher_pager);
+
+        mViewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+            @Override
+            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+
+            }
+
+            @Override
+            public void onPageSelected(int position) {
+                switch(position){
+                    case 0:
+                        toolbar.setBackgroundColor(getResources().getColor(R.color.colorPrimary));
+                        tabLayout.setBackgroundColor(getResources().getColor(R.color.colorPrimary));
+                        break;
+                    case 1:
+                        toolbar.setBackgroundColor(getResources().getColor(R.color.colorAccent));
+                        tabLayout.setBackgroundColor(getResources().getColor(R.color.colorAccent));
+                        break;
+                }
+            }
+
+            @Override
+            public void onPageScrollStateChanged(int state) {
+
+            }
+            //Override default methods and change toolbar color inside of here
+        });
 
         prefs = getSharedPreferences("com.fifthperiodstudios.glapp", MODE_PRIVATE);
 
@@ -97,6 +125,8 @@ public class MainActivity extends AppCompatActivity{
     protected void onResume() {
         super.onResume();
         if (prefs.getString("mobilkey", "DEF").equals("DEF")) {
+            toolbar.setBackgroundColor(getResources().getColor(R.color.colorPrimary));
+            tabLayout.setBackgroundColor(getResources().getColor(R.color.colorPrimary));
             setupLoginFragments();
         }else{
             Intent intent = new Intent(this, GLAPPActivity.class);

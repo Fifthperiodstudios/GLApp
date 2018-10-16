@@ -23,7 +23,10 @@
         android:layout_marginTop="20dp"
         android:background="@drawable/textview_style"
         android:gravity="center_vertical|center_horizontal"
-        android:hint="Benutzername" />
+        android:hint="Benutzername"
+        android:inputType="text"
+        android:maxLines="1"
+        android:nextFocusDown="@+id/password_student" />
 
     <EditText
         android:id="@+id/password_student"
