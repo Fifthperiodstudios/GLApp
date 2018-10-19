@@ -124,13 +124,13 @@ public class MainActivity extends AppCompatActivity{
     @Override
     protected void onResume() {
         super.onResume();
-        if (prefs.getString("mobilkey", "DEF").equals("DEF")) {
+        if (prefs.getString("mobilKey", "DEF").equals("DEF")) {
             toolbar.setBackgroundColor(getResources().getColor(R.color.colorPrimary));
             tabLayout.setBackgroundColor(getResources().getColor(R.color.colorPrimary));
             setupLoginFragments();
         }else{
             Intent intent = new Intent(this, GLAPPActivity.class);
-            intent.putExtra("mobilkey", prefs.getString("mobilkey", "DEF"));
+            intent.putExtra("mobilKey", prefs.getString("mobilKey", "DEF"));
             startActivity(intent);
             finish();
         }

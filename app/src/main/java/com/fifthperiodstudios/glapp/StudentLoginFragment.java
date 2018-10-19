@@ -93,9 +93,9 @@ public class StudentLoginFragment extends Fragment implements Login{
     }
 
     @Override public void loggedInSuccessfully(String mobilKey){
-        sharedPreferences.edit().putString("mobilkey", mobilKey).commit();
+        sharedPreferences.edit().putString("mobilKey", mobilKey).commit();
         Intent intent = new Intent(getActivity(), GLAPPActivity.class);
-        intent.putExtra("mobilkey", mobilKey);
+        intent.putExtra("mobilKey", mobilKey);
         startActivity(intent);
         getActivity().finish();
     }

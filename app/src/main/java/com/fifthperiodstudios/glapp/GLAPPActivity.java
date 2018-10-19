@@ -30,46 +30,37 @@ import java.net.URLConnection;
 import java.util.ArrayList;
 import java.util.List;
 
-public class GLAPPActivity extends AppCompatActivity implements UpdateDataSignal {
+public class GLAPPActivity extends AppCompatActivity implements GLAPPActivityView, UpdateDataSignal {
 
     private ViewPager mViewPager;
     private StundenViewAdapter svAdapter;
     private TabLayout tabLayout;
     private Toolbar toolbar;
-    private String mobilKey;
-    private StundenplanParser.Stundenplan stundenplan;
-    private static final String URL = "https://mobil.gymnasium-lohmar.org/XML/stupla.php?mobilKey=";
+    private GLAPPActivityPresenter presenter;
+    private StundenplanRepo repository;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
         toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
         mViewPager = (ViewPager) findViewById(R.id.pager);
-        setSupportActionBar(toolbar);
-        Intent intent = getIntent();
-        mobilKey = (String) intent.getExtras().get("mobilkey");
 
-        if(isOnline()) {
-            new DownloadXmlTask().execute(URL + mobilKey);
-        }else {
-            try {
-                File directory = getApplicationContext().getFilesDir();
-                File file = new File(directory, "Stundenplan.xml");
-                StundenplanParser stundenplanParser = new StundenplanParser();
-                stundenplan = (StundenplanParser.Stundenplan) stundenplanParser.parseStundenplan(new FileInputStream(file));
-                setupFragments(stundenplan);
-                Toast.makeText(getApplicationContext(), "Kein Internet, gespeicherter Stundenplan könnte veraltet sein", Toast.LENGTH_SHORT).show();
-            } catch (FileNotFoundException e) {
-                e.printStackTrace();
-            } catch (XmlPullParserException e) {
-                e.printStackTrace();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        }
+        Intent intent = getIntent();
+
+        repository = new StundenplanRepo(getApplicationContext());
+
+        presenter = new GLAPPActivityPresenter(this, repository);
+
+        repository.setPresenter(presenter);
+
+        presenter.setMobilKey((String) intent.getExtras().get("mobilKey"));
+
+        presenter.loadStundenplan(isOnline());
 
     }
 
@@ -83,131 +74,44 @@ public class GLAPPActivity extends AppCompatActivity implements UpdateDataSignal
         }
     }
 
-    //Fragmente einstellen
-    public void setupFragments(StundenplanParser.Stundenplan result) {
-        //guckt dass die geparseten Wochentage nicht leer sind
-        if (!result.getWochentage().isEmpty()) {
-            //stellt die farben ein:
-            setUpColors(result);
-            //Stellt den FragmentPagerAdapter ein
-            svAdapter = new StundenViewAdapter(getSupportFragmentManager(), result);
-            //die neuen Fragmente für die einzelnen Tage werden erstellt
-            svAdapter.setup();
-            //dem ViewPager wird der Adapter übergeben
-            mViewPager.setAdapter(svAdapter);
-            //die tabs werden eingerichtet
-            tabLayout = (TabLayout) findViewById(R.id.tabs);
-            tabLayout.setupWithViewPager(mViewPager);
-        } else {
-            Toast.makeText(GLAPPActivity.this, "Etwas ist schief gelaufen :/", Toast.LENGTH_SHORT).show();
-        }
-    }
-
-    public void setUpColors(StundenplanParser.Stundenplan stundenplan) {
-        ArrayList<String> colors = new ArrayList<String>();
-        colors.add("#1abc9c");
-        colors.add("#3498db");
-        colors.add("#2ecc71");
-        colors.add("#9b59b6");
-        colors.add("#34495e");
-        colors.add("#16a085");
-        colors.add("#f1c40f");
-        colors.add("#e74c3c");
-        colors.add("#95a5a6");
-        colors.add("#B33771");
-        colors.add("#A64B48");
-        colors.add("#A0A68B");//s
-        colors.add("#454442");//s
-        for (Fach f : stundenplan.getFächer()) {
-            int i = (int) (Math.random() * colors.size());
-            f.setColor(colors.get(i));
-            colors.remove(i);
-        }
-    }
-
-
     @Override
     public void updateData(WochentagFragment f) {
-        //setUpColors(stundenplan);
         logOut();
-        //svAdapter.updateFragments();
     }
 
     private void logOut() {
         SharedPreferences prefs = getSharedPreferences("com.fifthperiodstudios.glapp", MODE_PRIVATE);
-        prefs.edit().putString("mobilkey", "DEF").commit();
+        prefs.edit().putString("mobilKey", "DEF").commit();
         Intent intent = new Intent(this, MainActivity.class);
         startActivity(intent);
         finish();
     }
 
-    private class DownloadXmlTask extends AsyncTask<String, Void, StundenplanParser.Stundenplan> {
+    @Override
+    public void displayFreshStundenplan(StundenplanParser.Stundenplan stundenplan) {
+        displayStundenplan(stundenplan);
+    }
 
-        protected StundenplanParser.Stundenplan doInBackground(String... urls) {
-            try {
-                return loadXmlFromNetwork(urls[0]);
-            } catch (IOException e) {
-                return new StundenplanParser.Stundenplan();
-            } catch (XmlPullParserException e) {
-                return new StundenplanParser.Stundenplan();
-            }
+    public void displayStundenplan(StundenplanParser.Stundenplan stundenplan) {
+        svAdapter = new StundenViewAdapter(getSupportFragmentManager(), stundenplan);
+        //die neuen Fragmente für die einzelnen Tage werden erstellt
+        svAdapter.setup();
+        //dem ViewPager wird der Adapter übergeben
+        mViewPager.setAdapter(svAdapter);
+        //die tabs werden eingerichtet
+        tabLayout = (TabLayout) findViewById(R.id.tabs);
+        tabLayout.setupWithViewPager(mViewPager);
+    }
 
-        }
 
+    @Override
+    public void displayOldStundenplan(StundenplanParser.Stundenplan stundenplan) {
+        displayStundenplan(stundenplan);
+        Toast.makeText(getApplicationContext(), "Kein Internet, gespeicherter Stundenplan könnte veraltet sein", Toast.LENGTH_SHORT).show();
+    }
 
-        protected void onPostExecute(StundenplanParser.Stundenplan result) {
-            super.onPostExecute(result);
-            setupFragments(result);
-        }
-
-        private StundenplanParser.Stundenplan loadXmlFromNetwork(String urlString) throws XmlPullParserException, IOException {
-            InputStream stream = null;
-            // Instantiate the parser
-            StundenplanParser stundenplanParser = new StundenplanParser();
-
-            try {
-                stream = downloadUrl(urlString);
-
-                FileOutputStream outputStream = new FileOutputStream(new File(getApplicationContext().getFilesDir(), "Stundenplan.xml"));
-                int bytesRead = -1;
-                byte[] buffer = new byte[4096];
-                while ((bytesRead = stream.read(buffer)) != -1) {
-                    outputStream.write(buffer, 0, bytesRead);
-                }
-
-                outputStream.close();
-
-                File directory = getApplicationContext().getFilesDir();
-                File file = new File(directory, "Stundenplan.xml");
-                try {
-                    stundenplan = (StundenplanParser.Stundenplan) stundenplanParser.parseStundenplan(new FileInputStream(file));
-                } catch (XmlPullParserException e) {
-                    e.printStackTrace();
-                } catch (FileNotFoundException e) {
-                    e.printStackTrace();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-
-            } finally {
-                if (stream != null) {
-                    stream.close();
-                }
-            }
-
-            return stundenplan;
-        }
-
-        // Given a string representation of a URL, sets up a connection and gets
-// an input stream.
-        private InputStream downloadUrl(String urlString) throws IOException {
-            URL url = new URL(urlString);
-            URLConnection urlConnection = url.openConnection();
-            urlConnection.setReadTimeout(10000 /* milliseconds */);
-            urlConnection.setConnectTimeout(15000 /* milliseconds */);
-
-            InputStream in = urlConnection.getInputStream();
-            return in;
-        }
+    @Override
+    public void displayKeinenStundenplan(){
+        Toast.makeText(getApplicationContext(), "Etwas ist schief gelaufen", Toast.LENGTH_SHORT).show();
     }
 }
