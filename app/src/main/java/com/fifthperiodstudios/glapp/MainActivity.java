@@ -91,6 +91,7 @@ public class MainActivity extends AppCompatActivity{
         prefs = getSharedPreferences("com.fifthperiodstudios.glapp", MODE_PRIVATE);
 
 //        createBackgroundService();
+        //Ein Kommentar hahahahaha
     }
 
     private void createBackgroundService() {
