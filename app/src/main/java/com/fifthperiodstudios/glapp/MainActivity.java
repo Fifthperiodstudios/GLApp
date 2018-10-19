@@ -1,6 +1,8 @@
 package com.fifthperiodstudios.glapp;
 
+import android.app.AlarmManager;
 import android.app.FragmentTransaction;
+import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -30,6 +32,7 @@ import java.io.InputStream;
 import java.net.HttpURLConnection;
 import java.net.URLConnection;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
 
 import android.support.design.widget.TabLayout;
@@ -37,10 +40,6 @@ import android.support.design.widget.TabLayout;
 public class MainActivity extends AppCompatActivity{
 
     SharedPreferences prefs;
-    private static final String URL = null;
-    public static final String GLAPPDATEN = "com.example.myfirstapp.GLAPPDATEN";
-    private StundenplanParser.Stundenplan stundenplan;
-    private static String mobilKey = "";
     private LoginViewAdapter loginViewAdapter;
     private ViewPager mViewPager;
     private Toolbar toolbar;
@@ -91,6 +90,19 @@ public class MainActivity extends AppCompatActivity{
 
         prefs = getSharedPreferences("com.fifthperiodstudios.glapp", MODE_PRIVATE);
 
+//        createBackgroundService();
+    }
+
+    private void createBackgroundService() {
+        final long MINUTEN = 180;//in welchem Abstand soll der Hintergrund dienst arbeiten
+        AlarmManager alarmManager = (AlarmManager)MainActivity.this.getSystemService(MainActivity.this.ALARM_SERVICE);
+
+        Intent startBackgroundserviceIntent = new Intent(MainActivity.this,BackgroundService.class);
+        PendingIntent startBackgroundservicePendingIntent = PendingIntent.getService(MainActivity.this,0,startBackgroundserviceIntent,0);
+
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTimeInMillis(System.currentTimeMillis() + 1000*60*MINUTEN);
+        alarmManager.setRepeating(AlarmManager.RTC_WAKEUP,calendar.getTimeInMillis(),1000*60*MINUTEN,startBackgroundservicePendingIntent);
     }
 
     @Override
