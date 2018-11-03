@@ -1,42 +1,26 @@
-package com.fifthperiodstudios.glapp;
+package com.fifthperiodstudios.glapp.Login;
 
 import android.app.AlarmManager;
-import android.app.FragmentTransaction;
 import android.app.PendingIntent;
-import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.net.wifi.WifiInfo;
-import android.net.wifi.WifiManager;
-import android.os.AsyncTask;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.os.Bundle;
-import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
-import android.widget.Toast;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.net.URL;
-
-import org.xmlpull.v1.XmlPullParserException;
-
-import java.io.IOException;
-import java.io.InputStream;
-import java.net.HttpURLConnection;
-import java.net.URLConnection;
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.List;
 
 import android.support.design.widget.TabLayout;
+
+import com.fifthperiodstudios.glapp.GLAPPActivity;
+import com.fifthperiodstudios.glapp.Notification.BackgroundService;
+import com.fifthperiodstudios.glapp.R;
 
 public class MainActivity extends AppCompatActivity{
 
@@ -90,10 +74,7 @@ public class MainActivity extends AppCompatActivity{
         mViewPager = (ViewPager) findViewById(R.id.student_teacher_pager);
 
         prefs = getSharedPreferences("com.fifthperiodstudios.glapp", MODE_PRIVATE);
-
 //        createBackgroundService();
-        Log.d("Sinnlose Nachricht","Sinnlose Nachricht");
-        //Ein Kommentar hahahahaha
     }
 
     private void createBackgroundService() {
@@ -111,11 +92,11 @@ public class MainActivity extends AppCompatActivity{
     @Override
     protected void onResume() {
         super.onResume();
-        if (prefs.getString("mobilkey", "DEF").equals("DEF")) {
+        if (prefs.getString("mobilKey", "DEF").equals("DEF")) {
             setupLoginFragments();
         }else{
             Intent intent = new Intent(this, GLAPPActivity.class);
-            intent.putExtra("mobilkey", prefs.getString("mobilkey", "DEF"));
+            intent.putExtra("mobilKey", prefs.getString("mobilKey", "DEF"));
             startActivity(intent);
             finish();
         }

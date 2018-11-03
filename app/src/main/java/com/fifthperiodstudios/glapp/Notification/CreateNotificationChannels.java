@@ -1,4 +1,4 @@
-package com.fifthperiodstudios.glapp;
+package com.fifthperiodstudios.glapp.Notification;
 
 import android.app.Application;
 import android.app.NotificationChannel;

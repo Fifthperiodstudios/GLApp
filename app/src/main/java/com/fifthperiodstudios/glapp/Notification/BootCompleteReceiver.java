@@ -1,10 +1,12 @@
-package com.fifthperiodstudios.glapp;
+package com.fifthperiodstudios.glapp.Notification;
 
 import android.app.AlarmManager;
 import android.app.PendingIntent;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+
+import com.fifthperiodstudios.glapp.Notification.BackgroundService;
 
 import java.util.Calendar;
 

@@ -1,4 +1,4 @@
-package com.fifthperiodstudios.glapp;
+package com.fifthperiodstudios.glapp.Login;
 
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -14,6 +14,9 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.fifthperiodstudios.glapp.GLAPPActivity;
+import com.fifthperiodstudios.glapp.R;
+
 import org.xmlpull.v1.XmlPullParserException;
 
 import java.io.IOException;
@@ -21,8 +24,9 @@ import java.io.InputStream;
 import java.net.URL;
 import java.net.URLConnection;
 
-public class StudentLoginFragment extends Fragment {
-    public StudentLoginFragment() {
+
+public class LehrerLoginFragment extends Fragment {
+    public LehrerLoginFragment() {
 
     }
     SharedPreferences sharedPreferences;
@@ -32,12 +36,12 @@ public class StudentLoginFragment extends Fragment {
     private String mobilKey;
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        final View rootView = inflater.inflate(R.layout.student_login_layout, container, false);
+        final View rootView = inflater.inflate(R.layout.lehrer_login_layout, container, false);
         Bundle args = getArguments();
 
         loginButton = (Button) rootView.findViewById(R.id.login_button);
-        usernameTextView = (EditText) rootView.findViewById(R.id.username_student);
-        passwordTextView = (EditText) rootView.findViewById(R.id.password_student);
+        usernameTextView = (EditText) rootView.findViewById(R.id.username_lehrer);
+        passwordTextView = (EditText) rootView.findViewById(R.id.password_lehrer);
         sharedPreferences = getActivity().getSharedPreferences("com.fifthperiodstudios.glapp", getActivity().MODE_PRIVATE);
         loginButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -128,3 +132,4 @@ public class StudentLoginFragment extends Fragment {
     }
 
 }
+

@@ -1,11 +1,10 @@
-package com.fifthperiodstudios.glapp;
+package com.fifthperiodstudios.glapp.Notification;
 
 import android.app.Service;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.IBinder;
 import android.support.annotation.Nullable;
-import android.widget.Toast;
 
 public class BackgroundService extends Service {
 //    @android.annotation.Nullable

@@ -1,4 +1,4 @@
-package com.fifthperiodstudios.glapp;
+package com.fifthperiodstudios.glapp.Stundenplan;
 
 import android.util.Xml;
 
@@ -7,53 +7,10 @@ import org.xmlpull.v1.XmlPullParserException;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.Serializable;
 import java.util.ArrayList;
-import java.util.List;
 
 public class StundenplanParser {     // We don't use namespaces
     private static final String ns = null;
-
-    public static class Wochentag implements Serializable {
-        public final ArrayList<Stunde> stunden;
-
-        public Wochentag(ArrayList<Stunde> stunden) {
-            this.stunden = stunden;
-        }
-
-        public ArrayList<Stunde> getStunden() {
-            return stunden;
-        }
-    }
-
-    public static class Stundenplan implements Serializable {
-        public final ArrayList<Wochentag> wochentage;
-        public final ArrayList<Fach> fächer;
-
-        public Stundenplan() {
-            this.wochentage = new ArrayList<>();
-            this.fächer = new ArrayList<>();
-        }
-
-        public ArrayList<Fach> getFächer() {
-            return fächer;
-        }
-
-        public ArrayList<Wochentag> getWochentage() {
-            return wochentage;
-        }
-
-    }
-
-    public String parseKey (InputStream in) throws IOException {
-        try {
-            java.util.Scanner s = new java.util.Scanner(in).useDelimiter("\\A");
-            return s.hasNext() ? s.next() : "";
-        } finally {
-            in.close();
-        }
-    }
-
 
     public Stundenplan parseStundenplan(InputStream in) throws XmlPullParserException, IOException {
         try {
@@ -86,7 +43,7 @@ public class StundenplanParser {     // We don't use namespaces
         return stundenplan;
     }
 
-    private Wochentag readWochentag(XmlPullParser parser, Stundenplan stundenplan) throws XmlPullParserException, IOException {
+    private Stundenplan.Wochentag readWochentag(XmlPullParser parser, Stundenplan stundenplan) throws XmlPullParserException, IOException {
         parser.require(XmlPullParser.START_TAG, ns, "Wochentag");
         ArrayList<Stunde> stunden = new ArrayList<Stunde>();
 
@@ -109,7 +66,7 @@ public class StundenplanParser {     // We don't use namespaces
                 skip(parser);
             }
         }
-        return new Wochentag(stunden);
+        return new Stundenplan.Wochentag(stunden);
     }
 
     private Stunde readStunde(XmlPullParser parser) throws IOException, XmlPullParserException {

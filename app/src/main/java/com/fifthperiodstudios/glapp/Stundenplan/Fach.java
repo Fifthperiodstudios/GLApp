@@ -1,10 +1,18 @@
-package com.fifthperiodstudios.glapp;
+package com.fifthperiodstudios.glapp.Stundenplan;
 
 import java.io.Serializable;
 
 public class Fach implements Serializable {
     private String color, kurs, raum, kursart, lehrer, fach;
 
+    public Fach (){
+        color = "#ffffff";
+        kurs = "";
+        raum = "";
+        kursart = "";
+        lehrer = "";
+        fach = "";
+    }
     public String getFach() {
         return fach;
     }

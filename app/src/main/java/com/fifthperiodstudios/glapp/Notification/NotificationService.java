@@ -1,13 +1,14 @@
-package com.fifthperiodstudios.glapp;
+package com.fifthperiodstudios.glapp.Notification;
 
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.app.Service;
 import android.content.Intent;
-import android.content.SharedPreferences;
-import android.graphics.Color;
 import android.os.IBinder;
 import android.support.v4.app.NotificationCompat;
+
+import com.fifthperiodstudios.glapp.Login.MainActivity;
+import com.fifthperiodstudios.glapp.R;
 
 public class NotificationService extends Service {
 

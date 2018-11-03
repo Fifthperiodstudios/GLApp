@@ -1,4 +1,4 @@
-package com.fifthperiodstudios.glapp;
+package com.fifthperiodstudios.glapp.Stundenplan;
 
 import java.io.Serializable;
 

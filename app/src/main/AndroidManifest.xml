@@ -10,14 +10,14 @@
     <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED"/>
 
     <application
-        android:name=".CreateNotificationChannels"
+        android:name=".Notification.CreateNotificationChannels"
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".MainActivity">
+        <activity android:name=".Login.MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -32,12 +32,12 @@
             android:label="@string/setting_activity_glapp"></activity>
 
         <service
-            android:name=".NotificationService"
+            android:name=".Notification.NotificationService"
             android:enabled="true"
             android:exported="true" />
-        <service android:name=".BackgroundService" />
+        <service android:name=".Notification.BackgroundService" />
 
-        <receiver android:name=".BootCompleteReceiver">
+        <receiver android:name=".Notification.BootCompleteReceiver">
             <intent-filter>
                 <action android:name="android.intent.action.BOOT_COMPLETED" />
             </intent-filter>

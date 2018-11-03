@@ -1,4 +1,4 @@
-package com.fifthperiodstudios.glapp;
+package com.fifthperiodstudios.glapp.Login;
 
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -14,6 +14,9 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.fifthperiodstudios.glapp.GLAPPActivity;
+import com.fifthperiodstudios.glapp.R;
+
 import org.xmlpull.v1.XmlPullParserException;
 
 import java.io.IOException;
@@ -21,9 +24,8 @@ import java.io.InputStream;
 import java.net.URL;
 import java.net.URLConnection;
 
-
-public class LehrerLoginFragment extends Fragment {
-    public LehrerLoginFragment() {
+public class StudentLoginFragment extends Fragment {
+    public StudentLoginFragment() {
 
     }
     SharedPreferences sharedPreferences;
@@ -33,12 +35,12 @@ public class LehrerLoginFragment extends Fragment {
     private String mobilKey;
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        final View rootView = inflater.inflate(R.layout.lehrer_login_layout, container, false);
+        final View rootView = inflater.inflate(R.layout.student_login_layout, container, false);
         Bundle args = getArguments();
 
         loginButton = (Button) rootView.findViewById(R.id.login_button);
-        usernameTextView = (EditText) rootView.findViewById(R.id.username_lehrer);
-        passwordTextView = (EditText) rootView.findViewById(R.id.password_lehrer);
+        usernameTextView = (EditText) rootView.findViewById(R.id.username_student);
+        passwordTextView = (EditText) rootView.findViewById(R.id.password_student);
         sharedPreferences = getActivity().getSharedPreferences("com.fifthperiodstudios.glapp", getActivity().MODE_PRIVATE);
         loginButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -84,9 +86,9 @@ public class LehrerLoginFragment extends Fragment {
             if(result.isEmpty() || result.equals("0")) {
                 Toast.makeText(getActivity().getApplicationContext(), "Benutzername oder Passwort falsch", Toast.LENGTH_SHORT).show();
             }else{
-                sharedPreferences.edit().putString("mobilkey", mobilKey).commit();
+                sharedPreferences.edit().putString("mobilKey", mobilKey).commit();
                 Intent intent = new Intent(getActivity(), GLAPPActivity.class);
-                intent.putExtra("mobilkey", mobilKey);
+                intent.putExtra("mobilKey", mobilKey);
                 startActivity(intent);
                 getActivity().finish();
             }
@@ -129,4 +131,3 @@ public class LehrerLoginFragment extends Fragment {
     }
 
 }
-
