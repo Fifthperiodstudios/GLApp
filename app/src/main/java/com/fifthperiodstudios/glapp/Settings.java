@@ -3,6 +3,7 @@ package com.fifthperiodstudios.glapp;
 import android.content.SharedPreferences;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.widget.CompoundButton;
@@ -28,6 +29,8 @@ public class Settings extends AppCompatActivity {
     TextView tVanzeigen;
 
     RecyclerView recyclerView;
+    RecyclerView.Adapter recyclerAdapter;
+    RecyclerView.LayoutManager recyclerManager;
 
     SharedPreferences sharedPreferences;
     SharedPreferences.Editor sharedPreferencesEditor;
@@ -55,8 +58,12 @@ public class Settings extends AppCompatActivity {
         swtAutoAktualisieren = findViewById(R.id.switch2);
 
 
-        /*recyclerView = findViewById(R.id.recycler);
-        recyclerView*/
+        recyclerManager = new LinearLayoutManager(this);
+        recyclerAdapter = new RecyclerViewAdapter();
+
+        recyclerView = findViewById(R.id.recycler);
+        recyclerView.setLayoutManager(recyclerManager);
+        recyclerView.setAdapter(recyclerAdapter);
     }
 
     @Override
