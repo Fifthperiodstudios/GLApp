@@ -73,6 +73,34 @@ public class MainActivity extends AppCompatActivity{
 
         mViewPager = (ViewPager) findViewById(R.id.student_teacher_pager);
 
+        mViewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+            @Override
+            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+
+            }
+
+            @Override
+            public void onPageSelected(int position) {
+                switch(position){
+                    case 0:
+                        toolbar.setBackgroundColor(getResources().getColor(R.color.colorPrimary));
+                        tabLayout.setBackgroundColor(getResources().getColor(R.color.colorPrimary));
+                        break;
+                    case 1:
+                        toolbar.setBackgroundColor(getResources().getColor(R.color.colorAccent));
+                        tabLayout.setBackgroundColor(getResources().getColor(R.color.colorAccent));
+                        break;
+                }
+            }
+
+            @Override
+            public void onPageScrollStateChanged(int state) {
+
+            }
+            //Override default methods and change toolbar color inside of here
+        });
+
+
         prefs = getSharedPreferences("com.fifthperiodstudios.glapp", MODE_PRIVATE);
 //        createBackgroundService();
     }
@@ -94,6 +122,8 @@ public class MainActivity extends AppCompatActivity{
         super.onResume();
         if (prefs.getString("mobilKey", "DEF").equals("DEF")) {
             setupLoginFragments();
+            toolbar.setBackgroundColor(getResources().getColor(R.color.colorPrimary));
+            tabLayout.setBackgroundColor(getResources().getColor(R.color.colorPrimary));
         }else{
             Intent intent = new Intent(this, GLAPPActivity.class);
             intent.putExtra("mobilKey", prefs.getString("mobilKey", "DEF"));

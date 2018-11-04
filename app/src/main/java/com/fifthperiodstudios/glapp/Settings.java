@@ -43,6 +43,9 @@ public class Settings extends AppCompatActivity {
         toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setDisplayShowHomeEnabled(true);
+
         tVbenachrichtigungen = findViewById(R.id.textView);
         tVanzeigen = findViewById(R.id.textView2);
 
@@ -69,6 +72,7 @@ public class Settings extends AppCompatActivity {
     @Override
     public boolean onSupportNavigateUp() {
         save();
+        finish();
         return true;
     }
 
