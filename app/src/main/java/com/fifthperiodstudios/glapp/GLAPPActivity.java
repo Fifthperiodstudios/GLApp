@@ -117,6 +117,7 @@ public class GLAPPActivity extends AppCompatActivity implements DownloadStundenp
 
     private void logout(){
         SharedPreferences prefs = getSharedPreferences("com.fifthperiodstudios.glapp", MODE_PRIVATE);
+        this.getSharedPreferences("com.fifthperiodstudios.glapp",MODE_PRIVATE).edit().clear().commit();
         prefs.edit().putString("mobilKey", "DEF").commit();
         Intent intent = new Intent(this, MainActivity.class);
         startActivity(intent);

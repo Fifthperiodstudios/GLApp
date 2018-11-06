@@ -60,6 +60,8 @@ public class Settings extends AppCompatActivity {
         swtBenachrichtigungen = findViewById(R.id.switch1);
         swtAutoAktualisieren = findViewById(R.id.switch2);
 
+        swtBenachrichtigungen.setChecked(benachrichtigungen);
+        swtAutoAktualisieren.setChecked(autoAktualisieren);
 
         recyclerManager = new LinearLayoutManager(this);
         recyclerAdapter = new RecyclerViewAdapter();
