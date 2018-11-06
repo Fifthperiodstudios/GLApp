@@ -78,6 +78,12 @@ public class Settings extends AppCompatActivity {
         return true;
     }
 
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        save();
+    }
+
     private void save() {
         sharedPreferencesEditor.putBoolean(SHAREDPREFERENCES_BENACHRICHTIGUNGEN,swtBenachrichtigungen.isChecked());
         sharedPreferencesEditor.putBoolean(SHAREDPREFERENCES_AKTUALISIEREN,swtAutoAktualisieren.isChecked());
