@@ -6,6 +6,8 @@ import android.content.SharedPreferences;
 import android.os.IBinder;
 import android.support.annotation.Nullable;
 
+import com.fifthperiodstudios.glapp.Downloader.VertretungsplanDownloader;
+
 public class BackgroundService extends Service {
 //    @android.annotation.Nullable
     public static final String SHAREDPREFERENCES_NAME = "com.fifthperiodstudios.glapp";
@@ -26,19 +28,20 @@ public class BackgroundService extends Service {
         if (sharedPreferences.getBoolean(SHAREDPREFERENCES_AKTUALISIEREN,true)) {
             /*Hier den WiFi Manager benutzen um titel vertretung Fach und co zu erhalten
              * */
-            boolean esGibtNeueVertretung = false;//Nur provisorisch, dieser boolean muss durch den Wifi manager gesetzt werden
+            boolean esGibtEtwasNeues = false;//Nur provisorisch, dieser boolean muss durch den Wifi manager gesetzt werden
+            boolean istEsVertretung = false;
 //          ^wichtig^   ^wichtig^   ^wichtig^   ^wichtig^
 
             String title = "Titel";
             String textKurz = "Diese Nachricht wird vom Background service geschreiben";
             String textLang = null;
 
-            if (sharedPreferences.getBoolean(SHAREDPREFERENCES_BENACHRICHTIGUNGEN,true)&&esGibtNeueVertretung) {
+            if (sharedPreferences.getBoolean(SHAREDPREFERENCES_BENACHRICHTIGUNGEN,true)&&esGibtEtwasNeues) {
                 startService(new Intent(this, NotificationService.class)
                         .putExtra("title", title)
                         .putExtra("textKurz", textKurz)
                         .putExtra("textLang", textLang)
-                        .putExtra("vertretung",esGibtNeueVertretung));
+                        .putExtra("vertretung",istEsVertretung));
             }
             stopSelf();
         }

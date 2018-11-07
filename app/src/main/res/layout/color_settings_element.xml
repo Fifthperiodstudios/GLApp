@@ -2,24 +2,12 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="@android:color/background_light"
     android:orientation="horizontal"
-    android:padding="16dp">
+    android:paddingTop="10dp"
+    android:paddingBottom="10dp">
+
+    <!--android:background="@android:color/background_light"-->
     <!--android:layout_margin="16dp"-->
-
-    <LinearLayout
-        android:layout_width="0dp"
-        android:layout_height="match_parent"
-        android:layout_weight="1"
-        android:orientation="vertical"
-        android:paddingLeft="16dp">
-
-        <TextView
-            android:id="@+id/colorSettingsFach"
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent" />
-
-    </LinearLayout>
 
     <Button
         android:id="@+id/colorSettingsFarbe"
@@ -28,5 +16,21 @@
         android:textColor="@android:color/white"
         android:background="@drawable/circle"
         android:gravity="center" />
+
+    <LinearLayout
+        android:layout_width="fill_parent"
+        android:layout_height="match_parent"
+        android:layout_weight="1"
+        android:orientation="vertical"
+        android:layout_margin="10dp">
+
+        <TextView
+            android:id="@+id/colorSettingsFach"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:text="Test"
+            android:textSize="18sp" />
+
+    </LinearLayout>
 
 </LinearLayout>

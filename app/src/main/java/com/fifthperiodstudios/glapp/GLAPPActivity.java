@@ -36,14 +36,19 @@ import java.util.ArrayList;
 
 public class GLAPPActivity extends AppCompatActivity implements DownloadStundenplanStatusListener {
 
+
     private ViewPager mViewPager;
     private GLAPPViewAdapter glappViewAdapter;
     private TabLayout tabLayout;
     private Toolbar toolbar;
     private String mobilKey;
     private Stundenplan stundenplan;
+
     StundenplanDownloader stundenplanDownloader;
+
     private static final String URL = "https://mobil.gymnasium-lohmar.org/XML/stupla.php?mobilKey=";
+    public static final String SHAREDPREFERENCES_NAME = "com.fifthperiodstudios.glapp";
+    public static final String SHAREDPREFERENCES_MOBILEKEY = "mobilKey";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -55,7 +60,7 @@ public class GLAPPActivity extends AppCompatActivity implements DownloadStundenp
         mViewPager = (ViewPager) findViewById(R.id.pager);
 
         Intent intent = getIntent();
-        mobilKey = (String) intent.getExtras().get("mobilKey");
+        mobilKey = (String) intent.getExtras().get(SHAREDPREFERENCES_MOBILEKEY);
         stundenplanDownloader = new StundenplanDownloader(this, mobilKey, this);
         stundenplanDownloader.downloadStundenplan();
     }
@@ -116,9 +121,9 @@ public class GLAPPActivity extends AppCompatActivity implements DownloadStundenp
     }
 
     private void logout(){
-        SharedPreferences prefs = getSharedPreferences("com.fifthperiodstudios.glapp", MODE_PRIVATE);
-        this.getSharedPreferences("com.fifthperiodstudios.glapp",MODE_PRIVATE).edit().clear().commit();
-        prefs.edit().putString("mobilKey", "DEF").commit();
+        SharedPreferences prefs = getSharedPreferences(SHAREDPREFERENCES_NAME, MODE_PRIVATE);
+        this.getSharedPreferences(SHAREDPREFERENCES_NAME,MODE_PRIVATE).edit().clear().commit();
+        prefs.edit().putString(SHAREDPREFERENCES_MOBILEKEY, "DEF").commit();
         Intent intent = new Intent(this, MainActivity.class);
         startActivity(intent);
         finish();

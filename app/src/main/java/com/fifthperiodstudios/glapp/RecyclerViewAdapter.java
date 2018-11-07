@@ -8,6 +8,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.fifthperiodstudios.glapp.Login.MainActivity;
 
@@ -25,15 +26,21 @@ class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapter.ViewH
     @Override
     public void onBindViewHolder(@NonNull ViewHolderKlasse holder, final int position) {
 
-        holder.fachName.setText("Fachname aus ArrayListe");//Hier die Fächerliste einzeln aufrufen
-        holder.farbeWaehlen.setBackgroundColor(Color.BLUE);//Farbe der Einzelnen Fächer anzeigen/ eine zufällige Farbe erzeugen/nehmen, wenn es keine gibt.
+        holder.fachName.setText("Fachname Nr:"+position);//Hier die Fächerliste einzeln aufrufen
+//        holder.farbeWaehlen.setBackgroundColor();//Farbe der Einzelnen Fächer anzeigen/ eine zufällige Farbe erzeugen/nehmen, wenn es keine gibt.
+        holder.farbeWaehlen.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+            }
+        });
 
     }
 
     @Override
     public int getItemCount() {
 
-        return 0;//Arraylist.getSize() länge der Liste ausgeben lassen
+        return 16;//Arraylist.getSize() länge der Liste ausgeben lassen
     }
 
     public class ViewHolderKlasse extends RecyclerView.ViewHolder{
@@ -47,12 +54,7 @@ class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapter.ViewH
 
             fachName = itemView.findViewById(R.id.colorSettingsFach);
             farbeWaehlen = itemView.findViewById(R.id.colorSettingsFarbe);
-            farbeWaehlen.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
 
-                }
-            });
         }
     }
 }

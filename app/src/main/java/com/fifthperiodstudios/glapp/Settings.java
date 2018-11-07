@@ -14,6 +14,7 @@ public class Settings extends AppCompatActivity {
     private Toolbar toolbar;
 
     public static final String SHAREDPREFERENCES_NAME = "com.fifthperiodstudios.glapp";
+//    public static final String SHAREDPREFERENCES_MOBILEKEY = "mobilKey";
     public static final String SHAREDPREFERENCES_BENACHRICHTIGUNGEN = "benachrichtigungen";
     public static final String SHAREDPREFERENCES_AKTUALISIEREN = "autoAktualiseren";
 
@@ -34,6 +35,7 @@ public class Settings extends AppCompatActivity {
 
     SharedPreferences sharedPreferences;
     SharedPreferences.Editor sharedPreferencesEditor;
+//    SharedPreferences helpPreferences;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -54,6 +56,7 @@ public class Settings extends AppCompatActivity {
 
         benachrichtigungen = sharedPreferences.getBoolean(SHAREDPREFERENCES_BENACHRICHTIGUNGEN,true);
         autoAktualisieren = sharedPreferences.getBoolean(SHAREDPREFERENCES_AKTUALISIEREN,true);
+
         farbeNummer = sharedPreferences.getInt("farbeNummer",0);
         farbeName = sharedPreferences.getString("farbeName","#54de54");
 
