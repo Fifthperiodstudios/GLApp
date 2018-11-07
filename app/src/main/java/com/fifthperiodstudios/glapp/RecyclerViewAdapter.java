@@ -31,7 +31,7 @@ class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapter.ViewH
         holder.farbeWaehlen.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
+//                zeige die Auswahl an
             }
         });
 
