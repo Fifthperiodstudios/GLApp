@@ -8,6 +8,7 @@ import android.os.AsyncTask;
 
 import com.fifthperiodstudios.glapp.Vertretungsplan.Vertretungsplan;
 import com.fifthperiodstudios.glapp.Stundenplan.Stundenplan;
+import com.fifthperiodstudios.glapp.Vertretungsplan.VertretungsplanParser;
 
 import org.xmlpull.v1.XmlPullParserException;
 
@@ -26,7 +27,7 @@ public class VertretungsplanDownloader {
     private Stundenplan stundenplan;
     private String mobilKey;
     private final String URL = "https://mobil.gymnasium-lohmar.org/XML/vplan.php?mobilKey=";
-    private Vertretungsplan Vertretungsplan;
+    private Vertretungsplan vertretungsplan;
 
     public VertretungsplanDownloader (Activity activity, Stundenplan stundenplan, String mobilKey, DownloadVertretungsplanStatusListener downloadVertretungsplanStatusListener) {
         this.activity = activity;
@@ -93,8 +94,8 @@ public class VertretungsplanDownloader {
 
                 File directory = activity.getApplicationContext().getFilesDir();
                 File file = new File(directory, "Stundenplan.xml");
-                /*try {
-                    Vertretungsplan = (Vertretungsplan) VertretungsplanParser.parseVertretungsplan(new FileInputStream(file));
+                try {
+                    vertretungsplan = (Vertretungsplan) VertretungsplanParser.parseVertretungsplan(new FileInputStream(file));
                 } catch (XmlPullParserException e) {
                     downloadVertretungsplanStatusListener.andererFehler();
                     e.printStackTrace();
@@ -104,7 +105,7 @@ public class VertretungsplanDownloader {
                 } catch (IOException e) {
                     downloadVertretungsplanStatusListener.andererFehler();
                     e.printStackTrace();
-                }*/
+                }
 
             } finally {
                 if (stream != null) {
@@ -112,7 +113,7 @@ public class VertretungsplanDownloader {
                 }
             }
 
-            return new Vertretungsplan();
+            return vertretungsplan;
         }
 
         // Given a string representation of a URL, sets up a connection and gets
