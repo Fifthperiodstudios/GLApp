@@ -1,3 +1,7 @@
+package com.fifthperiodstudios.glapp.Vertretungsplan;
+
+import java.io.Serializable;
+
 /**
  *
  * Beschreibung
@@ -6,7 +10,7 @@
  * @author 
  */
 
-public class VertretungsplanStunde {
+public class VertretungsplanStunde implements Serializable {
   
   // Anfang Attribute
   private int Stunde;
