@@ -13,13 +13,11 @@ import android.view.View;
 
 public class StundenplanView extends View {
     private Paint mPaint;
-    private int stunden_width;
-    private int stunden_height;
-    private int width;
-    private int height;
-    private int topBorder;
-    private int leftBorder;
-    private int buffer;
+
+    private int screen_width;
+    private int screen_height;
+    private int painting_width;
+    private int painting_height;
 
     private Stundenplan stundenplan;
 
@@ -38,40 +36,57 @@ public class StundenplanView extends View {
         this.stundenplan = stundeplan;
     }
 
+    public int convertDipToPixels(float dips)
+    {
+        return (int) (dips * this.getContext().getResources().getDisplayMetrics().density + 0.5f);
+    }
+
     @Override
     protected void onSizeChanged(int w, int h, int oldw, int oldh) {
         super.onSizeChanged(w, h, oldw, oldh);
-        float xpad = (float)(getPaddingLeft() + getPaddingRight());
-        float ypad = (float)(getPaddingTop() + getPaddingBottom());
-        buffer = 5;
-        this.width = (int) ((float)w - xpad);
-        this.height = (int) ((float)h - ypad);
+        int xpad = (getPaddingLeft() + getPaddingRight());
+        int ypad = (getPaddingTop() + getPaddingBottom());
 
-        stunden_width = (int)((float) width / 5.0f);
-        stunden_height = (int)((float) height / 10.0f);
+        painting_width = w-xpad;
+        painting_height = h-ypad;
+        screen_height = h;
+        screen_width = w;
 
-        leftBorder = getPaddingLeft();
-        topBorder = getPaddingTop();
-
-        Log.d("asdlj", Integer.toString(leftBorder)+" "+Integer.toString(getPaddingRight()));
     }
 
-    public RectF makeStunde (int xpos, int ypos, int width, int height) {
+    public RectF makeStunde (int tag, int stunde) {
+        int stunden_width = (int)((float) painting_width / 5.0f);
+        int stunden_height = (int)((float) screen_height / 10.0f);
+
+        int buffer = 10;
+        int xpos = buffer + getPaddingLeft() + stunden_width*tag;
+        int breitemitbuffer = stunden_width-2*buffer;
+
+        int ypos = stunden_height*stunde + buffer + getPaddingTop();
+        int hoehemitbuffer = stunden_height-2*buffer;
+
+        return makeRect (xpos, ypos, breitemitbuffer, hoehemitbuffer);
+    }
+
+    public RectF makeRect (int xpos, int ypos, int w, int h) {
         int left = xpos;
         int top = ypos;
-        int right = width+xpos;
-        int bottom = height+ypos;
+        int right = w+xpos;
+        int bottom = h+ypos;
         return new RectF(left, top, right, bottom);
     }
+
     @Override
     protected void onDraw (Canvas canvas) {
-
         for(int i = 0; i<stundenplan.getWochentage().size(); i++){
             for(int j = 0; j<stundenplan.getWochentage().get(i).getStunden().size(); j++){
                 mPaint.setColor(Color.parseColor(stundenplan.getWochentage().get(i).getStunden().get(j).getFach().getColor()));
                 int nte = Integer.parseInt(stundenplan.getWochentage().get(i).getStunden().get(j).getStunde())-1;
-                canvas.drawRoundRect(makeStunde(i*(stunden_width+buffer)+leftBorder, nte*(stunden_height+buffer)+topBorder, stunden_width-buffer, stunden_height-buffer), 10, 10, mPaint);
+                RectF stunde = makeStunde(i, nte);
+                canvas.drawRoundRect(stunde, 10, 10, mPaint);
             }
         }
     }
+
+
 }
