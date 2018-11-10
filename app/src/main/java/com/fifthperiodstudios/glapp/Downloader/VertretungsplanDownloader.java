@@ -94,6 +94,9 @@ public class VertretungsplanDownloader {
 
                 File directory = activity.getApplicationContext().getFilesDir();
                 File file = new File(directory, "Stundenplan.xml");
+
+                vertretungsplan = (Vertretungsplan) VertretungsplanParser.parseVertretungsplan(new FileInputStream(file));
+/*
                 try {
                     vertretungsplan = (Vertretungsplan) VertretungsplanParser.parseVertretungsplan(new FileInputStream(file));
                 } catch (XmlPullParserException e) {
@@ -105,7 +108,7 @@ public class VertretungsplanDownloader {
                 } catch (IOException e) {
                     downloadVertretungsplanStatusListener.andererFehler();
                     e.printStackTrace();
-                }
+                }*/
 
             } finally {
                 if (stream != null) {

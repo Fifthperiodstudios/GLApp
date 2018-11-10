@@ -73,11 +73,12 @@ public class Settings extends AppCompatActivity {
         swtAutoAktualisieren.setChecked(autoAktualisieren);
 
         recyclerManager = new LinearLayoutManager(this);
-        recyclerAdapter = new RecyclerViewAdapter(stundenplan);
+        recyclerAdapter = new RecyclerViewAdapter(stundenplan, getSupportFragmentManager());
 
         recyclerView = findViewById(R.id.recycler);
         recyclerView.setLayoutManager(recyclerManager);
         recyclerView.setAdapter(recyclerAdapter);
+
     }
 
     @Override

@@ -1,11 +1,13 @@
 package com.fifthperiodstudios.glapp;
 
+import android.content.Context;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
 import android.graphics.drawable.GradientDrawable;
 import android.graphics.drawable.ShapeDrawable;
 import android.support.annotation.NonNull;
+import android.support.v4.app.FragmentManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -14,14 +16,17 @@ import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.fifthperiodstudios.glapp.FarbAuswahlDialog.FarbAuswahlDialog;
 import com.fifthperiodstudios.glapp.Login.MainActivity;
 import com.fifthperiodstudios.glapp.Stundenplan.Stundenplan;
 
 class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapter.ViewHolderKlasse> {
     Stundenplan stundenplan;
+    FragmentManager mFragmentManager;
 
-    public RecyclerViewAdapter (Stundenplan stundenplan) {
+    public RecyclerViewAdapter (Stundenplan stundenplan, FragmentManager fragmentManager) {
         this.stundenplan = stundenplan;
+        mFragmentManager = fragmentManager;
     }
 
     @NonNull
@@ -49,8 +54,7 @@ class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapter.ViewH
         holder.farbeWaehlen.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-//                Toast.makeText(,"Das ist die Nachricht von Element: "+position,Toast.LENGTH_SHORT).show();
-//                zeige die Auswahl an
+                new FarbAuswahlDialog().show(mFragmentManager, "fifthperiodstudios");
             }
         });
 
