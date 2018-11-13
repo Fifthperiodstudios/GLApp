@@ -83,7 +83,7 @@ public class GLAPPActivity extends AppCompatActivity implements DownloadStundenp
     @Override
     public void keineInternetverbindung(Stundenplan stundenplan) {
         this.stundenplan = stundenplan;
-        Toast.makeText(getApplicationContext(), "Keine Internetverbindung, alter Stundenplan", Toast.LENGTH_SHORT);
+        Toast.makeText(getApplicationContext(), "Keine Internetverbindung, alter Stundenplan", Toast.LENGTH_SHORT).show();
         setupFragments(stundenplan);
     }
 
@@ -95,7 +95,7 @@ public class GLAPPActivity extends AppCompatActivity implements DownloadStundenp
 
     @Override
     public void andererFehler() {
-        Toast.makeText(getApplicationContext(), "Etwas ist schiefgelaufen :/", Toast.LENGTH_SHORT);
+        Toast.makeText(getApplicationContext(), "Etwas ist schiefgelaufen :/", Toast.LENGTH_SHORT).show();
     }
 
     @Override

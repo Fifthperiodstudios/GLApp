@@ -48,7 +48,6 @@ public class Settings extends AppCompatActivity {
 
         toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-        toolbar.setTitleTextColor(Color.WHITE);
 
         stundenplan = (Stundenplan) getIntent().getSerializableExtra("Stundenplan");
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
@@ -74,11 +73,9 @@ public class Settings extends AppCompatActivity {
 
         recyclerManager = new LinearLayoutManager(this);
         recyclerAdapter = new RecyclerViewAdapter(stundenplan, getSupportFragmentManager());
-
         recyclerView = findViewById(R.id.recycler);
         recyclerView.setLayoutManager(recyclerManager);
         recyclerView.setAdapter(recyclerAdapter);
-
     }
 
     @Override

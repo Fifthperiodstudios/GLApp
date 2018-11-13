@@ -43,7 +43,7 @@ public class FarbAuswahlDialog extends DialogFragment implements FarbRecyclerVie
                 .setPositiveButton("Select", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int id) {
-                        // sign in the user ...
+
                     }
                 })
                 .setNegativeButton("Abbruch", new DialogInterface.OnClickListener() {
@@ -58,19 +58,34 @@ public class FarbAuswahlDialog extends DialogFragment implements FarbRecyclerVie
     private ArrayList<String> getColors() {
         ArrayList<String> colors = new ArrayList<String>();
         colors.add("#1abc9c");
-        colors.add("#3498db");
-        colors.add("#2ecc71");
-        colors.add("#9b59b6");
-        colors.add("#34495e");
         colors.add("#16a085");
         colors.add("#f1c40f");
+        colors.add("#f39c12");
+
+        colors.add("#2ecc71");
+        colors.add("#27ae60");
+        colors.add("#e67e22");
+        colors.add("#d35400");
+
+        colors.add("#3498db");
+        colors.add("#2980b9");
         colors.add("#e74c3c");
+        colors.add("#c0392b");
+
+        colors.add("#9b59b6");
+        colors.add("#8e44ad");
+        colors.add("#ecf0f1");
+        colors.add("#bdc3c7");
+
+        colors.add("#34495e");
+        colors.add("#2c3e50");
         colors.add("#95a5a6");
+        colors.add("#7f8c8d");
+
         colors.add("#B33771");
         colors.add("#A64B48");
         colors.add("#A0A68B");
         colors.add("#454442");
-
         return colors;
     }
 
