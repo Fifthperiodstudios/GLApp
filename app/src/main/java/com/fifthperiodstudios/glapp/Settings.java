@@ -11,6 +11,8 @@ import android.widget.CompoundButton;
 import android.widget.Switch;
 import android.widget.TextView;
 
+import com.fifthperiodstudios.glapp.Stundenplan.Stundenplan;
+
 public class Settings extends AppCompatActivity {
     private Toolbar toolbar;
 
@@ -37,6 +39,7 @@ public class Settings extends AppCompatActivity {
     SharedPreferences sharedPreferences;
     SharedPreferences.Editor sharedPreferencesEditor;
 //    SharedPreferences helpPreferences;
+    Stundenplan stundenplan;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -45,8 +48,8 @@ public class Settings extends AppCompatActivity {
 
         toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-        toolbar.setTitleTextColor(Color.WHITE);
 
+        stundenplan = (Stundenplan) getIntent().getSerializableExtra("Stundenplan");
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setDisplayShowHomeEnabled(true);
 
@@ -69,8 +72,7 @@ public class Settings extends AppCompatActivity {
         swtAutoAktualisieren.setChecked(autoAktualisieren);
 
         recyclerManager = new LinearLayoutManager(this);
-        recyclerAdapter = new RecyclerViewAdapter();
-
+        recyclerAdapter = new RecyclerViewAdapter(stundenplan, getSupportFragmentManager());
         recyclerView = findViewById(R.id.recycler);
         recyclerView.setLayoutManager(recyclerManager);
         recyclerView.setAdapter(recyclerAdapter);

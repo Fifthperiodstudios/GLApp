@@ -11,6 +11,6 @@
         android:id="@+id/stundenplanview"
         android:layout_height="match_parent"
         android:layout_width="match_parent"
-        android:padding="30dp"/>
+        android:padding="70px"/>
 
 </android.support.v4.widget.SwipeRefreshLayout>

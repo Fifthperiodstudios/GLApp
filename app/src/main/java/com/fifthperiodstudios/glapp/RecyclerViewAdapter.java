@@ -1,11 +1,13 @@
 package com.fifthperiodstudios.glapp;
 
+import android.content.Context;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
 import android.graphics.drawable.GradientDrawable;
 import android.graphics.drawable.ShapeDrawable;
 import android.support.annotation.NonNull;
+import android.support.v4.app.FragmentManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -14,9 +16,18 @@ import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.fifthperiodstudios.glapp.FarbAuswahlDialog.FarbAuswahlDialog;
 import com.fifthperiodstudios.glapp.Login.MainActivity;
+import com.fifthperiodstudios.glapp.Stundenplan.Stundenplan;
 
 class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapter.ViewHolderKlasse> {
+    Stundenplan stundenplan;
+    FragmentManager mFragmentManager;
+
+    public RecyclerViewAdapter (Stundenplan stundenplan, FragmentManager fragmentManager) {
+        this.stundenplan = stundenplan;
+        mFragmentManager = fragmentManager;
+    }
 
     @NonNull
     @Override
@@ -32,19 +43,18 @@ class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapter.ViewH
 
         Drawable background = holder.farbeWaehlen.getBackground();
         if (background instanceof ShapeDrawable) {
-            ((ShapeDrawable)background).getPaint().setColor(Color.BLUE/*.parseColor(stunde.getFach().getColor())*/);
+            ((ShapeDrawable)background).getPaint().setColor(Color.parseColor(stundenplan.getFächer().get(position).getColor()));
         } else if (background instanceof GradientDrawable) {
-            ((GradientDrawable)background).setColor(Color.GREEN/*.parseColor(stunde.getFach().getColor())*/);
+            ((GradientDrawable)background).setColor(Color.parseColor(stundenplan.getFächer().get(position).getColor()));
         } else if (background instanceof ColorDrawable) {
-            ((ColorDrawable)background).setColor(Color.RED/*.parseColor(stunde.getFach().getColor())*/);
+            ((ColorDrawable)background).setColor(Color.parseColor(stundenplan.getFächer().get(position).getColor()));
         }
 
-        holder.fachName.setText("Fachname Nr:"+position);//Hier die Fächerliste einzeln aufrufen
+        holder.fachName.setText(stundenplan.getFächer().get(position).getFach());//Hier die Fächerliste einzeln aufrufen
         holder.farbeWaehlen.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-//                Toast.makeText(,"Das ist die Nachricht von Element: "+position,Toast.LENGTH_SHORT).show();
-//                zeige die Auswahl an
+                new FarbAuswahlDialog().show(mFragmentManager, "fifthperiodstudios");
             }
         });
 
@@ -53,7 +63,7 @@ class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapter.ViewH
     @Override
     public int getItemCount() {
 
-        return 16;//Arraylist.getSize() länge der Liste ausgeben lassen
+        return stundenplan.getFächer().size();
     }
 
     public class ViewHolderKlasse extends RecyclerView.ViewHolder{

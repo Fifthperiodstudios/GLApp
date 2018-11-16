@@ -11,6 +11,7 @@ import android.support.design.widget.TabLayout;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.Toast;
@@ -81,18 +82,20 @@ public class GLAPPActivity extends AppCompatActivity implements DownloadStundenp
 
     @Override
     public void keineInternetverbindung(Stundenplan stundenplan) {
-        Toast.makeText(getApplicationContext(), "Keine Internetverbindung, alter Stundenplan", Toast.LENGTH_SHORT);
+        this.stundenplan = stundenplan;
+        Toast.makeText(getApplicationContext(), "Keine Internetverbindung, alter Stundenplan", Toast.LENGTH_SHORT).show();
         setupFragments(stundenplan);
     }
 
     @Override
     public void fertigHeruntergeladen(Stundenplan stundenplan) {
+        this.stundenplan = stundenplan;
         setupFragments(stundenplan);
     }
 
     @Override
     public void andererFehler() {
-        Toast.makeText(getApplicationContext(), "Etwas ist schiefgelaufen :/", Toast.LENGTH_SHORT);
+        Toast.makeText(getApplicationContext(), "Etwas ist schiefgelaufen :/", Toast.LENGTH_SHORT).show();
     }
 
     @Override
@@ -111,6 +114,8 @@ public class GLAPPActivity extends AppCompatActivity implements DownloadStundenp
         switch(id){
             case R.id.action_settings:
                 Intent intent = new Intent (this, Settings.class);
+                if(stundenplan == null) {Log.d("TAGAG", "LKJLJLK"); }
+                intent.putExtra("Stundenplan", stundenplan);
                 this.startActivity(intent);
                 break;
             case R.id.action_logout:

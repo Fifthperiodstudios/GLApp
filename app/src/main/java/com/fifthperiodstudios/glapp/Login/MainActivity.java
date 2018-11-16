@@ -11,7 +11,6 @@ import android.support.v4.view.ViewPager;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -49,7 +48,7 @@ public class MainActivity extends AppCompatActivity{
         }
 
         public void setup (){
-            StudentLoginFragment f1 = new StudentLoginFragment ();
+            SchuelerLoginFragment f1 = new SchuelerLoginFragment();
             mFragmentTitleList.add("Schüler");
             LehrerLoginFragment f2 = new LehrerLoginFragment ();
             mFragmentTitleList.add("Lehrer");
