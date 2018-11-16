@@ -9,26 +9,29 @@ import java.util.ArrayList;
 
 public class Vertretungsplan implements Serializable{
     public ArrayList<Vertretungsplan.VertretungsTag> vertretungstage;
-    public ArrayList<VertretungsplanStunde> fächer;
+    public ArrayList<VertretungsplanStunde> stunde;
 
     public Vertretungsplan() {
         this.vertretungstage = new ArrayList<>();
-        this.fächer = new ArrayList<>();
+        this.stunde = new ArrayList<>();
     }
 
     public ArrayList<Vertretungsplan.VertretungsTag> getVertretungstage() {
         return vertretungstage;
     }
+    public ArrayList<VertretungsplanStunde> getStunde() {
+        return VertretungsTag.getStunden();
+    }
 
 
     public static class VertretungsTag implements Serializable {
-        public ArrayList<VertretungsplanStunde> stunden;
+        public static ArrayList<VertretungsplanStunde> stunden;
 
         public VertretungsTag(ArrayList<VertretungsplanStunde> vertretungsplanStunde) {
             this.stunden = vertretungsplanStunde;
         }
 
-        public ArrayList<VertretungsplanStunde> getStunden() {
+        public static ArrayList<VertretungsplanStunde> getStunden() {
             return stunden;
         }
     }

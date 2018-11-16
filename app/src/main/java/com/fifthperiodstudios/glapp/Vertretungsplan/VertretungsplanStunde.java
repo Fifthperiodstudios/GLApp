@@ -10,7 +10,7 @@ import java.io.Serializable;
  * @author 
  */
 
-public class VertretungsplanStunde implements Serializable {
+public class  VertretungsplanStunde implements Serializable {
   
   // Anfang Attribute
   private int Stunde;
