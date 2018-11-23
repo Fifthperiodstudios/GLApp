@@ -79,7 +79,7 @@ public class VertretungsplanDownloader {
 
         private Vertretungsplan loadXmlFromNetwork(String urlString) throws XmlPullParserException, IOException {
             InputStream stream = null;
-            VertretungsplanParser vertretungsplanParser = new VertretungsplanParser(stundenplan);
+            VertretungsplanParser vertretungsplanParser = new VertretungsplanParser();
             try {
                 stream = downloadUrl(urlString);
 
