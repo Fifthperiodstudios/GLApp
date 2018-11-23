@@ -18,10 +18,10 @@ import com.fifthperiodstudios.glapp.R;
 
 class VertretungsViewAdapter extends RecyclerView.Adapter<VertretungsViewAdapter.ViewHolderKlasse> {
 
-    Vertretungsplan.VertretungsTag vertretungsTag;
-
-    public VertretungsViewAdapter(Vertretungsplan.VertretungsTag vertretungstag){
-        this.vertretungsTag = vertretungstag;
+    Vertretungsplan vertretungsplan;
+    //Vertretungsplan.VertretungsTag vertretungsTag;
+    public VertretungsViewAdapter(Vertretungsplan vertretungsplan){
+        this.vertretungsplan = vertretungsplan;
     }
 
     @NonNull
