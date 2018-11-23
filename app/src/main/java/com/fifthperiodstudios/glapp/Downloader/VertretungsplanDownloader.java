@@ -79,7 +79,7 @@ public class VertretungsplanDownloader {
 
         private Vertretungsplan loadXmlFromNetwork(String urlString) throws XmlPullParserException, IOException {
             InputStream stream = null;
-            //VertretungsplanParser VertretungsplanParser = new VertretungsplanParser(stundenplan);
+            VertretungsplanParser vertretungsplanParser = new VertretungsplanParser(stundenplan);
             try {
                 stream = downloadUrl(urlString);
 
@@ -95,10 +95,8 @@ public class VertretungsplanDownloader {
                 File directory = activity.getApplicationContext().getFilesDir();
                 File file = new File(directory, "Stundenplan.xml");
 
-                vertretungsplan = (Vertretungsplan) VertretungsplanParser.parseVertretungsplan(new FileInputStream(file));
-/*
                 try {
-                    vertretungsplan = (Vertretungsplan) VertretungsplanParser.parseVertretungsplan(new FileInputStream(file));
+                    vertretungsplan = (Vertretungsplan) vertretungsplanParser.parseVertretungsplan(new FileInputStream(file));
                 } catch (XmlPullParserException e) {
                     downloadVertretungsplanStatusListener.andererFehler();
                     e.printStackTrace();
@@ -108,7 +106,7 @@ public class VertretungsplanDownloader {
                 } catch (IOException e) {
                     downloadVertretungsplanStatusListener.andererFehler();
                     e.printStackTrace();
-                }*/
+                }
 
             } finally {
                 if (stream != null) {

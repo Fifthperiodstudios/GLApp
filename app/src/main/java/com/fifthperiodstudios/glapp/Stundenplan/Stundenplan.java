@@ -1,11 +1,27 @@
 package com.fifthperiodstudios.glapp.Stundenplan;
 
 import java.io.Serializable;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 
 public class Stundenplan implements Serializable {
     public ArrayList<Wochentag> wochentage;
     public ArrayList<Fach> fächer;
+    public Date datum;
+
+    public void setDatum (Date datum) {
+        this.datum = datum;
+    }
+
+    public Date getDatum () {
+        return datum;
+    }
+
+    public boolean isNewer (Date date) {
+        return datum.before(date);
+    }
 
     public Stundenplan() {
         this.wochentage = new ArrayList<>();

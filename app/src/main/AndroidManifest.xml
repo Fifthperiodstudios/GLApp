@@ -7,7 +7,7 @@
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
-    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED"/>
+    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
 
     <application
         android:name=".Notification.CreateNotificationChannels"
@@ -28,8 +28,9 @@
             android:name=".GLAPPActivity"
             android:label="@string/title_activity_glapp"
             android:theme="@style/AppTheme" />
-        <activity android:name=".Settings"
-            android:label="@string/setting_activity_glapp"></activity>
+        <activity
+            android:name=".Settings"
+            android:label="@string/setting_activity_glapp" />
 
         <service
             android:name=".Notification.NotificationService"
@@ -42,6 +43,8 @@
                 <action android:name="android.intent.action.BOOT_COMPLETED" />
             </intent-filter>
         </receiver>
+
+        <activity android:name=".Stundenplan.WochentagActivity"></activity>
     </application>
 
 </manifest>

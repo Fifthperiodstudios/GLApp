@@ -1,6 +1,8 @@
 package com.fifthperiodstudios.glapp.Stundenplan;
 
+import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Color;
@@ -9,7 +11,10 @@ import android.graphics.RectF;
 import android.graphics.drawable.shapes.RoundRectShape;
 import android.util.AttributeSet;
 import android.util.Log;
+import android.view.MotionEvent;
 import android.view.View;
+
+import java.util.ArrayList;
 
 public class StundenplanView extends View {
     private Paint mPaint;
@@ -18,12 +23,11 @@ public class StundenplanView extends View {
 
     private int painting_width;
     private int painting_height;
-
+    private ArrayList<RectF> zeile;
     private Stundenplan stundenplan;
 
     public StundenplanView(Context context, AttributeSet attributeSet) {
         super(context, attributeSet);
-
         mPaint = new Paint();
         mPaint.setAntiAlias(true);
         mPaint.setColor(Color.BLACK);
@@ -32,8 +36,8 @@ public class StundenplanView extends View {
         mPaint.setStrokeWidth(4f);
     }
 
-    public void setStundenplan(Stundenplan stundeplan) {
-        this.stundenplan = stundeplan;
+    public void setStundenplan(Stundenplan stundenplan) {
+        this.stundenplan = stundenplan;
     }
 
     public int convertDipToPixels(float dips) {
@@ -50,6 +54,8 @@ public class StundenplanView extends View {
 
         painting_width = w - xpad;
         painting_height = h - ypad;
+
+        zeile = makeWochenZeile();
     }
 
     public RectF makeStunde(int tag, int stunde) {
@@ -88,9 +94,49 @@ public class StundenplanView extends View {
                 int nte = Integer.parseInt(stundenplan.getWochentage().get(i).getStunden().get(j).getStunde()) - 1;
                 RectF stunde = makeStunde(i, nte);
                 canvas.drawRoundRect(stunde, 10, 10, mPaint);
+                mPaint.setColor(Color.WHITE);
+                mPaint.setTextSize(stunde.height()/3.3f);
+                mPaint.setTextAlign(Paint.Align.CENTER);
+                Log.d("TAGA", Float.toString(stunde.right));
+                String bezeichnung = stundenplan.getWochentage().get(i).getStunden().get(j).getFach().getFach();
+                if(stundenplan.getWochentage().get(i).getStunden().get(j).getFach().getKursart().contains("LK")){
+                    bezeichnung += "-LK";
+                }
+                canvas.drawText(bezeichnung, stunde.centerX(), stunde.centerY()+15.0f, mPaint);
             }
         }
-
     }
 
+    @Override
+    public boolean onTouchEvent(MotionEvent event) {
+        int xpos = (int) event.getX();
+        int tag = identifyTag (xpos);
+        Log.d("msg", Integer.toString(tag));
+        if(tag != -1){
+            Intent intent = new Intent(this.getContext(), WochentagActivity.class);
+            Activity host = (Activity) this.getContext();
+            intent.putExtra("Wochentag", stundenplan.getWochentage().get(tag));
+            getContext().startActivity(intent);
+        }
+        return false;
+    }
+
+    public int identifyTag(float x){
+        for(int i = 0; i<zeile.size(); i++){
+            if(x >= zeile.get(i).left && x <= zeile.get(i).left + zeile.get(i).width()) {
+                return i;
+            }
+        }
+        return -1;
+    }
+
+    private ArrayList<RectF> makeWochenZeile () {
+        ArrayList<RectF> z = new ArrayList<RectF>();
+        for(int i = 0; i<stundenplan.getWochentage().size(); i++){
+            z.add(makeStunde(i, 0));
+            Log.d("MAS", "JKK");
+        }
+        return z;
+    }
 }
+

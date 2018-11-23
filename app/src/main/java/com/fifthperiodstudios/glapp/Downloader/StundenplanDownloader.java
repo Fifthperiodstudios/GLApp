@@ -38,7 +38,6 @@ public class StundenplanDownloader {
 
     public void downloadStundenplan () {
         if(isOnline()) {
-            Log.d("LOG", "aslödk");
             new DownloadStundenplanXML().execute(URL + mobilKey);
         }else {
             try {
@@ -103,7 +102,6 @@ public class StundenplanDownloader {
 
         }
 
-
         protected void onPostExecute(Stundenplan result) {
             super.onPostExecute(result);
             if(result == null){
@@ -117,7 +115,7 @@ public class StundenplanDownloader {
         private Stundenplan loadXmlFromNetwork(String urlString) throws XmlPullParserException, IOException {
             InputStream stream = null;
             // Instantiate the parser
-            StundenplanParser StundenplanParser = new StundenplanParser();
+            StundenplanParser stundenplanParser = new StundenplanParser();
             try {
                 stream = downloadUrl(urlString);
 
@@ -133,7 +131,7 @@ public class StundenplanDownloader {
                 File directory = activity.getApplicationContext().getFilesDir();
                 File file = new File(directory, "Stundenplan.xml");
                 try {
-                    stundenplan = (Stundenplan) StundenplanParser.parseStundenplan(new FileInputStream(file));
+                    stundenplan = (Stundenplan) stundenplanParser.parseStundenplan(new FileInputStream(file));
                 } catch (XmlPullParserException e) {
                     downloadStundenplanStatusListener.andererFehler();
                     e.printStackTrace();

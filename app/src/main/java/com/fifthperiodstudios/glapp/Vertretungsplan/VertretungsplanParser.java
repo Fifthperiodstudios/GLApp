@@ -2,6 +2,8 @@ package com.fifthperiodstudios.glapp.Vertretungsplan;
 
 import android.util.Xml;
 
+import com.fifthperiodstudios.glapp.Stundenplan.Stundenplan;
+
 import org.xmlpull.v1.XmlPullParser;
 import org.xmlpull.v1.XmlPullParserException;
 
@@ -11,7 +13,7 @@ import java.util.ArrayList;
 
 public class VertretungsplanParser {     // We don't use namespaces
     private static final String ns = null;
-
+    
     public Vertretungsplan parseVertretungsplan(InputStream in) throws XmlPullParserException, IOException {
         try {
             XmlPullParser parser = Xml.newPullParser();

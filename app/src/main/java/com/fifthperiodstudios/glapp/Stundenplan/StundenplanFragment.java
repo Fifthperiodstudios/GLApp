@@ -3,6 +3,7 @@ package com.fifthperiodstudios.glapp.Stundenplan;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -24,12 +25,11 @@ public class StundenplanFragment extends Fragment implements SwipeRefreshLayout.
         View rootView = inflater.inflate(R.layout.stundenplan_fragment, container, false);
         Bundle args = getArguments();
         stundenplan = (Stundenplan) args.getSerializable("stundenplan");
-
         StundenplanView stundenplanView = rootView.findViewById(R.id.stundenplanview);
         stundenplanView.setStundenplan (stundenplan);
         mSwipeRefreshLayout = rootView.findViewById(R.id.swipe_container);
-
         setupStundenplanFragment(stundenplan);
+
         return rootView;
     }
 
