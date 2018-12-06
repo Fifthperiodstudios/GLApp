@@ -17,11 +17,15 @@ public class GLAPPViewAdapter extends FragmentPagerAdapter {
 
     private final ArrayList<Fragment> mFragmentList = new ArrayList<>();
     private final ArrayList<String> mFragmentTitleList = new ArrayList<>();
-    private Stundenplan stundenplan;
+    private Farben farben;
 
-    public GLAPPViewAdapter(FragmentManager fm, Stundenplan stundenplan) {
+    public GLAPPViewAdapter(FragmentManager fm, Farben farben) {
         super(fm);
-        this.stundenplan = stundenplan;
+        this.farben = farben;
+    }
+
+    public ArrayList<String> getmFragmentTitleList() {
+        return mFragmentTitleList;
     }
 
     @Override
@@ -32,7 +36,7 @@ public class GLAPPViewAdapter extends FragmentPagerAdapter {
     public void setup (String mobilKey){
         Bundle args = new Bundle();
         args.putString ("mobilKey", mobilKey);
-        args.putSerializable("stundenplan", stundenplan);
+        args.putSerializable("farben", farben);
         StundenplanFragment stundenplanFragment = new StundenplanFragment();
         stundenplanFragment.setArguments(args);
         VertretungsplanFragment vertretungsplanFragment = new VertretungsplanFragment();

@@ -24,14 +24,12 @@ import java.net.URLConnection;
 public class VertretungsplanDownloader {
     private DownloadVertretungsplanStatusListener downloadVertretungsplanStatusListener;
     private Activity activity;
-    private Stundenplan stundenplan;
     private String mobilKey;
     private final String URL = "https://mobil.gymnasium-lohmar.org/XML/vplan.php?mobilKey=";
     private Vertretungsplan vertretungsplan;
 
-    public VertretungsplanDownloader (Activity activity, Stundenplan stundenplan, String mobilKey, DownloadVertretungsplanStatusListener downloadVertretungsplanStatusListener) {
+    public VertretungsplanDownloader (Activity activity, String mobilKey, DownloadVertretungsplanStatusListener downloadVertretungsplanStatusListener) {
         this.activity = activity;
-        this.stundenplan = stundenplan;
         this.mobilKey = mobilKey;
         this.downloadVertretungsplanStatusListener = downloadVertretungsplanStatusListener;
     }
@@ -93,10 +91,10 @@ public class VertretungsplanDownloader {
                 outputStream.close();
 
                 File directory = activity.getApplicationContext().getFilesDir();
-                File file = new File(directory, "Stundenplan.xml");
+                File file = new File(directory, "Vertretungsplan.xml");
 
                 try {
-                    vertretungsplan = (Vertretungsplan) vertretungsplanParser.parseVertretungsplan(new FileInputStream(file));
+                    vertretungsplan = vertretungsplanParser.parseVertretungsplan(new FileInputStream(file));
                 } catch (XmlPullParserException e) {
                     downloadVertretungsplanStatusListener.andererFehler();
                     e.printStackTrace();

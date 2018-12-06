@@ -31,7 +31,9 @@
         <activity
             android:name=".Settings"
             android:label="@string/setting_activity_glapp" />
-
+        <activity
+            android:name=".Stundenplan.WochentagActivity"
+            android:label="@string/wochentag" />
         <service
             android:name=".Notification.NotificationService"
             android:enabled="true"
@@ -43,8 +45,6 @@
                 <action android:name="android.intent.action.BOOT_COMPLETED" />
             </intent-filter>
         </receiver>
-
-        <activity android:name=".Stundenplan.WochentagActivity"></activity>
     </application>
 
 </manifest>

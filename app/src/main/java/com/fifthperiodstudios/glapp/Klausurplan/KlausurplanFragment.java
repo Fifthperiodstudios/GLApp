@@ -12,6 +12,8 @@ import android.view.ViewGroup;
 
 import com.fifthperiodstudios.glapp.Downloader.DownloadKlausurplanStatusListener;
 import com.fifthperiodstudios.glapp.Downloader.KlausurplanDownloader;
+import com.fifthperiodstudios.glapp.Farben;
+import com.fifthperiodstudios.glapp.OnUpdateListener;
 import com.fifthperiodstudios.glapp.R;
 import com.fifthperiodstudios.glapp.Stundenplan.Stundenplan;
 
@@ -29,11 +31,11 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
 
-public class KlausurplanFragment extends Fragment implements SwipeRefreshLayout.OnRefreshListener, DownloadKlausurplanStatusListener {
+public class KlausurplanFragment extends Fragment implements SwipeRefreshLayout.OnRefreshListener, DownloadKlausurplanStatusListener, OnUpdateListener {
 
     private SwipeRefreshLayout mSwipeRefreshLayout;
     private Klausurplan klausurplan;
-    private Stundenplan stundenplan;
+    private Farben farben;
     private KlausurplanDownloader klausurplanDownloader;
 
     public KlausurplanFragment() {
@@ -45,12 +47,12 @@ public class KlausurplanFragment extends Fragment implements SwipeRefreshLayout.
         View rootView = inflater.inflate(R.layout.klausurplan_fragment, container, false);
         Bundle args = getArguments();
 
-        stundenplan = (Stundenplan) args.getSerializable("stundenplan");
+        farben = (Farben) args.getSerializable("farben");
 
         mSwipeRefreshLayout = rootView.findViewById(R.id.swipe_container);
         mSwipeRefreshLayout.setOnRefreshListener(this);
 
-        klausurplanDownloader = new KlausurplanDownloader(getActivity(), stundenplan, args.getString("mobilKey"), this);
+        klausurplanDownloader = new KlausurplanDownloader(getActivity(), args.getString("mobilKey"), this);
         klausurplanDownloader.downloadKlausurplan();
 
         return rootView;
@@ -73,6 +75,11 @@ public class KlausurplanFragment extends Fragment implements SwipeRefreshLayout.
 
     @Override
     public void andererFehler() {
+
+    }
+
+    @Override
+    public void updateData(Farben farben) {
 
     }
 }

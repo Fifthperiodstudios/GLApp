@@ -1,6 +1,7 @@
 package com.fifthperiodstudios.glapp.FarbAuswahlDialog;
 
 import android.app.Dialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -13,11 +14,28 @@ import android.view.LayoutInflater;
 import android.view.View;
 
 
+import com.fifthperiodstudios.glapp.Farben;
 import com.fifthperiodstudios.glapp.R;
+import com.fifthperiodstudios.glapp.Stundenplan.Fach;
 
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 
 public class FarbAuswahlDialog extends DialogFragment implements FarbRecyclerViewAdapter.ItemClickListener {
+    private String color;
+    private NoticeDialogListener mListener;
+    private Fach fach;
+    private int position;
+    private ArrayList<String> farben;
+
+    public void setOnNoticeListener(NoticeDialogListener noticeListener) {
+        mListener = noticeListener;
+    }
+
+    public interface NoticeDialogListener {
+        public void onDialogPositiveClick(DialogFragment dialog, String farbe, Fach fach, int position);
+        public void onDialogNegativeClick(DialogFragment dialog);
+    }
 
     @NonNull
     @Override
@@ -25,6 +43,10 @@ public class FarbAuswahlDialog extends DialogFragment implements FarbRecyclerVie
 
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
         // Get the layout inflater
+        fach = (Fach) getArguments().getSerializable("fach");
+        farben = ((Farben) getArguments().getSerializable("farben")).getStandardFarben();
+        position = getArguments().getInt("position");
+
         LayoutInflater inflater = getActivity().getLayoutInflater();
 
         // Inflate and set the layout for the dialog
@@ -34,23 +56,25 @@ public class FarbAuswahlDialog extends DialogFragment implements FarbRecyclerVie
         int numberOfColumns = 4;
         recyclerView.setLayoutManager(new GridLayoutManager(this.getContext(), numberOfColumns));
 
-        FarbRecyclerViewAdapter adapter = new FarbRecyclerViewAdapter(this.getContext(), getColors());
+        FarbRecyclerViewAdapter adapter = new FarbRecyclerViewAdapter(this.getContext(), farben);
         adapter.setClickListener(this);
         recyclerView.setAdapter(adapter);
 
-        builder.setView(view)
-                // Add action buttons
-                .setPositiveButton("Select", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int id) {
+        builder.setPositiveButton("Auswählen", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                mListener.onDialogPositiveClick(FarbAuswahlDialog.this, color, fach, position);
+            }
+        });
 
-                    }
-                })
-                .setNegativeButton("Abbruch", new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int id) {
-                        FarbAuswahlDialog.this.getDialog().cancel();
-                    }
-                });
+        builder.setNegativeButton("Abbrechen", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                mListener.onDialogNegativeClick(FarbAuswahlDialog.this);
+            }
+        });
+
+        builder.setView(view);
 
         return builder.create();
     }
@@ -90,7 +114,11 @@ public class FarbAuswahlDialog extends DialogFragment implements FarbRecyclerVie
     }
 
     @Override
-    public void onItemClick(View view, int position) {
+    public void onItemClick(View view, int position, ArrayList<String> data) {
+        color = data.get(position);
+    }
 
+    public String getFarbe() {
+        return color;
     }
 }

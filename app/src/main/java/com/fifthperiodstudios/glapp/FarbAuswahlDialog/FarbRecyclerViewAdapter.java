@@ -50,14 +50,6 @@ public class FarbRecyclerViewAdapter extends RecyclerView.Adapter<FarbRecyclerVi
         Drawable[] drawableItems = dcs.getChildren();
         GradientDrawable gradientDrawable = (GradientDrawable) drawableItems[1]; // item 1
         gradientDrawable.setColor(Color.parseColor(mData.get(position)));
-        /*if (background instanceof ShapeDrawable) {
-            ((ShapeDrawable) background).getPaint().setColor(Color.parseColor(mData.get(position)));
-        } else if (background instanceof GradientDrawable) {
-            ((GradientDrawable) background).setColor(Color.parseColor(mData.get(position)));
-        } else if (background instanceof ColorDrawable) {
-            ((ColorDrawable) background).setColor(Color.parseColor(mData.get(position)));
-        }*/
-        //Set color
     }
 
     // total number of cells
@@ -100,8 +92,7 @@ public class FarbRecyclerViewAdapter extends RecyclerView.Adapter<FarbRecyclerVi
         @Override
         public void onClick(View view) {
             select(view);
-
-            if (mClickListener != null) mClickListener.onItemClick(view, getAdapterPosition());
+            if (mClickListener != null) mClickListener.onItemClick(view, getAdapterPosition(), mData);
         }
     }
 
@@ -117,6 +108,6 @@ public class FarbRecyclerViewAdapter extends RecyclerView.Adapter<FarbRecyclerVi
 
     // parent activity will implement this method to respond to click events
     public interface ItemClickListener {
-        void onItemClick(View view, int position);
+        void onItemClick(View view, int position, ArrayList<String> data);
     }
 }

@@ -8,19 +8,23 @@ import android.graphics.drawable.GradientDrawable;
 import android.graphics.drawable.ShapeDrawable;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import com.fifthperiodstudios.glapp.Farben;
 import com.fifthperiodstudios.glapp.R;
 
-import java.util.ArrayList;
 
 public class StundenListAdapter extends RecyclerView.Adapter<StundenListAdapter.MyViewHolder> {
     private Stundenplan.Wochentag wochentag;
-    public StundenListAdapter(Stundenplan.Wochentag w) {
-        wochentag = w;
+    private Farben farben;
+
+    public StundenListAdapter(Stundenplan.Wochentag w, Farben farben) {
+        this.wochentag = w;
+        this.farben = farben;
     }
 
     @Override
@@ -39,19 +43,20 @@ public class StundenListAdapter extends RecyclerView.Adapter<StundenListAdapter.
         TextView lehrerView = holder.lehrer;
         TextView raumView = holder.raum;
         TextView symbolView = holder.symbol;
-
+        /*String farbe = farben.getFarbenFaecher().get(stunde.getFach());
         Drawable background = symbolView.getBackground();
         if (background instanceof ShapeDrawable) {
-            ((ShapeDrawable)background).getPaint().setColor(Color.parseColor(stunde.getFach().getColor()));
+            ((ShapeDrawable)background).getPaint().setColor(Color.parseColor(farbe));
         } else if (background instanceof GradientDrawable) {
-            ((GradientDrawable)background).setColor(Color.parseColor(stunde.getFach().getColor()));
+            ((GradientDrawable)background).setColor(Color.parseColor(farbe));
         } else if (background instanceof ColorDrawable) {
-            ((ColorDrawable)background).setColor(Color.parseColor(stunde.getFach().getColor()));
+            ((ColorDrawable)background).setColor(Color.parseColor(farbe));
         }
         symbolView.setText(stunde.getFach().getKursart().contains("LK") ? stunde.getFach() + "LK" : stunde.getFach().getFach());
+        */
         kursnameView.setText(stunde.getStunde() + ". " + stunde.getFach().getKurs());
         lehrerView.setText(stunde.getFach().getLehrer());
-        raumView.setText(stunde.getFach().getRaum());
+        raumView.setText(stunde.getRaum());
 
     }
 

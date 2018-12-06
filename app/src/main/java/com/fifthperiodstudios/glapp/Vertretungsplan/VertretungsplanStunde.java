@@ -1,104 +1,94 @@
 package com.fifthperiodstudios.glapp.Vertretungsplan;
 
+import com.fifthperiodstudios.glapp.Stundenplan.Fach;
+
 import java.io.Serializable;
 
 /**
- *
  * Beschreibung
  *
+ * @author
  * @version 1.0 vom 09.11.2018
- * @author 
  */
 
-public class  VertretungsplanStunde implements Serializable {
-  
-  // Anfang Attribute
-  private int Stunde;
-  private String Klasse;
-  private String Raum;
-  private String Fach;
-  private String RaumNeu;
-  private String Bemerkung;
-  private String FLehrer;
-  private String VLehrer;
-  // Ende Attribute
-  
-  public VertretungsplanStunde() {
-    this.Stunde = 0;
-    this.Klasse = "";
-    this.Raum = "";
-    this.Fach = "";
-    this.RaumNeu = "";
-    this.Bemerkung = "";
-    this.FLehrer = "";
-    this.VLehrer = "";
-  }
+public class VertretungsplanStunde implements Serializable {
 
-  // Anfang Methoden
-  public int getStunde() {
-    return Stunde;
-  }
+    // Anfang Attribute
+    private int Stunde;
+    private String Raum;
+    private Fach fach;
+    private String RaumNeu;
+    private String Bemerkung;
+    private String FLehrer;
+    private String VLehrer;
+    // Ende Attribute
 
-  public void setStunde(int StundeNeu) {
-    Stunde = StundeNeu;
-  }
+    public VertretungsplanStunde() {
+        this.Stunde = 0;
+        this.Raum = "";
+        this.RaumNeu = "";
+        this.Bemerkung = "";
+        this.FLehrer = "";
+        this.VLehrer = "";
+    }
 
-  public String getKlasse() {
-    return Klasse;
-  }
+    // Anfang Methoden
+    public int getStunde() {
+        return Stunde;
+    }
 
-  public void setKlasse(String KlasseNeu) {
-    Klasse = KlasseNeu;
-  }
+    public void setStunde(int StundeNeu) {
+        Stunde = StundeNeu;
+    }
 
-  public String getRaum() {
-    return Raum;
-  }
+    public String getRaum() {
+        return Raum;
+    }
 
-  public void setRaum(String RaumNeu) {
-    Raum = RaumNeu;
-  }
+    public void setRaum(String RaumNeu) {
+        Raum = RaumNeu;
+    }
 
-  public String getFach() {
-    return Fach;
-  }
+    public Fach getFach() {
+        return fach;
+    }
 
-  public void setFach(String FachNeu) {
-    Fach = FachNeu;
-  }
+    public void setFach(Fach FachNeu) {
+        this.fach = FachNeu;
+    }
 
-  public String getRaumNeu() {
-    return RaumNeu;
-  }
+    public String getRaumNeu() {
+        return RaumNeu;
+    }
 
-  public void setRaumNeu(String RaumNeuNeu) {
-    RaumNeu = RaumNeuNeu;
-  }
+    public void setRaumNeu(String RaumNeuNeu) {
+        RaumNeu = RaumNeuNeu;
+    }
 
-  public String getBemerkung() {
-    return Bemerkung;
-  }
+    public String getBemerkung() {
+        return Bemerkung;
+    }
 
-  public void setBemerkung(String BemerkungNeu) {
-    Bemerkung = BemerkungNeu;
-  }
+    public void setBemerkung(String BemerkungNeu) {
+        Bemerkung = BemerkungNeu;
+    }
 
-  public String getFLehrer() {
-    return FLehrer;
-  }
+    public String getFLehrer() {
+        return FLehrer;
+    }
 
-  public void setFLehrer(String FLehrerNeu) {
-    FLehrer = FLehrerNeu;
-  }
+    public void setFLehrer(String FLehrerNeu) {
+        FLehrer = FLehrerNeu;
+    }
 
-  public String getVLehrer() {
-    return VLehrer;
-  }
+    public String getVLehrer() {
+        return VLehrer;
+    }
 
-  public void setVLehrer(String VLehrerNeu) {
-    VLehrer = VLehrerNeu;
-  }
+    public void setVLehrer(String VLehrerNeu) {
+        VLehrer = VLehrerNeu;
+    }
 
-  // Ende Methoden
+    // Ende Methoden
 } // end of VertretungsplanStunde
 

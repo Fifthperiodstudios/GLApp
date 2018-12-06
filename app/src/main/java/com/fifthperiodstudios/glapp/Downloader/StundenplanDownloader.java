@@ -45,7 +45,6 @@ public class StundenplanDownloader {
                 File file = new File(directory, "Stundenplan.xml");
                 StundenplanParser stundenplanParser = new StundenplanParser();
                 stundenplan = (Stundenplan) stundenplanParser.parseStundenplan(new FileInputStream(file));
-                setUpColors(stundenplan);
                 downloadStundenplanStatusListener.keineInternetverbindung(stundenplan);
             } catch (FileNotFoundException e) {
                 e.printStackTrace();
@@ -54,28 +53,6 @@ public class StundenplanDownloader {
             } catch (IOException e) {
                 e.printStackTrace();
             }
-        }
-    }
-
-    public void setUpColors(Stundenplan stundenplan) {
-        ArrayList<String> colors = new ArrayList<String>();
-        colors.add("#1abc9c");
-        colors.add("#3498db");
-        colors.add("#2ecc71");
-        colors.add("#9b59b6");
-        colors.add("#34495e");
-        colors.add("#16a085");
-        colors.add("#f1c40f");
-        colors.add("#e74c3c");
-        colors.add("#95a5a6");
-        colors.add("#B33771");
-        colors.add("#A64B48");
-        colors.add("#A0A68B");//s
-        colors.add("#454442");//s
-        for (Fach f : stundenplan.getFächer()) {
-            int i = (int) (Math.random() * colors.size());
-            f.setColor(colors.get(i));
-            colors.remove(i);
         }
     }
 
@@ -107,7 +84,6 @@ public class StundenplanDownloader {
             if(result == null){
                 downloadStundenplanStatusListener.andererFehler();
             }else {
-                setUpColors(stundenplan);
                 downloadStundenplanStatusListener.fertigHeruntergeladen(result);
             }
         }

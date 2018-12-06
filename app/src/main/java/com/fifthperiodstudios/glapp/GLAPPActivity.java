@@ -3,39 +3,26 @@ package com.fifthperiodstudios.glapp;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.net.ConnectivityManager;
-import android.net.NetworkInfo;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.design.widget.TabLayout;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.widget.Toast;
 
-import com.fifthperiodstudios.glapp.Downloader.DownloadStundenplanStatusListener;
-import com.fifthperiodstudios.glapp.Downloader.StundenplanDownloader;
 import com.fifthperiodstudios.glapp.Login.MainActivity;
-import com.fifthperiodstudios.glapp.Stundenplan.Fach;
 import com.fifthperiodstudios.glapp.Stundenplan.Stundenplan;
-import com.fifthperiodstudios.glapp.Stundenplan.StundenplanParser;
+import com.fifthperiodstudios.glapp.Stundenplan.StundenplanFragment;
 
-import org.xmlpull.v1.XmlPullParserException;
-
-import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.InputStream;
-import java.net.URL;
-import java.net.URLConnection;
-import java.util.ArrayList;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 
-public class GLAPPActivity extends AppCompatActivity implements DownloadStundenplanStatusListener {
+public class GLAPPActivity extends AppCompatActivity {
 
 
     private ViewPager mViewPager;
@@ -43,10 +30,7 @@ public class GLAPPActivity extends AppCompatActivity implements DownloadStundenp
     private TabLayout tabLayout;
     private Toolbar toolbar;
     private String mobilKey;
-    private Stundenplan stundenplan;
-
-    StundenplanDownloader stundenplanDownloader;
-
+    private Farben farben;
     private static final String URL = "https://mobil.gymnasium-lohmar.org/XML/stupla.php?mobilKey=";
     public static final String SHAREDPREFERENCES_NAME = "com.fifthperiodstudios.glapp";
     public static final String SHAREDPREFERENCES_MOBILEKEY = "mobilKey";
@@ -59,18 +43,33 @@ public class GLAPPActivity extends AppCompatActivity implements DownloadStundenp
         setSupportActionBar(toolbar);
 
         mViewPager = (ViewPager) findViewById(R.id.pager);
-
+        mViewPager.setOffscreenPageLimit(3);
         Intent intent = getIntent();
         mobilKey = (String) intent.getExtras().get(SHAREDPREFERENCES_MOBILEKEY);
-        stundenplanDownloader = new StundenplanDownloader(this, mobilKey, this);
-        stundenplanDownloader.downloadStundenplan();
+        setupFragments();
     }
 
 
     //Fragmente einstellen
-    public void setupFragments(Stundenplan result) {
+    public void setupFragments() {
+        Farben farben;
+        FileInputStream fis = null;
+        try {
+            fis = getApplicationContext().openFileInput("farben");
+            ObjectInputStream is = new ObjectInputStream(fis);
+            farben = (Farben) is.readObject();
+            is.close();
+            fis.close();
+        } catch (FileNotFoundException e) {
+            farben = new Farben ();
+        } catch (IOException e) {
+            farben = new Farben ();
+        } catch (ClassNotFoundException e) {
+            farben = new Farben();
+        }
+
         //Stellt den FragmentPagerAdapter ein
-        glappViewAdapter = new GLAPPViewAdapter(getSupportFragmentManager(), result);
+        glappViewAdapter = new GLAPPViewAdapter(getSupportFragmentManager(), farben);
         //die neuen Fragmente für die einzelnen Tage werden erstellt
         glappViewAdapter.setup(mobilKey);
         //dem ViewPager wird der Adapter übergeben
@@ -80,23 +79,6 @@ public class GLAPPActivity extends AppCompatActivity implements DownloadStundenp
         tabLayout.setupWithViewPager(mViewPager);
     }
 
-    @Override
-    public void keineInternetverbindung(Stundenplan stundenplan) {
-        this.stundenplan = stundenplan;
-        Toast.makeText(getApplicationContext(), "Keine Internetverbindung, alter Stundenplan", Toast.LENGTH_SHORT).show();
-        setupFragments(stundenplan);
-    }
-
-    @Override
-    public void fertigHeruntergeladen(Stundenplan stundenplan) {
-        this.stundenplan = stundenplan;
-        setupFragments(stundenplan);
-    }
-
-    @Override
-    public void andererFehler() {
-        Toast.makeText(getApplicationContext(), "Etwas ist schiefgelaufen :/", Toast.LENGTH_SHORT).show();
-    }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -114,9 +96,11 @@ public class GLAPPActivity extends AppCompatActivity implements DownloadStundenp
         switch(id){
             case R.id.action_settings:
                 Intent intent = new Intent (this, Settings.class);
-                if(stundenplan == null) {Log.d("TAGAG", "LKJLJLK"); }
+                Stundenplan stundenplan = ((StundenplanFragment)glappViewAdapter.getItem(0)).getStundenplan();
+                Farben farben = ((StundenplanFragment)glappViewAdapter.getItem(0)).getFarben();
                 intent.putExtra("Stundenplan", stundenplan);
-                this.startActivity(intent);
+                intent.putExtra("farben", farben);
+                this.startActivityForResult(intent, 1);
                 break;
             case R.id.action_logout:
                 logout ();
@@ -132,5 +116,32 @@ public class GLAPPActivity extends AppCompatActivity implements DownloadStundenp
         Intent intent = new Intent(this, MainActivity.class);
         startActivity(intent);
         finish();
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if(requestCode == 1){
+            if(resultCode == RESULT_OK){
+                farben = (Farben) data.getSerializableExtra("farben");
+                for(int i = 0; i<glappViewAdapter.getCount(); i++){
+                    ((OnUpdateListener)glappViewAdapter.getItem(i)).updateData(farben);
+                }
+                FileOutputStream fos = null;
+                try {
+                    fos = getApplicationContext().openFileOutput("farben", Context.MODE_PRIVATE);
+                    ObjectOutputStream os = new ObjectOutputStream(fos);
+                    os.writeObject(farben);
+                    os.close();
+                    fos.close();
+                } catch (FileNotFoundException e) {
+                    e.printStackTrace();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+
+            }else if(resultCode == RESULT_CANCELED){
+
+            }
+        }
     }
 }

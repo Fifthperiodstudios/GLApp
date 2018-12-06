@@ -110,7 +110,7 @@ public class StundenplanParser {     // We don't use namespaces
         if (tag.equals("Stunde")) {
             stunde.setStunde(parser.getAttributeValue(null, "Std"));
             stunde.getFach().setKurs(parser.getAttributeValue(null, "Kurs"));
-            stunde.getFach().setRaum(parser.getAttributeValue(null, "Raum"));
+            stunde.setRaum(parser.getAttributeValue(null, "Raum"));
             stunde.getFach().setKursart(parser.getAttributeValue(null, "Kursart"));
             stunde.getFach().setLehrer(parser.getAttributeValue(null, "Lehrer"));
             stunde.getFach().setFach(parser.getAttributeValue(null, "Fach"));

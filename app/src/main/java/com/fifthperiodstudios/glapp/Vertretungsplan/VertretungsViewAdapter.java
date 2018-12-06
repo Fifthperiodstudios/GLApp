@@ -14,14 +14,16 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.fifthperiodstudios.glapp.Farben;
 import com.fifthperiodstudios.glapp.R;
 
 class VertretungsViewAdapter extends RecyclerView.Adapter<VertretungsViewAdapter.ViewHolderKlasse> {
 
     Vertretungsplan vertretungsplan;
-    //Vertretungsplan.VertretungsTag vertretungsTag;
-    public VertretungsViewAdapter(Vertretungsplan vertretungsplan){
+    Farben farben;
+    public VertretungsViewAdapter(Vertretungsplan vertretungsplan, Farben farben){
         this.vertretungsplan = vertretungsplan;
+        this.farben = farben;
     }
 
     @NonNull

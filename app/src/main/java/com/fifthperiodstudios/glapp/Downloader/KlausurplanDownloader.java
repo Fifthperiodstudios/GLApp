@@ -23,14 +23,12 @@ import java.net.URLConnection;
 public class KlausurplanDownloader {
     private DownloadKlausurplanStatusListener downloadKlausurplanStatusListener;
     private Activity activity;
-    private Stundenplan stundenplan;
     private String mobilKey;
     private final String URL = "";
     private Klausurplan klausurplan;
 
-    public KlausurplanDownloader (Activity activity, Stundenplan stundenplan, String mobilKey, DownloadKlausurplanStatusListener downloadKlausurplanStatusListener) {
+    public KlausurplanDownloader (Activity activity, String mobilKey, DownloadKlausurplanStatusListener downloadKlausurplanStatusListener) {
         this.activity = activity;
-        this.stundenplan = stundenplan;
         this.mobilKey = mobilKey;
         this.downloadKlausurplanStatusListener = downloadKlausurplanStatusListener;
     }

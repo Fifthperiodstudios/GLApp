@@ -1,5 +1,6 @@
 package com.fifthperiodstudios.glapp;
 
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.support.v7.app.AppCompatActivity;
@@ -40,6 +41,7 @@ public class Settings extends AppCompatActivity {
     SharedPreferences.Editor sharedPreferencesEditor;
 //    SharedPreferences helpPreferences;
     Stundenplan stundenplan;
+    Farben farben;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -50,6 +52,8 @@ public class Settings extends AppCompatActivity {
         setSupportActionBar(toolbar);
 
         stundenplan = (Stundenplan) getIntent().getSerializableExtra("Stundenplan");
+        farben = (Farben) getIntent().getSerializableExtra("farben");
+
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setDisplayShowHomeEnabled(true);
 
@@ -72,7 +76,7 @@ public class Settings extends AppCompatActivity {
         swtAutoAktualisieren.setChecked(autoAktualisieren);
 
         recyclerManager = new LinearLayoutManager(this);
-        recyclerAdapter = new RecyclerViewAdapter(stundenplan, getSupportFragmentManager());
+        recyclerAdapter = new RecyclerViewAdapter(stundenplan, farben, getSupportFragmentManager());
         recyclerView = findViewById(R.id.recycler);
         recyclerView.setLayoutManager(recyclerManager);
         recyclerView.setAdapter(recyclerAdapter);
@@ -87,13 +91,17 @@ public class Settings extends AppCompatActivity {
 
     @Override
     public void onBackPressed() {
-        super.onBackPressed();
         save();
+        finish();
     }
 
     private void save() {
         sharedPreferencesEditor.putBoolean(SHAREDPREFERENCES_BENACHRICHTIGUNGEN,swtBenachrichtigungen.isChecked());
         sharedPreferencesEditor.putBoolean(SHAREDPREFERENCES_AKTUALISIEREN,swtAutoAktualisieren.isChecked());
         sharedPreferencesEditor.commit();
+
+        Intent returnIntent = new Intent();
+        returnIntent.putExtra("farben", farben);
+        setResult(RESULT_OK, returnIntent);
     }
 }

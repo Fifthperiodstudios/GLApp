@@ -20,4 +20,7 @@
 
     <string name="pref_title_vibrate">Vibrate</string>
     <string name="setting_activity_glapp">Einstellungen</string>
+
+    <string name="wochentag">Wochentag</string>
+
 </resources>

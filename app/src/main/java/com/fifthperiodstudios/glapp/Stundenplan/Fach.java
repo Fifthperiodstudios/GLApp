@@ -1,14 +1,13 @@
 package com.fifthperiodstudios.glapp.Stundenplan;
 
 import java.io.Serializable;
+import java.util.Objects;
 
 public class Fach implements Serializable {
-    private String color, kurs, raum, kursart, lehrer, fach;
+    private String kurs, kursart, lehrer, fach;
 
     public Fach (){
-        color = "#ffffff";
         kurs = "";
-        raum = "";
         kursart = "";
         lehrer = "";
         fach = "";
@@ -21,28 +20,12 @@ public class Fach implements Serializable {
         this.fach = fach;
     }
 
-    public String getColor() {
-        return color;
-    }
-
-    public void setColor(String color) {
-        this.color = color;
-    }
-
     public String getKurs() {
         return kurs;
     }
 
     public void setKurs(String kurs) {
         this.kurs = kurs;
-    }
-
-    public String getRaum() {
-        return raum;
-    }
-
-    public void setRaum(String raum) {
-        this.raum = raum;
     }
 
     public String getKursart() {
@@ -73,9 +56,18 @@ public class Fach implements Serializable {
             return false;
         }
         Fach fach = (Fach) other;
-        if (this.kurs.equals(fach.getKurs())) {
-            return true;
+        return this.kurs.equals(fach.getKurs());
+    }
+
+    @Override
+    public int hashCode() {
+        return kurs.hashCode();
+    }
+
+    public String getVollenName(){
+        if(kursart.contains("LK")){
+            return fach+"LK";
         }
-        return false;
+        return fach;
     }
 }

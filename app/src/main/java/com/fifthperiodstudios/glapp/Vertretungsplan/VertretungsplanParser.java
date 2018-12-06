@@ -2,6 +2,7 @@ package com.fifthperiodstudios.glapp.Vertretungsplan;
 
 import android.util.Xml;
 
+import com.fifthperiodstudios.glapp.Stundenplan.Fach;
 import com.fifthperiodstudios.glapp.Stundenplan.Stundenplan;
 
 import org.xmlpull.v1.XmlPullParser;
@@ -13,7 +14,7 @@ import java.util.ArrayList;
 
 public class VertretungsplanParser {     // We don't use namespaces
     private static final String ns = null;
-    
+
     public Vertretungsplan parseVertretungsplan(InputStream in) throws XmlPullParserException, IOException {
         try {
             XmlPullParser parser = Xml.newPullParser();
@@ -55,7 +56,7 @@ public class VertretungsplanParser {     // We don't use namespaces
             }
             String name = parser.getName();
 
-            if (name.equals("Stunde") && !parser.getAttributeValue(null, "Kurs").equals("")) {
+            if (name.equals("Stunde")) {
                 VertretungsplanStunde k = readVertretungsplanStunde(parser);
                 stunden.add(k);
             } else {
@@ -71,9 +72,10 @@ public class VertretungsplanParser {     // We don't use namespaces
         String tag = parser.getName();
         if (tag.equals("Stunde")) {
             stunde.setStunde(Integer.valueOf(parser.getAttributeValue(null, "Std")));
-            stunde.setKlasse(parser.getAttributeValue(null, "Klasse"));
             stunde.setRaum(parser.getAttributeValue(null, "Raum"));
-            stunde.setFach(parser.getAttributeValue(null, "Fach"));
+            Fach fach = new Fach();
+            fach.setFach(parser.getAttributeValue(null, "Fach"));
+            stunde.setFach(fach);
             stunde.setRaumNeu(parser.getAttributeValue(null, "RaumNeu"));
             stunde.setBemerkung(parser.getAttributeValue(null, "Bemerkung"));
             stunde.setFLehrer(parser.getAttributeValue(null, "FLehrer"));

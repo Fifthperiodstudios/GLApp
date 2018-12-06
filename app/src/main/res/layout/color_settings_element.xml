@@ -5,9 +5,6 @@
     android:orientation="horizontal"
     >
 
-    <!--android:background="@android:color/background_light"-->
-    <!--android:layout_margin="16dp"-->
-
     <TextView
         android:id="@+id/colorSettingsFach"
         android:layout_width="wrap_content"
