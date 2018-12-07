@@ -6,6 +6,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -38,6 +39,10 @@ public class KlausurplanFragment extends Fragment implements SwipeRefreshLayout.
     private Farben farben;
     private KlausurplanDownloader klausurplanDownloader;
 
+    RecyclerView recyclerView;
+    RecyclerView.Adapter recyclerAdapter;
+    RecyclerView.LayoutManager recyclerManager;
+
     public KlausurplanFragment() {
 
     }
@@ -55,6 +60,8 @@ public class KlausurplanFragment extends Fragment implements SwipeRefreshLayout.
         klausurplanDownloader = new KlausurplanDownloader(getActivity(), args.getString("mobilKey"), this);
         klausurplanDownloader.downloadKlausurplan();
 
+        recyclerView = rootView.findViewById(R.id.recyc);
+
         return rootView;
     }
 
@@ -70,7 +77,11 @@ public class KlausurplanFragment extends Fragment implements SwipeRefreshLayout.
 
     @Override
     public void fertigHeruntergeladen(Klausurplan klausurplan) {
-
+        recyclerAdapter = new KlausurplanViewAdapter(klausurplan, farben);
+        Log.d("RAG", klausurplan.toString());
+        recyclerManager = new LinearLayoutManager(getContext());
+        recyclerView.setLayoutManager(recyclerManager);
+        recyclerView.setAdapter(recyclerAdapter);
     }
 
     @Override
@@ -80,6 +91,7 @@ public class KlausurplanFragment extends Fragment implements SwipeRefreshLayout.
 
     @Override
     public void updateData(Farben farben) {
-
+        this.farben = farben;
+        recyclerAdapter.notifyDataSetChanged();
     }
 }

@@ -10,6 +10,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import com.fifthperiodstudios.glapp.Downloader.DownloadVertretungsplanStatusListener;
 import com.fifthperiodstudios.glapp.Downloader.VertretungsplanDownloader;
@@ -39,6 +40,7 @@ public class VertretungsplanFragment extends Fragment implements SwipeRefreshLay
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState){
         View rootView = inflater.inflate(R.layout.vertretungsplan_fragment, container, false);
         Bundle args = getArguments();
+
         farben = (Farben) args.getSerializable("farben");
 
         mSwipeRefreshLayout = rootView.findViewById(R.id.swipe_container);
@@ -59,7 +61,7 @@ public class VertretungsplanFragment extends Fragment implements SwipeRefreshLay
 
     @Override
     public void keineInternetverbindung() {
-
+        Toast.makeText(getContext(), "Vertretungplan kann nicht aktualisiert werden, bitte prüfe deine Internetverbindung", Toast.LENGTH_LONG).show();
     }
 
     @Override

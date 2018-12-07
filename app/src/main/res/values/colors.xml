@@ -3,4 +3,30 @@
     <color name="colorPrimary">#2273D1</color>
     <color name="colorPrimaryDark">#303F9F</color>
     <color name="colorAccent">#70c54b</color>
+
+    <color name="weiß">#ffffff</color>
+    <color name="gelb">#ffff00</color>
+    <color name="hellorange">#ffcc00</color>
+    <color name="orange">#ff8800</color>
+    <color name="helrot">#ff4400</color>
+    <color name="rot">#ff0000</color><!---->
+    <color name="dunkelrot">#ff0044</color>
+    <color name="rosa">#ff0088</color>
+    <color name="rosalila">#ff00cc</color>
+    <color name="lila">#ff00ff</color>
+    <color name="violette">#cc00ff</color>
+    <color name="dunkelviolette">#8800ff</color>
+    <color name="dunkelblau">#4400ff</color>
+    <color name="blau">#0000ff</color><!---->
+    <color name="hellblau">#0044ff</color>
+    <color name="türkisblau">#0088ff</color>
+    <color name="helltürkis">#00ccff</color>
+    <color name="türkis">#00ffff</color>
+    <color name="dunkeltürkis">#00ffcc</color>
+    <color name="türkisgrün">#00ff88</color>
+    <color name="dunkelgrün">#00ff44</color>
+    <color name="grün">#00ff00</color><!---->
+    <color name="hellgrün">#44ff00</color>
+    <color name="giftgrün">#88ff00</color>
+    <color name="gelbgrün">#ccff00</color>
 </resources>

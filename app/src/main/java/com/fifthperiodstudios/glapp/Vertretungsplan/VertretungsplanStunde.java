@@ -21,6 +21,7 @@ public class VertretungsplanStunde implements Serializable {
     private String Bemerkung;
     private String FLehrer;
     private String VLehrer;
+    private String fachName;
     // Ende Attribute
 
     public VertretungsplanStunde() {
@@ -30,6 +31,7 @@ public class VertretungsplanStunde implements Serializable {
         this.Bemerkung = "";
         this.FLehrer = "";
         this.VLehrer = "";
+        this.fachName = "";
     }
 
     // Anfang Methoden
@@ -87,6 +89,14 @@ public class VertretungsplanStunde implements Serializable {
 
     public void setVLehrer(String VLehrerNeu) {
         VLehrer = VLehrerNeu;
+    }
+
+    public void setFachName(String fachNameNeu) {
+        fachName = fachNameNeu;
+    }
+
+    public String getFachName() {
+        return fachName;
     }
 
     // Ende Methoden

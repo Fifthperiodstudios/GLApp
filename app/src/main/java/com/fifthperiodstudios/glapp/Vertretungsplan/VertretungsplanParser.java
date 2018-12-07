@@ -80,6 +80,7 @@ public class VertretungsplanParser {     // We don't use namespaces
             stunde.setBemerkung(parser.getAttributeValue(null, "Bemerkung"));
             stunde.setFLehrer(parser.getAttributeValue(null, "FLehrer"));
             stunde.setVLehrer(parser.getAttributeValue(null, "VLehrer"));
+            stunde.setFachName(parser.getAttributeValue(null, "Fach"));
             parser.nextTag();
         }
 
