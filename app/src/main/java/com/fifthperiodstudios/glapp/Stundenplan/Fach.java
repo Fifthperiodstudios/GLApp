@@ -56,7 +56,7 @@ public class Fach implements Serializable {
             return false;
         }
         Fach fach = (Fach) other;
-        return this.kurs.equals(fach.getKurs());
+        return this.fach.equals(fach.getFach()) || this.kurs.equals(fach.getKurs());
     }
 
     @Override
