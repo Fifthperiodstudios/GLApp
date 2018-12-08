@@ -7,6 +7,7 @@ import android.graphics.drawable.Drawable;
 import android.graphics.drawable.GradientDrawable;
 import android.graphics.drawable.ShapeDrawable;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.util.Log;
@@ -42,17 +43,15 @@ public class StundenplanFragment extends Fragment implements SwipeRefreshLayout.
         Bundle args = getArguments();
         farben = (Farben) args.getSerializable("farben");
 
-        stundenplanDownloader = new StundenplanDownloader(getActivity(), args.getString("mobilKey"), this);
-        stundenplanDownloader.downloadStundenplan();
 
         mSwipeRefreshLayout = rootView.findViewById(R.id.swipe_container);
         mSwipeRefreshLayout.setOnRefreshListener(this);
-
         relativeLayout = rootView.findViewById(R.id.stundenplanview);
+        stundenplanDownloader = new StundenplanDownloader(getActivity(), getArguments().getString("mobilKey"), this);
+        stundenplanDownloader.downloadStundenplan();
 
         return rootView;
     }
-
 
     @Override
     public void onRefresh() {
@@ -60,17 +59,18 @@ public class StundenplanFragment extends Fragment implements SwipeRefreshLayout.
     }
 
     @Override
-    public void keineInternetverbindung(Stundenplan stundenplan) {
-
-        setupView(stundenplan);
-        Toast.makeText(getContext(), "Keine Internetverbindung, offline Daten werden angezeigt", Toast.LENGTH_SHORT).show();
-
+    public void keineInternetverbindung(final Stundenplan stundenplan) {
+        relativeLayout.post(new Runnable() {
+            @Override
+            public void run() {
+                setupView(stundenplan);
+            }
+        });
     }
 
     @Override
     public void fertigHeruntergeladen(Stundenplan stundenplan) {
 
-        relativeLayout.removeAllViews();
         setupView(stundenplan);
 
     }
@@ -83,9 +83,9 @@ public class StundenplanFragment extends Fragment implements SwipeRefreshLayout.
     public void setupView(Stundenplan stundenplan) {
         this.stundenplan = stundenplan;
         int buffer = 5;
-
-        int painting_width = relativeLayout.getWidth() - 2 * relativeLayout.getPaddingLeft() - 10 * (buffer);
-        int painting_height = relativeLayout.getHeight() - 2 * relativeLayout.getPaddingTop() - 10 * (buffer);
+        Log.d("RAGAD", "setupView: " + relativeLayout.getWidth());
+        int painting_width = relativeLayout.getMeasuredWidth() - 2 * relativeLayout.getPaddingLeft() - 10 * (buffer);
+        int painting_height = relativeLayout.getMeasuredHeight() - 2 * relativeLayout.getPaddingTop() - 10 * (buffer);
 
         int stunden_width = (int) painting_width / 5;
         int stunden_height = (int) painting_height / 10;

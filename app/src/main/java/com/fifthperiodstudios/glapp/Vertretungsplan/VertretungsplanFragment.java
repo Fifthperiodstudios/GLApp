@@ -46,10 +46,9 @@ public class VertretungsplanFragment extends Fragment implements SwipeRefreshLay
         mSwipeRefreshLayout = rootView.findViewById(R.id.swipe_container);
         mSwipeRefreshLayout.setOnRefreshListener(this);
 
+        recyclerView = rootView.findViewById(R.id.recyc);
         vertretungsplanDownloader = new VertretungsplanDownloader(getActivity(), args.getString("mobilKey"), this);
         vertretungsplanDownloader.downloadVertretungsplan();
-
-        recyclerView = rootView.findViewById(R.id.recyc);
 
         return rootView;
     }

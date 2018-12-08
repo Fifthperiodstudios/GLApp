@@ -56,11 +56,10 @@ public class KlausurplanFragment extends Fragment implements SwipeRefreshLayout.
 
         mSwipeRefreshLayout = rootView.findViewById(R.id.swipe_container);
         mSwipeRefreshLayout.setOnRefreshListener(this);
+        recyclerView = rootView.findViewById(R.id.recyc);
 
         klausurplanDownloader = new KlausurplanDownloader(getActivity(), args.getString("mobilKey"), this);
         klausurplanDownloader.downloadKlausurplan();
-
-        recyclerView = rootView.findViewById(R.id.recyc);
 
         return rootView;
     }
@@ -72,7 +71,10 @@ public class KlausurplanFragment extends Fragment implements SwipeRefreshLayout.
 
     @Override
     public void keineInternetverbindung(Klausurplan klausurplan) {
-
+        recyclerAdapter = new KlausurplanViewAdapter(klausurplan, farben);
+        recyclerManager = new LinearLayoutManager(getContext());
+        recyclerView.setLayoutManager(recyclerManager);
+        recyclerView.setAdapter(recyclerAdapter);
     }
 
     @Override
