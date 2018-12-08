@@ -61,7 +61,7 @@ public class SchuelerLoginFragment extends Fragment implements EinLoggerListener
 
     @Override
     public void falscheDaten() {
-        Toast.makeText(getContext(), "Benutzername oder Password falsch", Toast.LENGTH_SHORT).show();
+        Toast.makeText(getContext(), "Benutzername oder Passwort falsch", Toast.LENGTH_SHORT).show();
     }
 
     @Override
