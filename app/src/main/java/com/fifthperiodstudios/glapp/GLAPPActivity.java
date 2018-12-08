@@ -69,9 +69,7 @@ public class GLAPPActivity extends AppCompatActivity {
         }
 
         //Stellt den FragmentPagerAdapter ein
-        glappViewAdapter = new GLAPPViewAdapter(getSupportFragmentManager(), farben);
-        //die neuen Fragmente für die einzelnen Tage werden erstellt
-        glappViewAdapter.setup(mobilKey);
+        glappViewAdapter = new GLAPPViewAdapter(getSupportFragmentManager(), mobilKey, farben);
         //dem ViewPager wird der Adapter übergeben
         mViewPager.setAdapter(glappViewAdapter);
         //die tabs werden eingerichtet

@@ -1,5 +1,7 @@
 package com.fifthperiodstudios.glapp.Klausurplan;
 
+import com.fifthperiodstudios.glapp.Stundenplan.Fach;
+
 /**
  * Created by ro_te on 07.12.2018.
  */
@@ -7,77 +9,77 @@ package com.fifthperiodstudios.glapp.Klausurplan;
 public class Klausur {
 
     // Anfang Attribute
-    private String Datum;
-    private String Start;
-    private String Ende;
-    private int Raum;
-    private String Fach;
-    private String Lehrkraft;
-    private int Individuell;
-    private String Bezeichnung;
-    // Ende Attribute
+    private String datum;
+    private String start;
+    private String ende;
+    private String raum;
+    private Fach fach;
+    private String lehrkraft;
+    private int individuell;
+    private String bezeichnung;
 
-    // Anfang Methoden
     public String getDatum() {
-        return Datum;
-    }
-    public int getIndividuell() {
-        return Individuell;
-    }
-    public String getBezeichnung() {
-        return Bezeichnung;
+        return datum;
     }
 
-    public void setBezeichnung(String BezeichnungNeu) {
-        Bezeichnung = BezeichnungNeu;
-    }
-    public void setIndividuell(int IndividuellNeu) {
-        Individuell = IndividuellNeu;
-    }
-    public void setDatum(String DatumNeu) {
-        Datum = DatumNeu;
+    public void setDatum(String datum) {
+        this.datum = datum;
     }
 
     public String getStart() {
-        return Start;
+        return start;
     }
 
-    public void setStart(String StartNeu) {
-        Start = StartNeu;
+    public void setStart(String start) {
+        this.start = start;
     }
 
     public String getEnde() {
-        return Ende;
+        return ende;
     }
 
-    public void setEnde(String EndeNeu) {
-        Ende = EndeNeu;
+    public void setEnde(String ende) {
+        this.ende = ende;
     }
 
-    public int getRaum() {
-        return Raum;
+    public String getRaum() {
+        return raum;
     }
 
-    public void setRaum(int RaumNeu) {
-        Raum = RaumNeu;
+    public void setRaum(String raum) {
+        this.raum = raum;
     }
 
-    public String getFach() {
-        return Fach;
+    public Fach getFach() {
+        return fach;
     }
 
-    public void setFach(String FachNeu) {
-        Fach = FachNeu;
+    public void setFach(Fach fach) {
+        this.fach = fach;
     }
 
     public String getLehrkraft() {
-        return Lehrkraft;
+        return lehrkraft;
     }
 
-    public void setLehrkraft(String LehrkraftNeu) {
-        Lehrkraft = LehrkraftNeu;
+    public void setLehrkraft(String lehrkraft) {
+        this.lehrkraft = lehrkraft;
     }
 
-    // Ende Methoden
-} // end of Klausur
+    public int getIndividuell() {
+        return individuell;
+    }
+
+    public void setIndividuell(int individuell) {
+        this.individuell = individuell;
+    }
+
+    public String getBezeichnung() {
+        return bezeichnung;
+    }
+
+    public void setBezeichnung(String bezeichnung) {
+        this.bezeichnung = bezeichnung;
+    }
+}
 

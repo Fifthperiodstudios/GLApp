@@ -6,6 +6,7 @@ import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.AsyncTask;
 
+import com.fifthperiodstudios.glapp.Klausurplan.KlausurenplanParser;
 import com.fifthperiodstudios.glapp.Klausurplan.Klausurplan;
 import com.fifthperiodstudios.glapp.Stundenplan.Stundenplan;
 
@@ -24,7 +25,7 @@ public class KlausurplanDownloader {
     private DownloadKlausurplanStatusListener downloadKlausurplanStatusListener;
     private Activity activity;
     private String mobilKey;
-    private final String URL = "";
+    private final String URL = "https://mobil.gymnasium-lohmar.org/XML/klausur.php?mobilKey=";
     private Klausurplan klausurplan;
 
     public KlausurplanDownloader (Activity activity, String mobilKey, DownloadKlausurplanStatusListener downloadKlausurplanStatusListener) {
@@ -37,19 +38,19 @@ public class KlausurplanDownloader {
         if(isOnline()) {
             new DownloadKlausurplanXML().execute(URL + mobilKey);
         }else {
-            /*try {
+            try {
                 File directory = activity.getApplicationContext().getFilesDir();
                 File file = new File(directory, "Klausurplan.xml");
-                KlausurplanParser klausurplanParser = new KlausurplanParser();
+                KlausurenplanParser klausurplanParser = new KlausurenplanParser();
                 klausurplan = (Klausurplan) klausurplanParser.parseKlausurplan(new FileInputStream(file));
                 downloadKlausurplanStatusListener.keineInternetverbindung(klausurplan);
             } catch (FileNotFoundException e) {
-                e.printStackTrace();
+                downloadKlausurplanStatusListener.andererFehler();
             } catch (XmlPullParserException e) {
-                e.printStackTrace();
+                downloadKlausurplanStatusListener.andererFehler();
             } catch (IOException e) {
-                e.printStackTrace();
-            }*/
+                downloadKlausurplanStatusListener.andererFehler();
+            }
         }
 
     }
@@ -90,7 +91,7 @@ public class KlausurplanDownloader {
         private Klausurplan loadXmlFromNetwork(String urlString) throws XmlPullParserException, IOException {
             InputStream stream = null;
             // Instantiate the parser
-            //KlausurplanParser klausurplanParser = new KlausurplanParser(stundenplan);
+            KlausurenplanParser klausurplanParser = new KlausurenplanParser();
             try {
                 stream = downloadUrl(urlString);
 
@@ -104,8 +105,8 @@ public class KlausurplanDownloader {
                 outputStream.close();
 
                 File directory = activity.getApplicationContext().getFilesDir();
-                File file = new File(directory, "Stundenplan.xml");
-                /*try {
+                File file = new File(directory, "Klausurplan.xml");
+                try {
                     klausurplan = (Klausurplan) klausurplanParser.parseKlausurplan(new FileInputStream(file));
                 } catch (XmlPullParserException e) {
                     downloadKlausurplanStatusListener.andererFehler();
@@ -116,7 +117,7 @@ public class KlausurplanDownloader {
                 } catch (IOException e) {
                     downloadKlausurplanStatusListener.andererFehler();
                     e.printStackTrace();
-                }*/
+                }
 
             } finally {
                 if (stream != null) {
@@ -124,7 +125,7 @@ public class KlausurplanDownloader {
                 }
             }
 
-            return new Klausurplan();
+            return klausurplan;
         }
 
         // Given a string representation of a URL, sets up a connection and gets

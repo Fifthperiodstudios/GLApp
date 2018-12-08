@@ -61,7 +61,7 @@ public class Fach implements Serializable {
 
     @Override
     public int hashCode() {
-        return kurs.hashCode();
+        return fach.hashCode();
     }
 
     public String getVollenName(){

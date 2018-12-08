@@ -61,7 +61,6 @@ public class StundenplanParser {     // We don't use namespaces
 
         parser.require(XmlPullParser.START_TAG, ns, "Stundenplan");
         stundenplan.setDatum(parseDateFromString(parser.getAttributeValue(null, "Datum")));
-        Log.d("TAG", stundenplan.getDatum().toString());
         while (parser.next() != XmlPullParser.END_TAG) {
             if (parser.getEventType() != XmlPullParser.START_TAG) {
                 continue;

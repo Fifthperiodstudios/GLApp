@@ -2,6 +2,7 @@ package com.fifthperiodstudios.glapp.Klausurplan;
 import android.util.Xml;
 
 
+import com.fifthperiodstudios.glapp.Stundenplan.Fach;
 import com.fifthperiodstudios.glapp.Stundenplan.Stundenplan;
 
 import org.xmlpull.v1.XmlPullParser;
@@ -53,19 +54,21 @@ public class KlausurenplanParser {private static final String ns = null;
         Klausur klausur = new Klausur();
         parser.require(XmlPullParser.START_TAG, ns, "Klausur");
         String tag = parser.getName();
-        if (tag.equals("Stunde")) {
+        if (tag.equals("Klausur")) {
             klausur.setDatum(parser.getAttributeValue(null, "Datum"));
             klausur.setIndividuell(Integer.valueOf(parser.getAttributeValue(null, "individuell")));
             klausur.setBezeichnung(parser.getAttributeValue(null, "bezeichnung"));
             klausur.setLehrkraft(parser.getAttributeValue(null, "lehrer"));
-            klausur.setFach(parser.getAttributeValue(null, "fach"));
-            klausur.setRaum(Integer.valueOf(parser.getAttributeValue(null, "raum")));
+            Fach f = new Fach();
+            f.setFach(parser.getAttributeValue(null, "fach"));
+            klausur.setFach(f);
+            klausur.setRaum(parser.getAttributeValue(null, "raum"));
             klausur.setEnde(parser.getAttributeValue(null, "bisStd"));
             klausur.setStart(parser.getAttributeValue(null, "vonStd"));
             parser.nextTag();
         }
 
-        parser.require(XmlPullParser.END_TAG, ns, "Stunde");
+        parser.require(XmlPullParser.END_TAG, ns, "Klausur");
         return klausur;
     }
 

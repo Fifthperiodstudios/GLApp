@@ -53,19 +53,16 @@ public class KlausurplanViewAdapter extends RecyclerView.Adapter<KlausurplanView
         tVdauer.setText(klausur.getStart()+" - "+klausur.getEnde());
         tVraum.setText(klausur.getRaum());
         tVlehrer.setText(klausur.getLehrkraft());
-        tVsymbol.setText(klausur.getFach());
+        tVsymbol.setText(klausur.getFach().getFach());
 
         Drawable background = tVsymbol.getBackground();
 
-        Fach fach = new Fach();
-        fach.setFach(klausur.getFach());
-
         if (background instanceof ShapeDrawable) {
-            ((ShapeDrawable)background).getPaint().setColor(Color.parseColor(fach.getFach()));
+            ((ShapeDrawable)background).getPaint().setColor(Color.parseColor(farben.getFarbeFach(klausur.getFach())));
         } else if (background instanceof GradientDrawable) {
-            ((GradientDrawable)background).setColor(Color.parseColor(fach.getFach()));
+            ((GradientDrawable)background).setColor(Color.parseColor(farben.getFarbeFach(klausur.getFach())));
         } else if (background instanceof ColorDrawable) {
-            ((ColorDrawable)background).setColor(Color.parseColor(fach.getFach()));
+            ((ColorDrawable)background).setColor(Color.parseColor(farben.getFarbeFach(klausur.getFach())));
         }
 
     }
@@ -91,5 +88,9 @@ public class KlausurplanViewAdapter extends RecyclerView.Adapter<KlausurplanView
             symbol = itemView.findViewById(R.id.list_item_icon);
             lehrer = itemView.findViewById(R.id.lehrer);
         }
+    }
+
+    public void setFarben(Farben farben){
+        this.farben = farben;
     }
 }

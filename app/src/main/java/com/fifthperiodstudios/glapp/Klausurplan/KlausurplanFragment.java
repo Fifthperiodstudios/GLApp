@@ -78,7 +78,6 @@ public class KlausurplanFragment extends Fragment implements SwipeRefreshLayout.
     @Override
     public void fertigHeruntergeladen(Klausurplan klausurplan) {
         recyclerAdapter = new KlausurplanViewAdapter(klausurplan, farben);
-        Log.d("RAG", klausurplan.toString());
         recyclerManager = new LinearLayoutManager(getContext());
         recyclerView.setLayoutManager(recyclerManager);
         recyclerView.setAdapter(recyclerAdapter);
@@ -92,6 +91,7 @@ public class KlausurplanFragment extends Fragment implements SwipeRefreshLayout.
     @Override
     public void updateData(Farben farben) {
         this.farben = farben;
+        ((KlausurplanViewAdapter)recyclerAdapter).setFarben(farben);
         recyclerAdapter.notifyDataSetChanged();
     }
 }
