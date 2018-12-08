@@ -22,6 +22,10 @@ public class Vertretungsplan implements Serializable{
         return stunden;
     }
 
+    public void setStunden(ArrayList<VertretungsplanStunde> neueStunden){
+        stunden = neueStunden;
+    }
+
 
     public static class VertretungsTag implements Serializable {
         public ArrayList<VertretungsplanStunde> stunden;
