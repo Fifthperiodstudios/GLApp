@@ -23,11 +23,6 @@ import com.fifthperiodstudios.glapp.Farben;
 import com.fifthperiodstudios.glapp.OnUpdateListener;
 import com.fifthperiodstudios.glapp.R;
 
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.ObjectOutputStream;
-import java.util.ArrayList;
 
 public class StundenplanFragment extends Fragment implements SwipeRefreshLayout.OnRefreshListener, DownloadStundenplanStatusListener, OnUpdateListener {
     private SwipeRefreshLayout mSwipeRefreshLayout;
@@ -43,7 +38,6 @@ public class StundenplanFragment extends Fragment implements SwipeRefreshLayout.
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.stundenplan_fragment, container, false);
-        relativeLayout = rootView.findViewById(R.id.stundenplanview);
 
         Bundle args = getArguments();
         farben = (Farben) args.getSerializable("farben");
@@ -52,6 +46,9 @@ public class StundenplanFragment extends Fragment implements SwipeRefreshLayout.
         stundenplanDownloader.downloadStundenplan();
 
         mSwipeRefreshLayout = rootView.findViewById(R.id.swipe_container);
+        mSwipeRefreshLayout.setOnRefreshListener(this);
+
+        relativeLayout = rootView.findViewById(R.id.stundenplanview);
 
         return rootView;
     }
@@ -59,7 +56,6 @@ public class StundenplanFragment extends Fragment implements SwipeRefreshLayout.
 
     @Override
     public void onRefresh() {
-        stundenplanDownloader.downloadStundenplan();
         mSwipeRefreshLayout.setRefreshing(false);
     }
 
