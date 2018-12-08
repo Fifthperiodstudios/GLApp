@@ -67,7 +67,6 @@ public class VertretungsplanFragment extends Fragment implements SwipeRefreshLay
     @Override
     public void fertigHeruntergeladen(Vertretungsplan vertretungsplan) {
         recyclerAdapter = new VertretungsViewAdapter(vertretungsplan, farben);
-        Log.d("RAG", vertretungsplan.toString());
         recyclerManager = new LinearLayoutManager(getContext());
         recyclerView.setLayoutManager(recyclerManager);
         recyclerView.setAdapter(recyclerAdapter);

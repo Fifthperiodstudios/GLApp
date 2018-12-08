@@ -52,7 +52,7 @@ class VertretungsViewAdapter extends RecyclerView.Adapter<VertretungsViewAdapter
         TextView raumView = holder.raum;
         TextView symbolView = holder.symbol;
         TextView bemerkung = holder.bemerkung;
-        VertretungsplanStunde stunde = vertretungsplan.getStunde().get(position);
+        VertretungsplanStunde stunde = vertretungsplan.getStunden().get(position);
 
 //        Fach fach = new Fach();
 //        fach.setKurs();fach.setFach();fach.setKursart();fach.setLehrer();
@@ -107,7 +107,7 @@ class VertretungsViewAdapter extends RecyclerView.Adapter<VertretungsViewAdapter
 
     @Override
     public int getItemCount() {
-        return vertretungsplan.getStunde().size();
+        return vertretungsplan.getStunden().size();
     }
 
     public class ViewHolderKlasse extends RecyclerView.ViewHolder{

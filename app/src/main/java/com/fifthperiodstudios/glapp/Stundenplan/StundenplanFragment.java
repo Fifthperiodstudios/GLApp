@@ -30,7 +30,6 @@ import java.io.ObjectOutputStream;
 import java.util.ArrayList;
 
 public class StundenplanFragment extends Fragment implements SwipeRefreshLayout.OnRefreshListener, DownloadStundenplanStatusListener, OnUpdateListener {
-    private final String URL = "https://mobil.gymnasium-lohmar.org/XML/stupla.php?";
     private SwipeRefreshLayout mSwipeRefreshLayout;
     private RelativeLayout relativeLayout;
     private Farben farben;
@@ -60,7 +59,7 @@ public class StundenplanFragment extends Fragment implements SwipeRefreshLayout.
 
     @Override
     public void onRefresh() {
-        Log.d("TAAG", "onRefresh: ");
+        stundenplanDownloader.downloadStundenplan();
         mSwipeRefreshLayout.setRefreshing(false);
     }
 
@@ -68,19 +67,21 @@ public class StundenplanFragment extends Fragment implements SwipeRefreshLayout.
     public void keineInternetverbindung(Stundenplan stundenplan) {
 
         setupView(stundenplan);
+        Toast.makeText(getContext(), "Keine Internetverbindung, offline Daten werden angezeigt", Toast.LENGTH_SHORT).show();
 
     }
 
     @Override
     public void fertigHeruntergeladen(Stundenplan stundenplan) {
 
+        relativeLayout.removeAllViews();
         setupView(stundenplan);
 
     }
 
     @Override
     public void andererFehler() {
-
+        Toast.makeText(getContext(), "Etwas ist schiefgelaufen :/", Toast.LENGTH_SHORT).show();
     }
 
     public void setupView(Stundenplan stundenplan) {
@@ -95,9 +96,11 @@ public class StundenplanFragment extends Fragment implements SwipeRefreshLayout.
 
         for (int i = 0; i < stundenplan.getWochentage().size(); i++) {
             for (int j = 0; j < stundenplan.getWochentage().get(i).getStunden().size(); j++) {
+                final Stunde stunde = stundenplan.getWochentage().get(i).getStunden().get(j);
+
                 Button button = new Button(getActivity());
                 RelativeLayout.LayoutParams rl = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT, RelativeLayout.LayoutParams.WRAP_CONTENT);
-                int nte = Integer.parseInt(stundenplan.getWochentage().get(i).getStunden().get(j).getStunde()) - 1;
+                int nte = Integer.parseInt(stunde.getStunde()) - 1;
                 rl.leftMargin = buffer + i * (stunden_width + buffer + 2 * buffer);
                 rl.topMargin = buffer + nte * (stunden_height + buffer + 2 * buffer);
                 rl.width = stunden_width - 2 * buffer;
@@ -106,24 +109,31 @@ public class StundenplanFragment extends Fragment implements SwipeRefreshLayout.
                 button.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        Toast.makeText(getContext(), "HELLO", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(getContext(), "Bei " + stunde.getFach().getLehrer() + " in " + stunde.getRaum(), Toast.LENGTH_SHORT).show();
                     }
                 });
 
                 button.setBackgroundResource(R.drawable.stunde_rechteck);
                 Drawable background = button.getBackground();
                 if (background instanceof ShapeDrawable) {
-                    ((ShapeDrawable) background).getPaint().setColor(Color.parseColor(farben.getFarbeFach(stundenplan.getWochentage().get(i).getStunden().get(j).getFach())));
+                    ((ShapeDrawable) background).getPaint().setColor(Color.parseColor(farben.getFarbeFach(stunde.getFach())));
                 } else if (background instanceof GradientDrawable) {
-                    ((GradientDrawable) background).setColor(Color.parseColor(farben.getFarbeFach(stundenplan.getWochentage().get(i).getStunden().get(j).getFach())));
+                    ((GradientDrawable) background).setColor(Color.parseColor(farben.getFarbeFach(stunde.getFach())));
                 } else if (background instanceof ColorDrawable) {
-                    ((ColorDrawable) background).setColor(Color.parseColor(farben.getFarbeFach(stundenplan.getWochentage().get(i).getStunden().get(j).getFach())));
+                    ((ColorDrawable) background).setColor(Color.parseColor(farben.getFarbeFach(stunde.getFach())));
                 }
-                button.setText(stundenplan.getWochentage().get(i).getStunden().get(j).getFach().getVollenName());
+                button.setText(stunde.getFach().getVollenName());
                 button.setTextColor(Color.WHITE);
                 relativeLayout.addView(button);
             }
         }
+    }
+
+    @Override
+    public void updateData(Farben farben) {
+        this.farben = farben;
+        relativeLayout.removeAllViews();
+        setupView(stundenplan);
     }
 
     public Farben getFarben() {
@@ -132,12 +142,5 @@ public class StundenplanFragment extends Fragment implements SwipeRefreshLayout.
 
     public Stundenplan getStundenplan() {
         return stundenplan;
-    }
-
-    @Override
-    public void updateData(Farben farben) {
-        this.farben = farben;
-        relativeLayout.removeAllViews();
-        setupView(stundenplan);
     }
 }

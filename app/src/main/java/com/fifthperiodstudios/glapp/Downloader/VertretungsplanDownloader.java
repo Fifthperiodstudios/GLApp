@@ -5,6 +5,7 @@ import android.content.Context;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.AsyncTask;
+import android.util.Log;
 
 import com.fifthperiodstudios.glapp.Vertretungsplan.Vertretungsplan;
 import com.fifthperiodstudios.glapp.Stundenplan.Stundenplan;
@@ -69,6 +70,7 @@ public class VertretungsplanDownloader {
         protected void onPostExecute(Vertretungsplan result) {
             super.onPostExecute(result);
             if(result == null){
+                Log.d("RAGA", "onPostExecute: ");
                 downloadVertretungsplanStatusListener.andererFehler();
             }else {
                 downloadVertretungsplanStatusListener.fertigHeruntergeladen(result);
