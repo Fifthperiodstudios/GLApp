@@ -10,6 +10,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.fifthperiodstudios.glapp.Downloader.DownloadVertretungsplanStatusListener;
@@ -17,6 +18,8 @@ import com.fifthperiodstudios.glapp.Downloader.VertretungsplanDownloader;
 import com.fifthperiodstudios.glapp.Farben;
 import com.fifthperiodstudios.glapp.OnUpdateListener;
 import com.fifthperiodstudios.glapp.R;
+
+import org.w3c.dom.Text;
 
 import java.util.ArrayList;
 
@@ -29,6 +32,7 @@ public class VertretungsplanFragment extends Fragment implements SwipeRefreshLay
     private VertretungsplanDownloader vertretungsplanDownloader;
 
     private SwipeRefreshLayout mSwipeRefreshLayout;
+    private TextView keineVertretung;
 
     RecyclerView recyclerView;
     RecyclerView.Adapter recyclerAdapter;
@@ -47,6 +51,7 @@ public class VertretungsplanFragment extends Fragment implements SwipeRefreshLay
 
         mSwipeRefreshLayout = rootView.findViewById(R.id.swipe_container);
         mSwipeRefreshLayout.setOnRefreshListener(this);
+        keineVertretung = rootView.findViewById(R.id.keine_vertretung_text);
 
         recyclerView = rootView.findViewById(R.id.recyc);
         vertretungsplanDownloader = new VertretungsplanDownloader(getActivity(), args.getString("mobilKey"), this);
@@ -57,43 +62,29 @@ public class VertretungsplanFragment extends Fragment implements SwipeRefreshLay
 
     @Override
     public void onRefresh() {
+        vertretungsplanDownloader.downloadVertretungsplan();
         this.mSwipeRefreshLayout.setRefreshing(false);
     }
 
     @Override
     public void keineInternetverbindung() {
-        Toast.makeText(getContext(), "Vertretungplan kann nicht aktualisiert werden, bitte prüfe deine Internetverbindung", Toast.LENGTH_LONG).show();
+        keineVertretung.setVisibility(View.VISIBLE);
+        keineVertretung.setText("Keine Internetverbindung \n(๑◕︵◕๑)");
     }
 
     @Override
     public void fertigHeruntergeladen(Vertretungsplan vertretungsplan) {
-        if(vertretungsplan.getVertretungstage().size()==0){
-            VertretungsplanStunde stunde = new VertretungsplanStunde();
-            stunde.setRaum("Für heute und morgen liegt leider kein Vertretungsplan vor. :/");
-            vertretungsplan.getStunden().add(stunde);
+        if(vertretungsplan.getStunden().size() == 0){
+            keineVertretung.setVisibility(View.VISIBLE);
+            keineVertretung.setText("Es fällt bei dir leider nichts aus \n(๑◕︵◕๑)");
         }else {
-            for (int i = 0; i < vertretungsplan.getVertretungstage().size(); i++) {
-                VertretungsplanStunde stunde = new VertretungsplanStunde();
-                if (i == 0) {
-                    stunde.setRaum("Vertretung für heute:");
-                } else {
-                    stunde.setRaum("Vertretung für morgen:");
-                }
-                vertretungsplan.getStunden().add(stunde);
-                VertretungsplanStunde stunde1 = new VertretungsplanStunde();
-                if (vertretungsplan.getVertretungstage().get(i).getStunden().size() == 0) {
-                    stunde1.setRaum("Für diesen Tag liegt leider keine Vertretung vor. :/");
-                } else {
-                    for (int j = 0; j < vertretungsplan.getVertretungstage().get(i).getStunden().size(); j++) {
-                        vertretungsplan.getStunden().add(vertretungsplan.getVertretungstage().get(i).getStunden().get(j));
-                    }
-                }
-            }
+            recyclerView.setVisibility(View.VISIBLE);
+            recyclerAdapter = new VertretungsViewAdapter(vertretungsplan, farben);
+            recyclerManager = new LinearLayoutManager(getContext());
+            recyclerView.setLayoutManager(recyclerManager);
+            recyclerView.setAdapter(recyclerAdapter);
         }
-        recyclerAdapter = new VertretungsViewAdapter(vertretungsplan, farben);
-        recyclerManager = new LinearLayoutManager(getContext());
-        recyclerView.setLayoutManager(recyclerManager);
-        recyclerView.setAdapter(recyclerAdapter);
+
     }
 
     @Override

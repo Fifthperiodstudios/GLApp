@@ -38,7 +38,7 @@ public class VertretungsplanParser {     // We don't use namespaces
             String name = parser.getName();
             // Starts by looking for the entry tag
             if (name.equals("Vertretungstag")) {
-                vertretungsplan.getVertretungstage().add(readVertretungsplanTag(parser));
+                vertretungsplan.getVertretungstage().add(readVertretungsplanTag(parser, vertretungsplan));
             } else {
                 skip(parser);
             }
@@ -46,7 +46,7 @@ public class VertretungsplanParser {     // We don't use namespaces
         return vertretungsplan;
     }
 
-    private Vertretungsplan.VertretungsTag readVertretungsplanTag(XmlPullParser parser) throws IOException, XmlPullParserException {
+    private Vertretungsplan.VertretungsTag readVertretungsplanTag(XmlPullParser parser, Vertretungsplan vertretungsplan) throws IOException, XmlPullParserException {
         Vertretungsplan.VertretungsTag vertretungsTag = new Vertretungsplan.VertretungsTag();
         parser.require(XmlPullParser.START_TAG, ns, "Vertretungstag");
         while (!parser.isEmptyElementTag() && parser.next() != XmlPullParser.END_TAG) {
@@ -56,7 +56,9 @@ public class VertretungsplanParser {     // We don't use namespaces
             String name = parser.getName();
             // Starts by looking for the entry tag
             if (name.equals("Stunde")) {
-                vertretungsTag.getStunden().add(readVertretungsplanStunde(parser));
+                VertretungsplanStunde stunde = readVertretungsplanStunde(parser);
+                vertretungsTag.getStunden().add(stunde);
+                vertretungsplan.getStunden().add(stunde);
             } else {
                 skip(parser);
             }
