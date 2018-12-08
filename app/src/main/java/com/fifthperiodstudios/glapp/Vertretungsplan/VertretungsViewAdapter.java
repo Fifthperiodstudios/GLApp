@@ -73,25 +73,6 @@ class VertretungsViewAdapter extends RecyclerView.Adapter<VertretungsViewAdapter
         }
         bemerkung.setText(stunde.getBemerkung());
 
-        /*kursnameView.setText(vertretungsplan.getStunde().get(position).getFach().getFach());
-
-        if (vertretungsplan.getStunde().get(position).getStunde()!=0){
-
-            symbolView.setText(vertretungsplan.getStunde().get(position).getStunde());
-
-            if(vertretungsplan.getStunde().get(position).getVLehrer()==null){
-                lehrerView.setText(vertretungsplan.getStunde().get(position).getFLehrer());
-            }else{
-                lehrerView.setText(vertretungsplan.getStunde().get(position).getVLehrer());
-            }
-
-            if(vertretungsplan.getStunde().get(position).getRaumNeu()==null){
-                raumView.setText(vertretungsplan.getStunde().get(position).getRaum());
-            }else{
-                raumView.setText(vertretungsplan.getStunde().get(position).getRaumNeu());
-            }
-
-        }*/
         symbolView.setText(stunde.getFachName());
 
         Drawable background = symbolView.getBackground();

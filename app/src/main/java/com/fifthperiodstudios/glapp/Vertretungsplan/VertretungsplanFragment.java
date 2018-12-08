@@ -18,6 +18,8 @@ import com.fifthperiodstudios.glapp.Farben;
 import com.fifthperiodstudios.glapp.OnUpdateListener;
 import com.fifthperiodstudios.glapp.R;
 
+import java.util.ArrayList;
+
 
 public class VertretungsplanFragment extends Fragment implements SwipeRefreshLayout.OnRefreshListener, DownloadVertretungsplanStatusListener, OnUpdateListener {
 
@@ -65,6 +67,29 @@ public class VertretungsplanFragment extends Fragment implements SwipeRefreshLay
 
     @Override
     public void fertigHeruntergeladen(Vertretungsplan vertretungsplan) {
+        if(vertretungsplan.getVertretungstage().size()==0){
+            VertretungsplanStunde stunde = new VertretungsplanStunde();
+            stunde.setRaum("Für heute und morgen liegt leider kein Vertretungsplan vor. :/");
+            vertretungsplan.getStunden().add(stunde);
+        }else {
+            for (int i = 0; i < vertretungsplan.getVertretungstage().size(); i++) {
+                VertretungsplanStunde stunde = new VertretungsplanStunde();
+                if (i == 0) {
+                    stunde.setRaum("Vertretung für heute:");
+                } else {
+                    stunde.setRaum("Vertretung für morgen:");
+                }
+                vertretungsplan.getStunden().add(stunde);
+                VertretungsplanStunde stunde1 = new VertretungsplanStunde();
+                if (vertretungsplan.getVertretungstage().get(i).getStunden().size() == 0) {
+                    stunde1.setRaum("Für diesen Tag liegt leider keine Vertretung vor. :/");
+                } else {
+                    for (int j = 0; j < vertretungsplan.getVertretungstage().get(i).getStunden().size(); j++) {
+                        vertretungsplan.getStunden().add(vertretungsplan.getVertretungstage().get(i).getStunden().get(j));
+                    }
+                }
+            }
+        }
         recyclerAdapter = new VertretungsViewAdapter(vertretungsplan, farben);
         recyclerManager = new LinearLayoutManager(getContext());
         recyclerView.setLayoutManager(recyclerManager);
