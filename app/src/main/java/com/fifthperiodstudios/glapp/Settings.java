@@ -8,6 +8,7 @@ import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.widget.CompoundButton;
 import android.widget.Switch;
 import android.widget.TextView;
@@ -77,6 +78,7 @@ public class Settings extends AppCompatActivity {
 
         recyclerManager = new LinearLayoutManager(this);
         recyclerAdapter = new RecyclerViewAdapter(stundenplan, farben, getSupportFragmentManager());
+        Log.d("RAGAD", "onCreate: " + (stundenplan == null));
         recyclerView = findViewById(R.id.recycler);
         recyclerView.setLayoutManager(recyclerManager);
         recyclerView.setAdapter(recyclerAdapter);

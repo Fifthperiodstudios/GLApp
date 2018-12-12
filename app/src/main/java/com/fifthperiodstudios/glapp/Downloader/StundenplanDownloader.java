@@ -19,6 +19,8 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import java.net.URL;
 import java.net.URLConnection;
 import java.util.ArrayList;
@@ -41,16 +43,17 @@ public class StundenplanDownloader {
             new DownloadStundenplanXML().execute(URL + mobilKey);
         }else {
             try {
-                File directory = activity.getApplicationContext().getFilesDir();
-                File file = new File(directory, "Stundenplan.xml");
-                StundenplanParser stundenplanParser = new StundenplanParser();
-                stundenplan = (Stundenplan) stundenplanParser.parseStundenplan(new FileInputStream(file));
+                FileInputStream fis = activity.getApplicationContext().openFileInput("Stundenplan");
+                ObjectInputStream is = new ObjectInputStream(fis);
+                Stundenplan stundenplan = (Stundenplan) is.readObject();
+                is.close();
+                fis.close();
                 downloadStundenplanStatusListener.keineInternetverbindung(stundenplan);
             } catch (FileNotFoundException e) {
                 e.printStackTrace();
-            } catch (XmlPullParserException e) {
+            }catch (IOException e) {
                 e.printStackTrace();
-            } catch (IOException e) {
+            } catch (ClassNotFoundException e) {
                 e.printStackTrace();
             }
         }
@@ -95,19 +98,13 @@ public class StundenplanDownloader {
             try {
                 stream = downloadUrl(urlString);
 
-                FileOutputStream outputStream = new FileOutputStream(new File(activity.getApplicationContext().getFilesDir(), "Stundenplan.xml"));
-                int bytesRead = -1;
-                byte[] buffer = new byte[4096];
-                while ((bytesRead = stream.read(buffer)) != -1) {
-                    outputStream.write(buffer, 0, bytesRead);
-                }
-
-                outputStream.close();
-
-                File directory = activity.getApplicationContext().getFilesDir();
-                File file = new File(directory, "Stundenplan.xml");
                 try {
-                    stundenplan = (Stundenplan) stundenplanParser.parseStundenplan(new FileInputStream(file));
+                    stundenplan = (Stundenplan) stundenplanParser.parseStundenplan(stream);
+                    FileOutputStream fos = activity.getApplicationContext().openFileOutput("Stundenplan", Context.MODE_PRIVATE);
+                    ObjectOutputStream os = new ObjectOutputStream(fos);
+                    os.writeObject(stundenplan);
+                    os.close();
+                    fos.close();
                 } catch (XmlPullParserException e) {
                     downloadStundenplanStatusListener.andererFehler();
                     e.printStackTrace();

@@ -7,6 +7,7 @@ import android.graphics.drawable.Drawable;
 import android.graphics.drawable.GradientDrawable;
 import android.graphics.drawable.ShapeDrawable;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
@@ -41,17 +42,19 @@ public class StundenplanFragment extends Fragment implements SwipeRefreshLayout.
         View rootView = inflater.inflate(R.layout.stundenplan_fragment, container, false);
 
         Bundle args = getArguments();
-        farben = (Farben) args.getSerializable("farben");
-
 
         mSwipeRefreshLayout = rootView.findViewById(R.id.swipe_container);
         mSwipeRefreshLayout.setOnRefreshListener(this);
         relativeLayout = rootView.findViewById(R.id.stundenplanview);
+
+        farben = (Farben) args.getSerializable("farben");
         stundenplanDownloader = new StundenplanDownloader(getActivity(), getArguments().getString("mobilKey"), this);
         stundenplanDownloader.downloadStundenplan();
 
+
         return rootView;
     }
+
 
     @Override
     public void onRefresh() {
@@ -60,12 +63,14 @@ public class StundenplanFragment extends Fragment implements SwipeRefreshLayout.
 
     @Override
     public void keineInternetverbindung(final Stundenplan stundenplan) {
+
         relativeLayout.post(new Runnable() {
             @Override
             public void run() {
                 setupView(stundenplan);
             }
         });
+
     }
 
     @Override
@@ -83,7 +88,6 @@ public class StundenplanFragment extends Fragment implements SwipeRefreshLayout.
     public void setupView(Stundenplan stundenplan) {
         this.stundenplan = stundenplan;
         int buffer = 5;
-        Log.d("RAGAD", "setupView: " + relativeLayout.getWidth());
         int painting_width = relativeLayout.getMeasuredWidth() - 2 * relativeLayout.getPaddingLeft() - 10 * (buffer);
         int painting_height = relativeLayout.getMeasuredHeight() - 2 * relativeLayout.getPaddingTop() - 10 * (buffer);
 

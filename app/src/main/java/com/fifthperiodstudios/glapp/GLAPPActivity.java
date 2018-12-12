@@ -8,6 +8,7 @@ import android.support.design.widget.TabLayout;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 
@@ -77,6 +78,21 @@ public class GLAPPActivity extends AppCompatActivity {
         tabLayout.setupWithViewPager(mViewPager);
     }
 
+    private void saveFarben(Farben f) {
+        FileOutputStream fos = null;
+        try {
+            fos = getApplicationContext().openFileOutput("farben", Context.MODE_PRIVATE);
+            ObjectOutputStream os = new ObjectOutputStream(fos);
+            os.writeObject(f);
+            os.close();
+            fos.close();
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -94,7 +110,7 @@ public class GLAPPActivity extends AppCompatActivity {
         switch(id){
             case R.id.action_settings:
                 Intent intent = new Intent (this, Settings.class);
-                Stundenplan stundenplan = ((StundenplanFragment)glappViewAdapter.getItem(0)).getStundenplan();
+                Stundenplan stundenplan = ((StundenplanFragment) glappViewAdapter.getItem(0)).getStundenplan();
                 Farben farben = ((StundenplanFragment)glappViewAdapter.getItem(0)).getFarben();
                 intent.putExtra("Stundenplan", stundenplan);
                 intent.putExtra("farben", farben);
@@ -103,6 +119,9 @@ public class GLAPPActivity extends AppCompatActivity {
             case R.id.action_logout:
                 logout ();
                 break;
+            case R.id.action_about:
+                Intent intent1 = new Intent(this, AboutInformationActivity.class);
+                this.startActivity(intent1);
         }
         return true;
     }
@@ -124,19 +143,7 @@ public class GLAPPActivity extends AppCompatActivity {
                 for(int i = 0; i<glappViewAdapter.getCount(); i++){
                     ((OnUpdateListener)glappViewAdapter.getItem(i)).updateData(farben);
                 }
-                FileOutputStream fos = null;
-                try {
-                    fos = getApplicationContext().openFileOutput("farben", Context.MODE_PRIVATE);
-                    ObjectOutputStream os = new ObjectOutputStream(fos);
-                    os.writeObject(farben);
-                    os.close();
-                    fos.close();
-                } catch (FileNotFoundException e) {
-                    e.printStackTrace();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-
+                saveFarben(farben);
             }else if(resultCode == RESULT_CANCELED){
 
             }

@@ -12,12 +12,14 @@
     <application
         android:name=".Notification.CreateNotificationChannels"
         android:allowBackup="true"
-        android:icon="@mipmap/ic_launcher"
+        android:icon="@mipmap/icon"
         android:label="@string/app_name"
-        android:roundIcon="@mipmap/ic_launcher_round"
+        android:roundIcon="@mipmap/icon"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".Login.MainActivity">
+        <activity
+            android:name=".Login.MainActivity"
+            android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -27,13 +29,13 @@
         <activity
             android:name=".GLAPPActivity"
             android:label="@string/title_activity_glapp"
+            android:screenOrientation="portrait"
             android:theme="@style/AppTheme" />
         <activity
             android:name=".Settings"
-            android:label="@string/setting_activity_glapp" />
-        <activity
-            android:name=".Stundenplan.WochentagActivity"
-            android:label="@string/wochentag" />
+            android:label="@string/setting_activity_glapp"
+            android:screenOrientation="portrait" />
+
         <service
             android:name=".Notification.NotificationService"
             android:enabled="true"
@@ -45,6 +47,8 @@
                 <action android:name="android.intent.action.BOOT_COMPLETED" />
             </intent-filter>
         </receiver>
+
+        <activity android:name=".AboutInformationActivity"></activity>
     </application>
 
 </manifest>

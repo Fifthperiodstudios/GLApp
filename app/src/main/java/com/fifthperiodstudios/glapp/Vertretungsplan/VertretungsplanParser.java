@@ -1,5 +1,6 @@
 package com.fifthperiodstudios.glapp.Vertretungsplan;
 
+import android.util.Log;
 import android.util.Xml;
 
 import com.fifthperiodstudios.glapp.Stundenplan.Fach;
@@ -10,7 +11,10 @@ import org.xmlpull.v1.XmlPullParserException;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 
 public class VertretungsplanParser {     // We don't use namespaces
     private static final String ns = null;
@@ -38,18 +42,31 @@ public class VertretungsplanParser {     // We don't use namespaces
             String name = parser.getName();
             // Starts by looking for the entry tag
             if (name.equals("Vertretungstag")) {
-                vertretungsplan.getVertretungstage().add(readVertretungsplanTag(parser, vertretungsplan));
+                Date date = parseDateFromString(parser.getAttributeValue(null, "Datum"));
+                vertretungsplan.getVertretungstage().add(readVertretungsplanTag(parser, vertretungsplan, date));
             } else {
                 skip(parser);
             }
         }
         return vertretungsplan;
     }
+int i = 0;
+    private Date parseDateFromString(String date) {
+        SimpleDateFormat dateparser = new SimpleDateFormat("EE, dd.MM.yyyy");
+        Date datum;
+        try {
+            datum = dateparser.parse(date);
+        } catch (ParseException e) {
+            datum = new Date(0);
+        }
+        return datum;
+    }
 
-    private Vertretungsplan.VertretungsTag readVertretungsplanTag(XmlPullParser parser, Vertretungsplan vertretungsplan) throws IOException, XmlPullParserException {
+    private Vertretungsplan.VertretungsTag readVertretungsplanTag(XmlPullParser parser, Vertretungsplan vertretungsplan, Date date) throws IOException, XmlPullParserException {
         Vertretungsplan.VertretungsTag vertretungsTag = new Vertretungsplan.VertretungsTag();
+        vertretungsTag.setDatum(date);
         parser.require(XmlPullParser.START_TAG, ns, "Vertretungstag");
-        while (!parser.isEmptyElementTag() && parser.next() != XmlPullParser.END_TAG) {
+        while (parser.next() != XmlPullParser.END_TAG) {
             if (parser.getEventType() != XmlPullParser.START_TAG) {
                 continue;
             }
@@ -57,6 +74,7 @@ public class VertretungsplanParser {     // We don't use namespaces
             // Starts by looking for the entry tag
             if (name.equals("Stunde")) {
                 VertretungsplanStunde stunde = readVertretungsplanStunde(parser);
+                stunde.setDatum(date);
                 vertretungsTag.getStunden().add(stunde);
                 vertretungsplan.getStunden().add(stunde);
             } else {

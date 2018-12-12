@@ -52,8 +52,8 @@ public class VertretungsplanFragment extends Fragment implements SwipeRefreshLay
         mSwipeRefreshLayout = rootView.findViewById(R.id.swipe_container);
         mSwipeRefreshLayout.setOnRefreshListener(this);
         keineVertretung = rootView.findViewById(R.id.keine_vertretung_text);
-
         recyclerView = rootView.findViewById(R.id.recyc);
+
         vertretungsplanDownloader = new VertretungsplanDownloader(getActivity(), args.getString("mobilKey"), this);
         vertretungsplanDownloader.downloadVertretungsplan();
 
@@ -75,9 +75,12 @@ public class VertretungsplanFragment extends Fragment implements SwipeRefreshLay
     @Override
     public void fertigHeruntergeladen(Vertretungsplan vertretungsplan) {
         if(vertretungsplan.getStunden().size() == 0){
+            recyclerView.setVisibility(View.GONE);
             keineVertretung.setVisibility(View.VISIBLE);
             keineVertretung.setText("Es fällt bei dir leider nichts aus \n(๑◕︵◕๑)");
         }else {
+            this.vertretungsplan = vertretungsplan;
+            keineVertretung.setVisibility(View.GONE);
             recyclerView.setVisibility(View.VISIBLE);
             recyclerAdapter = new VertretungsViewAdapter(vertretungsplan, farben);
             recyclerManager = new LinearLayoutManager(getContext());
@@ -95,6 +98,9 @@ public class VertretungsplanFragment extends Fragment implements SwipeRefreshLay
     @Override
     public void updateData(Farben farben) {
         this.farben = farben;
-        recyclerAdapter.notifyDataSetChanged();
+        if(vertretungsplan != null && vertretungsplan.getStunden().size() != 0) {
+            ((VertretungsViewAdapter)recyclerAdapter).setFarben(farben);
+            recyclerAdapter.notifyDataSetChanged();
+        }
     }
 }

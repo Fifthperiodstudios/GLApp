@@ -29,8 +29,6 @@ class VertretungsViewAdapter extends RecyclerView.Adapter<VertretungsViewAdapter
     public VertretungsViewAdapter(Vertretungsplan vertretungsplan, Farben farben){
         this.vertretungsplan = vertretungsplan;
         this.farben = farben;
-        //fuelleVertretungsliste();
-
     }
 
     @NonNull
@@ -48,32 +46,30 @@ class VertretungsViewAdapter extends RecyclerView.Adapter<VertretungsViewAdapter
     public void onBindViewHolder(@NonNull VertretungsViewAdapter.ViewHolderKlasse holder, int position) {
 
         TextView kursnameView = holder.kursname;
-        TextView lehrerView = holder.lehrer;
-        TextView raumView = holder.raum;
+        TextView raumlehrerview = holder.raumlehrer;
         TextView symbolView = holder.symbol;
         TextView bemerkung = holder.bemerkung;
         VertretungsplanStunde stunde = vertretungsplan.getStunden().get(position);
 
-//        Fach fach = new Fach();
-//        fach.setKurs();fach.setFach();fach.setKursart();fach.setLehrer();
-//        stunde.setFach(fach);
 
-        kursnameView.setText(stunde.getStunde() + ". " + stunde.getFachName());
-        if (stunde.getVLehrer()==null){
-            lehrerView.setText(stunde.getFLehrer());
+        Fach f = farben.getFach(stunde.getFach());
+
+        String s = "";
+        kursnameView.setText(stunde.getDatumAlsText() + " " + stunde.getStunde() + ". " + f.getVollenName());
+        if (stunde.getVLehrer().isEmpty()){
+            s += "Bei " + stunde.getFLehrer();
         }else{
-            lehrerView.setText(stunde.getVLehrer());
-            lehrerView.setTextColor(Color.RED);
+            s += "Vertretung bei" + stunde.getVLehrer();
         }
-        if (stunde.getRaumNeu()==null){
-            raumView.setText(stunde.getRaum());
+        if (stunde.getRaumNeu().isEmpty()){
+            s += " in Raum " + stunde.getRaum();
         }else{
-            raumView.setText(stunde.getRaumNeu());
-            raumView.setTextColor(Color.RED);
+            s += " Raumwechsel: " + stunde.getRaumNeu();
         }
+
+        raumlehrerview.setText(s);
         bemerkung.setText(stunde.getBemerkung());
-
-        symbolView.setText(stunde.getFachName());
+        symbolView.setText(f.getVollenName());
 
         Drawable background = symbolView.getBackground();
         if (background instanceof ShapeDrawable) {
@@ -91,19 +87,21 @@ class VertretungsViewAdapter extends RecyclerView.Adapter<VertretungsViewAdapter
         return vertretungsplan.getStunden().size();
     }
 
+    public void setFarben(Farben farben) {
+        this.farben = farben;
+    }
+
     public class ViewHolderKlasse extends RecyclerView.ViewHolder{
 
         public TextView kursname;
-        public TextView lehrer;
-        public TextView raum;
+        public TextView raumlehrer;
         public TextView symbol;
         public TextView bemerkung;
 
         public ViewHolderKlasse (@NonNull View itemView) {
             super (itemView);
             kursname = itemView.findViewById(R.id.kursname);
-            lehrer = itemView.findViewById(R.id.lehrer);
-            raum = itemView.findViewById(R.id.raum);
+            raumlehrer = itemView.findViewById(R.id.raum_und_lehrer);
             symbol = itemView.findViewById(R.id.list_item_icon);
             bemerkung = itemView.findViewById(R.id.bemerkung);
         }

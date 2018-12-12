@@ -1,9 +1,9 @@
 <resources>
-    <string name="app_name">GLApp</string>
+    <string name="app_name">Glapp</string>
     <string name="connection_error">Es scheint, Sie sind nicht mit dem Internet verbunden.</string>
     <string name="xml_error">Es gab ein Problem beim Lesen ihres Stundenplans.</string>
     <string name="title_activity_glapp">GLApp</string>
-    <string name="title_activity_settings">Settings</string>
+    <string name="title_activity_settings">Einstellungen</string>
 
 
     <string-array name="multi_select_list_preference_default_value" />
@@ -20,7 +20,6 @@
 
     <string name="pref_title_vibrate">Vibrate</string>
     <string name="setting_activity_glapp">Einstellungen</string>
-
-    <string name="wochentag">Wochentag</string>
+    <string name="about_info">Die Glapp ist ein Assistent für Schüler der Oberstufe des Gymnasiums Lohmar. Sie zeigt dir deinen Stundenplan, Vertretungsplan und Klausurplan an. \n Achte aber bitte darauf, dass alle Angaben ohne Gewähr sind. \n Programmiert wurde die App von fifthperiodstudios. \nBei Fragen, Hilfe oder Anmerkungen eine E-Mail an: fifthperiod.studios@gmail.com senden. \nDanke</string>
 
 </resources>

@@ -3,6 +3,8 @@ package com.fifthperiodstudios.glapp.Vertretungsplan;
 import com.fifthperiodstudios.glapp.Stundenplan.Fach;
 
 import java.io.Serializable;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 /**
  * Beschreibung
@@ -22,7 +24,7 @@ public class VertretungsplanStunde implements Serializable {
     private String FLehrer;
     private String VLehrer;
     private String fachName;
-    // Ende Attribute
+    private Date datum;
 
     public VertretungsplanStunde() {
         this.Stunde = 0;
@@ -99,6 +101,19 @@ public class VertretungsplanStunde implements Serializable {
         return fachName;
     }
 
+    public Date getDatum() {
+        return datum;
+    }
+
+    public void setDatum(Date datum) {
+        this.datum = datum;
+    }
+
+    public String getDatumAlsText(){
+        SimpleDateFormat ft =
+                new SimpleDateFormat ("EE");
+        return ft.format(datum);
+    }
     // Ende Methoden
 } // end of VertretungsplanStunde
 

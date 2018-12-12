@@ -42,6 +42,18 @@ public class Farben implements Serializable {
         setupFarben(standardFarben);
     }
 
+    public Fach getFach(Fach f){
+        Fach[] faecher;
+        faecher = farbenFaecher.keySet().toArray(new Fach[0]);
+        for (Fach fach :
+                faecher) {
+            if(fach.equals(f)){
+                return fach;
+            }
+        }
+        return f;
+    }
+
     public void setupFarben(ArrayList<String> colors) {
         colors.add("#1abc9c");
         colors.add("#16a085");

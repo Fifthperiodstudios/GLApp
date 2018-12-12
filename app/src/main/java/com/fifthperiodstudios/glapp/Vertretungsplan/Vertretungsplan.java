@@ -4,8 +4,9 @@ import android.support.annotation.NonNull;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Date;
 
-public class Vertretungsplan implements Serializable{
+public class Vertretungsplan implements Serializable {
     public ArrayList<Vertretungsplan.VertretungsTag> vertretungstage;
     public ArrayList<VertretungsplanStunde> stunden;
 
@@ -22,13 +23,14 @@ public class Vertretungsplan implements Serializable{
         return stunden;
     }
 
-    public void setStunden(ArrayList<VertretungsplanStunde> neueStunden){
+    public void setStunden(ArrayList<VertretungsplanStunde> neueStunden) {
         stunden = neueStunden;
     }
 
 
     public static class VertretungsTag implements Serializable {
-        public ArrayList<VertretungsplanStunde> stunden;
+        private ArrayList<VertretungsplanStunde> stunden;
+        private Date datum;
 
         public VertretungsTag(ArrayList<VertretungsplanStunde> vertretungsplanStunde) {
             this.stunden = vertretungsplanStunde;
@@ -41,10 +43,18 @@ public class Vertretungsplan implements Serializable{
         public ArrayList<VertretungsplanStunde> getStunden() {
             return stunden;
         }
+
+        public Date getDatum() {
+            return datum;
+        }
+
+        public void setDatum(Date datum) {
+            this.datum = datum;
+        }
     }
 
     @NonNull
-    public String toString(){
+    public String toString() {
         String s = "";
         s += "Anzahl Vertretungstage: " + vertretungstage.size() + "\n";
         for (int i = 0; i < vertretungstage.size(); i++) {
@@ -53,6 +63,6 @@ public class Vertretungsplan implements Serializable{
                 s += "Stunde " + j + ": " + vertretungstage.get(i).getStunden().get(j).getFach().getFach() + "\n";
             }
         }
-        return  s;
+        return s;
     }
 }
