@@ -52,9 +52,13 @@ public class KlausurplanViewAdapter extends RecyclerView.Adapter<KlausurplanView
         tVdatum.setText(klausur.getDatum());
         tVdauer.setText(klausur.getStart()+" - "+klausur.getEnde());
         tVraum.setText(klausur.getRaum());
-        tVlehrer.setText(klausur.getLehrkraft());
-        tVsymbol.setText(klausur.getFach().getFach());
-
+        if (klausur.getIndividuell()==1) {
+            tVsymbol.setText(klausur.getFach().getFach());
+            tVlehrer.setText(klausur.getLehrkraft());
+        }
+        else {
+            tVlehrer.setText(klausur.getBezeichnung());
+        }
         Drawable background = tVsymbol.getBackground();
 
         if (background instanceof ShapeDrawable) {
