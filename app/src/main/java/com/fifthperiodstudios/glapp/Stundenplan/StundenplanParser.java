@@ -28,39 +28,11 @@ public class StundenplanParser {     // We don't use namespaces
         }
     }
 
-    public Date parseDatum(InputStream in) throws XmlPullParserException, IOException {
-        try {
-            XmlPullParser parser = Xml.newPullParser();
-            parser.setFeature(XmlPullParser.FEATURE_PROCESS_NAMESPACES, false);
-            parser.setInput(in, null);
-            parser.nextTag();
-            return readDatum(parser);
-        } finally {
-            in.close();
-        }
-    }
-
-    private Date parseDateFromString (String date){
-        SimpleDateFormat dateparser = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
-        Date datum;
-        try {
-            datum = dateparser.parse(date);
-        } catch (ParseException e) {
-            datum = new Date (0);
-        }
-        return datum;
-    }
-
-    private Date readDatum (XmlPullParser parser) throws XmlPullParserException, IOException {
-        parser.require(XmlPullParser.START_TAG, ns, "Stundenplan");
-        return parseDateFromString(parser.getAttributeValue(null, "Datum"));
-    }
-
     private Stundenplan readFeed(XmlPullParser parser) throws XmlPullParserException, IOException {
         Stundenplan stundenplan = new Stundenplan();
 
         parser.require(XmlPullParser.START_TAG, ns, "Stundenplan");
-        stundenplan.setDatum(parseDateFromString(parser.getAttributeValue(null, "Datum")));
+        stundenplan.setDatum(parser.getAttributeValue(null, "Datum"));
         while (parser.next() != XmlPullParser.END_TAG) {
             if (parser.getEventType() != XmlPullParser.START_TAG) {
                 continue;
@@ -135,7 +107,6 @@ public class StundenplanParser {     // We don't use namespaces
                     break;
             }
         }
-
     }
 
 }

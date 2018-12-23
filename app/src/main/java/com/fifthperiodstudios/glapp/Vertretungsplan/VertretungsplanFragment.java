@@ -68,12 +68,18 @@ public class VertretungsplanFragment extends Fragment implements SwipeRefreshLay
 
     @Override
     public void keineInternetverbindung() {
+        recyclerView.setVisibility(View.GONE);
         keineVertretung.setVisibility(View.VISIBLE);
         keineVertretung.setText("Keine Internetverbindung \n(๑◕︵◕๑)");
     }
 
     @Override
     public void fertigHeruntergeladen(Vertretungsplan vertretungsplan) {
+        this.vertretungsplan = vertretungsplan;
+        setupVertretunsplanFragment(vertretungsplan);
+    }
+
+    public void setupVertretunsplanFragment(Vertretungsplan vertretungsplan){
         if(vertretungsplan.getStunden().size() == 0){
             recyclerView.setVisibility(View.GONE);
             keineVertretung.setVisibility(View.VISIBLE);
@@ -87,12 +93,10 @@ public class VertretungsplanFragment extends Fragment implements SwipeRefreshLay
             recyclerView.setLayoutManager(recyclerManager);
             recyclerView.setAdapter(recyclerAdapter);
         }
-
     }
-
     @Override
     public void andererFehler() {
-
+        Toast.makeText(getContext(), "Es ist leider etwas schiefgelaufen :/", Toast.LENGTH_LONG).show();
     }
 
     @Override

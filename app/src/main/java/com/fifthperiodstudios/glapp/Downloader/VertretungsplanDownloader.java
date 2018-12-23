@@ -5,18 +5,13 @@ import android.content.Context;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.AsyncTask;
-import android.util.Log;
 
 import com.fifthperiodstudios.glapp.Vertretungsplan.Vertretungsplan;
-import com.fifthperiodstudios.glapp.Stundenplan.Stundenplan;
 import com.fifthperiodstudios.glapp.Vertretungsplan.VertretungsplanParser;
 
 import org.xmlpull.v1.XmlPullParserException;
 
-import java.io.File;
-import java.io.FileInputStream;
 import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
@@ -25,20 +20,20 @@ import java.net.URLConnection;
 public class VertretungsplanDownloader {
     private DownloadVertretungsplanStatusListener downloadVertretungsplanStatusListener;
     private Activity activity;
+    private Vertretungsplan vertretungsplan;
     private String mobilKey;
     private final String URL = "https://mobil.gymnasium-lohmar.org/XML/vplan.php?mobilKey=";
-    private Vertretungsplan vertretungsplan;
 
-    public VertretungsplanDownloader (Activity activity, String mobilKey, DownloadVertretungsplanStatusListener downloadVertretungsplanStatusListener) {
+    public VertretungsplanDownloader(Activity activity, String mobilKey, DownloadVertretungsplanStatusListener downloadVertretungsplanStatusListener) {
         this.activity = activity;
         this.mobilKey = mobilKey;
         this.downloadVertretungsplanStatusListener = downloadVertretungsplanStatusListener;
     }
 
-    public void downloadVertretungsplan () {
-        if(isOnline()) {
+    public void downloadVertretungsplan() {
+        if (isOnline()) {
             new DownloadVertretungsplanXML().execute(URL + mobilKey);
-        }else {
+        } else {
             downloadVertretungsplanStatusListener.keineInternetverbindung();
         }
     }
@@ -66,45 +61,34 @@ public class VertretungsplanDownloader {
 
         }
 
-
         protected void onPostExecute(Vertretungsplan result) {
             super.onPostExecute(result);
-            if(result == null){
-                Log.d("RAGA", "onPostExecute: ");
+            if (result == null) {
                 downloadVertretungsplanStatusListener.andererFehler();
-            }else {
+            } else {
                 downloadVertretungsplanStatusListener.fertigHeruntergeladen(result);
             }
         }
 
         private Vertretungsplan loadXmlFromNetwork(String urlString) throws XmlPullParserException, IOException {
             InputStream stream = null;
+            // Instantiate the parser
             VertretungsplanParser vertretungsplanParser = new VertretungsplanParser();
             try {
                 stream = downloadUrl(urlString);
 
-                FileOutputStream outputStream = new FileOutputStream(new File(activity.getApplicationContext().getFilesDir(), "Vertretungsplan.xml"));
-                int bytesRead = -1;
-                byte[] buffer = new byte[4096];
-                while ((bytesRead = stream.read(buffer)) != -1) {
-                    outputStream.write(buffer, 0, bytesRead);
-                }
-
-                outputStream.close();
-
-                File directory = activity.getApplicationContext().getFilesDir();
-                File file = new File(directory, "Vertretungsplan.xml");
-
                 try {
-                    vertretungsplan = vertretungsplanParser.parseVertretungsplan(new FileInputStream(file));
+                    vertretungsplan = (Vertretungsplan) vertretungsplanParser.parseVertretungsplan(stream);
+                    //FileOutputStream fos = activity.getApplicationContext().openFileOutput("Vertretungsplan", Context.MODE_PRIVATE);
+                    //ObjectOutputStream os = new ObjectOutputStream(fos);
+                    //os.writeObject(vertretungsplan);
+                    //os.close();
+                    //fos.close();
                 } catch (XmlPullParserException e) {
-                    downloadVertretungsplanStatusListener.andererFehler();
                     e.printStackTrace();
                 } catch (FileNotFoundException e) {
-                    downloadVertretungsplanStatusListener.andererFehler();
                     e.printStackTrace();
                 } catch (IOException e) {
-                    downloadVertretungsplanStatusListener.andererFehler();
                     e.printStackTrace();
                 }
 

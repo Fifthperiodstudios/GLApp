@@ -24,7 +24,7 @@
             app:fontFamily="sans-serif"
             android:textSize="50sp"
             android:visibility="gone"
-            android:id="@+id/keine_vertretung_text"/>
+            android:id="@+id/keine_klausuren_text"/>
 
     </LinearLayout>
 

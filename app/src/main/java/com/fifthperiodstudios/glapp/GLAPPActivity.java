@@ -32,9 +32,8 @@ public class GLAPPActivity extends AppCompatActivity {
     private Toolbar toolbar;
     private String mobilKey;
     private Farben farben;
-    private static final String URL = "https://mobil.gymnasium-lohmar.org/XML/stupla.php?mobilKey=";
     public static final String SHAREDPREFERENCES_NAME = "com.fifthperiodstudios.glapp";
-    public static final String SHAREDPREFERENCES_MOBILEKEY = "mobilKey";
+    public static final String SHAREDPREFERENCES_MOBILKEY = "mobilKey";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -46,7 +45,7 @@ public class GLAPPActivity extends AppCompatActivity {
         mViewPager = (ViewPager) findViewById(R.id.pager);
         mViewPager.setOffscreenPageLimit(3);
         Intent intent = getIntent();
-        mobilKey = (String) intent.getExtras().get(SHAREDPREFERENCES_MOBILEKEY);
+        mobilKey = (String) intent.getExtras().get(SHAREDPREFERENCES_MOBILKEY);
         setupFragments();
     }
 
@@ -129,7 +128,7 @@ public class GLAPPActivity extends AppCompatActivity {
     private void logout(){
         SharedPreferences prefs = getSharedPreferences(SHAREDPREFERENCES_NAME, MODE_PRIVATE);
         this.getSharedPreferences(SHAREDPREFERENCES_NAME,MODE_PRIVATE).edit().clear().commit();
-        prefs.edit().putString(SHAREDPREFERENCES_MOBILEKEY, "DEF").commit();
+        prefs.edit().putString(SHAREDPREFERENCES_MOBILKEY, "DEF").commit();
         Intent intent = new Intent(this, MainActivity.class);
         startActivity(intent);
         finish();

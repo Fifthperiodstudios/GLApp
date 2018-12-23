@@ -5,10 +5,10 @@ import android.content.Context;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.AsyncTask;
+import android.util.Log;
 
-import com.fifthperiodstudios.glapp.Klausurplan.KlausurenplanParser;
 import com.fifthperiodstudios.glapp.Klausurplan.Klausurplan;
-import com.fifthperiodstudios.glapp.Stundenplan.Stundenplan;
+import com.fifthperiodstudios.glapp.Klausurplan.KlausurenplanParser;
 
 import org.xmlpull.v1.XmlPullParserException;
 
@@ -18,15 +18,18 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import java.net.URL;
 import java.net.URLConnection;
+import java.util.ArrayList;
 
 public class KlausurplanDownloader {
     private DownloadKlausurplanStatusListener downloadKlausurplanStatusListener;
     private Activity activity;
+    private Klausurplan klausurplan;
     private String mobilKey;
     private final String URL = "https://mobil.gymnasium-lohmar.org/XML/klausur.php?mobilKey=";
-    private Klausurplan klausurplan;
 
     public KlausurplanDownloader (Activity activity, String mobilKey, DownloadKlausurplanStatusListener downloadKlausurplanStatusListener) {
         this.activity = activity;
@@ -39,20 +42,20 @@ public class KlausurplanDownloader {
             new DownloadKlausurplanXML().execute(URL + mobilKey);
         }else {
             try {
-                File directory = activity.getApplicationContext().getFilesDir();
-                File file = new File(directory, "Klausurplan.xml");
-                KlausurenplanParser klausurplanParser = new KlausurenplanParser();
-                klausurplan = (Klausurplan) klausurplanParser.parseKlausurplan(new FileInputStream(file));
+                FileInputStream fis = activity.getApplicationContext().openFileInput("Klausurplan");
+                ObjectInputStream is = new ObjectInputStream(fis);
+                Klausurplan klausurplan = (Klausurplan) is.readObject();
+                is.close();
+                fis.close();
                 downloadKlausurplanStatusListener.keineInternetverbindung(klausurplan);
             } catch (FileNotFoundException e) {
-                downloadKlausurplanStatusListener.andererFehler();
-            } catch (XmlPullParserException e) {
-                downloadKlausurplanStatusListener.andererFehler();
-            } catch (IOException e) {
-                downloadKlausurplanStatusListener.andererFehler();
+                e.printStackTrace();
+            }catch (IOException e) {
+                e.printStackTrace();
+            } catch (ClassNotFoundException e) {
+                e.printStackTrace();
             }
         }
-
     }
 
     private boolean isOnline() {
@@ -78,7 +81,6 @@ public class KlausurplanDownloader {
 
         }
 
-
         protected void onPostExecute(Klausurplan result) {
             super.onPostExecute(result);
             if(result == null){
@@ -94,28 +96,18 @@ public class KlausurplanDownloader {
             KlausurenplanParser klausurplanParser = new KlausurenplanParser();
             try {
                 stream = downloadUrl(urlString);
-
-                FileOutputStream outputStream = new FileOutputStream(new File(activity.getApplicationContext().getFilesDir(), "Klausurplan.xml"));
-                int bytesRead = -1;
-                byte[] buffer = new byte[4096];
-                while ((bytesRead = stream.read(buffer)) != -1) {
-                    outputStream.write(buffer, 0, bytesRead);
-                }
-
-                outputStream.close();
-
-                File directory = activity.getApplicationContext().getFilesDir();
-                File file = new File(directory, "Klausurplan.xml");
                 try {
-                    klausurplan = (Klausurplan) klausurplanParser.parseKlausurplan(new FileInputStream(file));
+                    klausurplan = (Klausurplan) klausurplanParser.parseKlausurplan(stream);
+                    FileOutputStream fos = activity.getApplicationContext().openFileOutput("Klausurplan", Context.MODE_PRIVATE);
+                    ObjectOutputStream os = new ObjectOutputStream(fos);
+                    os.writeObject(klausurplan);
+                    os.close();
+                    fos.close();
                 } catch (XmlPullParserException e) {
-                    downloadKlausurplanStatusListener.andererFehler();
                     e.printStackTrace();
                 } catch (FileNotFoundException e) {
-                    downloadKlausurplanStatusListener.andererFehler();
                     e.printStackTrace();
                 } catch (IOException e) {
-                    downloadKlausurplanStatusListener.andererFehler();
                     e.printStackTrace();
                 }
 

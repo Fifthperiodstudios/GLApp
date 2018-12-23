@@ -7,13 +7,13 @@ import android.net.NetworkInfo;
 import android.os.AsyncTask;
 import android.util.Log;
 
-import com.fifthperiodstudios.glapp.Stundenplan.Fach;
+
 import com.fifthperiodstudios.glapp.Stundenplan.Stundenplan;
 import com.fifthperiodstudios.glapp.Stundenplan.StundenplanParser;
 
 import org.xmlpull.v1.XmlPullParserException;
 
-import java.io.File;
+import java.io.ByteArrayInputStream;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
@@ -23,7 +23,6 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.URL;
 import java.net.URLConnection;
-import java.util.ArrayList;
 
 public class StundenplanDownloader {
     private DownloadStundenplanStatusListener downloadStundenplanStatusListener;
@@ -32,31 +31,36 @@ public class StundenplanDownloader {
     private String mobilKey;
     private final String URL = "https://mobil.gymnasium-lohmar.org/XML/stupla.php?mobilKey=";
 
-    public StundenplanDownloader (Activity activity, String mobilKey, DownloadStundenplanStatusListener downloadStundenplanStatusListener) {
+    public StundenplanDownloader(Activity activity, String mobilKey, DownloadStundenplanStatusListener downloadStundenplanStatusListener) {
         this.activity = activity;
         this.mobilKey = mobilKey;
         this.downloadStundenplanStatusListener = downloadStundenplanStatusListener;
     }
 
-    public void downloadStundenplan () {
-        if(isOnline()) {
+    public void downloadStundenplan() {
+        if (isOnline()) {
             new DownloadStundenplanXML().execute(URL + mobilKey);
-        }else {
+        } else {
             try {
-                FileInputStream fis = activity.getApplicationContext().openFileInput("Stundenplan");
-                ObjectInputStream is = new ObjectInputStream(fis);
-                Stundenplan stundenplan = (Stundenplan) is.readObject();
-                is.close();
-                fis.close();
+                this.stundenplan = loadStundenplanfromDevice();
                 downloadStundenplanStatusListener.keineInternetverbindung(stundenplan);
             } catch (FileNotFoundException e) {
                 e.printStackTrace();
-            }catch (IOException e) {
+            } catch (IOException e) {
                 e.printStackTrace();
             } catch (ClassNotFoundException e) {
                 e.printStackTrace();
             }
         }
+    }
+
+    public Stundenplan loadStundenplanfromDevice() throws IOException, ClassNotFoundException {
+        FileInputStream fis = activity.getApplicationContext().openFileInput("Stundenplan");
+        ObjectInputStream is = new ObjectInputStream(fis);
+        Stundenplan stundenplan = (Stundenplan) is.readObject();
+        is.close();
+        fis.close();
+        return stundenplan;
     }
 
     private boolean isOnline() {
@@ -72,57 +76,82 @@ public class StundenplanDownloader {
     private class DownloadStundenplanXML extends AsyncTask<String, Void, Stundenplan> {
 
         protected Stundenplan doInBackground(String... urls) {
-            try {
-                return loadXmlFromNetwork(urls[0]);
-            } catch (IOException e) {
-                return null;
-            } catch (XmlPullParserException e) {
-                return null;
-            }
-
+            return loadXmlFromNetwork(urls[0]);
         }
 
         protected void onPostExecute(Stundenplan result) {
             super.onPostExecute(result);
-            if(result == null){
+            if (result == null) {
                 downloadStundenplanStatusListener.andererFehler();
-            }else {
+            } else {
                 downloadStundenplanStatusListener.fertigHeruntergeladen(result);
             }
         }
 
-        private Stundenplan loadXmlFromNetwork(String urlString) throws XmlPullParserException, IOException {
+        private String convertStreamToString(InputStream in) {
+            java.util.Scanner s = new java.util.Scanner(in).useDelimiter("\\A");
+            return s.hasNext() ? s.next() : "";
+        }
+
+
+        public Stundenplan downloadLatestStundenplan(String url, Stundenplan stundenplan) {
             InputStream stream = null;
-            // Instantiate the parser
-            StundenplanParser stundenplanParser = new StundenplanParser();
+            StundenplanParser stundenplanparser = new StundenplanParser();
             try {
-                stream = downloadUrl(urlString);
+                stream = downloadUrl(url + "&timestamp=" + String.valueOf((stundenplan.getDatum().getTime()/1000)+1));
 
-                try {
-                    stundenplan = (Stundenplan) stundenplanParser.parseStundenplan(stream);
-                    FileOutputStream fos = activity.getApplicationContext().openFileOutput("Stundenplan", Context.MODE_PRIVATE);
-                    ObjectOutputStream os = new ObjectOutputStream(fos);
-                    os.writeObject(stundenplan);
-                    os.close();
-                    fos.close();
-                } catch (XmlPullParserException e) {
-                    downloadStundenplanStatusListener.andererFehler();
-                    e.printStackTrace();
-                } catch (FileNotFoundException e) {
-                    downloadStundenplanStatusListener.andererFehler();
-                    e.printStackTrace();
-                } catch (IOException e) {
-                    downloadStundenplanStatusListener.andererFehler();
-                    e.printStackTrace();
-                }
+                String neuodernicht = convertStreamToString(stream);
 
-            } finally {
-                if (stream != null) {
-                    stream.close();
+                if (!neuodernicht.equals("0")) {
+                    InputStream newstream = new ByteArrayInputStream(neuodernicht.getBytes("UTF-8"));
+                    stundenplan = stundenplanparser.parseStundenplan(newstream);
+                }else{
+                    Log.d("TAGDD", "downloadLatestStundenplan: " + neuodernicht);
                 }
+            } catch (IOException e) {
+                stundenplan = loadFromInternet(url);
+            } catch (XmlPullParserException e) {
+                e.printStackTrace();
             }
-
             return stundenplan;
+        }
+
+        public Stundenplan loadStundenplan(String url) {
+            Stundenplan stundenplan = null;
+            try {
+                stundenplan = loadStundenplanfromDevice();
+                stundenplan = downloadLatestStundenplan(url, stundenplan);
+            } catch (IOException e) {
+                stundenplan = loadFromInternet(url);
+            } catch (ClassNotFoundException e) {
+                stundenplan = loadFromInternet(url);
+            }
+            return stundenplan;
+        }
+
+        public Stundenplan loadFromInternet(String url) {
+            InputStream stream = null;
+            Stundenplan stundenplan = null;
+            try {
+                stream = downloadUrl(url);
+                StundenplanParser stundenplanParser = new StundenplanParser();
+                stundenplan = (Stundenplan) stundenplanParser.parseStundenplan(stream);
+                FileOutputStream fos = activity.getApplicationContext().openFileOutput("Stundenplan", Context.MODE_PRIVATE);
+                ObjectOutputStream os = new ObjectOutputStream(fos);
+                os.writeObject(stundenplan);
+                os.close();
+                fos.close();
+            } catch (IOException e) {
+                e.printStackTrace();
+            } catch (XmlPullParserException e) {
+                e.printStackTrace();
+            }
+            return stundenplan;
+        }
+
+        private Stundenplan loadXmlFromNetwork(String urlString) {
+            StundenplanDownloader.this.stundenplan = loadStundenplan(urlString);
+            return StundenplanDownloader.this.stundenplan;
         }
 
         // Given a string representation of a URL, sets up a connection and gets
@@ -138,4 +167,6 @@ public class StundenplanDownloader {
         }
     }
 }
+
+
 

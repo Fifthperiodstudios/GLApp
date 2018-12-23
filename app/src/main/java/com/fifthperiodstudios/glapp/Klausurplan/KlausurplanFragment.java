@@ -44,7 +44,7 @@ public class KlausurplanFragment extends Fragment implements SwipeRefreshLayout.
         mSwipeRefreshLayout = rootView.findViewById(R.id.swipe_container);
         mSwipeRefreshLayout.setOnRefreshListener(this);
         recyclerView = rootView.findViewById(R.id.recyc);
-        keineKlausuren = rootView.findViewById(R.id.keine_vertretung_text);
+        keineKlausuren = rootView.findViewById(R.id.keine_klausuren_text);
         
         klausurplanDownloader = new KlausurplanDownloader(getActivity(), args.getString("mobilKey"), this);
         klausurplanDownloader.downloadKlausurplan();
@@ -55,7 +55,6 @@ public class KlausurplanFragment extends Fragment implements SwipeRefreshLayout.
     @Override
     public void onRefresh() {
         klausurplanDownloader.downloadKlausurplan();
-        Toast.makeText(getContext(), "Aktualisiert", Toast.LENGTH_SHORT).show();
         this.mSwipeRefreshLayout.setRefreshing(false);
     }
 
@@ -67,13 +66,13 @@ public class KlausurplanFragment extends Fragment implements SwipeRefreshLayout.
 
     @Override
     public void fertigHeruntergeladen(Klausurplan klausurplan) {
-       setupKlausurplanFragment(klausurplan);
+        this.klausurplan = klausurplan;
+        setupKlausurplanFragment(klausurplan);
     }
     
     
     public void setupKlausurplanFragment(Klausurplan klausurplan){
         if(klausurplan != null && klausurplan.getKlausuren().size() != 0){
-            this.klausurplan = klausurplan;
             keineKlausuren.setVisibility(View.GONE);
             recyclerView.setVisibility(View.VISIBLE);
             recyclerAdapter = new KlausurplanViewAdapter(klausurplan, farben);
@@ -83,12 +82,12 @@ public class KlausurplanFragment extends Fragment implements SwipeRefreshLayout.
         }else {
             recyclerView.setVisibility(View.GONE);
             keineKlausuren.setVisibility(View.VISIBLE);
-            keineKlausuren.setText("Es stehen momentan keine Klausuren mehr an :)");
+            keineKlausuren.setText("Es stehen momentan keine Klausuren an :)");
         }
     }
     @Override
     public void andererFehler() {
-        Toast.makeText(getContext(), "Es ist etwas schiefgelaufen", Toast.LENGTH_SHORT).show();
+        Toast.makeText(getContext(), "Es ist etwas schiefgelaufen", Toast.LENGTH_LONG).show();
     }
 
     @Override

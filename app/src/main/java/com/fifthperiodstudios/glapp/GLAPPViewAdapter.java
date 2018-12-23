@@ -43,23 +43,10 @@ public class GLAPPViewAdapter extends FragmentPagerAdapter {
         mFragmentTitleList.add("Klausurplan");
     }
 
-    public ArrayList<String> getmFragmentTitleList() {
-        return mFragmentTitleList;
-    }
-
     @Override
     public Fragment getItem(int position) {
         return mFragmentList.get(position);
     }
-
-    public void setup (String mobilKey){
-
-    }
-
-    /*@Override
-    public Fragment getItem(int position) {
-        return WochentagFragment.newInstance(position, k[position], stundenplan.getWochentage().get(position));
-    }*/
 
     @Override
     public int getCount() {

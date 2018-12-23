@@ -2,6 +2,7 @@ package com.fifthperiodstudios.glapp.Klausurplan;
 
 import com.fifthperiodstudios.glapp.Stundenplan.Fach;
 
+import java.io.Serializable;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -12,7 +13,7 @@ import java.util.concurrent.TimeUnit;
  * Created by ro_te on 07.12.2018.
  */
 
-public class Klausur {
+public class Klausur implements Serializable {
 
     // Anfang Attribute
     private String datum;

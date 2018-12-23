@@ -7,19 +7,28 @@ import java.util.ArrayList;
 import java.util.Date;
 
 public class Stundenplan implements Serializable {
-    public ArrayList<Wochentag> wochentage;
-    public ArrayList<Fach> fächer;
-    public Date datum;
+    private ArrayList<Wochentag> wochentage;
+    private ArrayList<Fach> fächer;
+    private Date datum;
 
-    public void setDatum (Date datum) {
+    public void setDatum(Date datum) {
         this.datum = datum;
     }
 
-    public Date getDatum () {
+    public void setDatum(String datum) {
+        SimpleDateFormat dateparser = new SimpleDateFormat("yyyy-MM-dd kk:mm:ss");
+        try {
+            this.datum = dateparser.parse(datum);
+        } catch (ParseException e) {
+            this.datum = new Date(0);
+        }
+    }
+
+    public Date getDatum() {
         return datum;
     }
 
-    public boolean isNewer (Date date) {
+    public boolean isNewer(Date date) {
         return datum.before(date);
     }
 

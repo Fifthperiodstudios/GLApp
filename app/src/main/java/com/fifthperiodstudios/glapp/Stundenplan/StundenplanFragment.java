@@ -58,6 +58,7 @@ public class StundenplanFragment extends Fragment implements SwipeRefreshLayout.
 
     @Override
     public void onRefresh() {
+        stundenplanDownloader.downloadStundenplan();
         mSwipeRefreshLayout.setRefreshing(false);
     }
 
@@ -82,11 +83,12 @@ public class StundenplanFragment extends Fragment implements SwipeRefreshLayout.
 
     @Override
     public void andererFehler() {
-        Toast.makeText(getContext(), "Etwas ist schiefgelaufen :/", Toast.LENGTH_SHORT).show();
+        Toast.makeText(getContext(), "Etwas ist schiefgelaufen :/", Toast.LENGTH_LONG).show();
     }
 
     public void setupView(Stundenplan stundenplan) {
         this.stundenplan = stundenplan;
+        relativeLayout.removeAllViews();
         int buffer = 5;
         int painting_width = relativeLayout.getMeasuredWidth() - 2 * relativeLayout.getPaddingLeft() - 10 * (buffer);
         int painting_height = relativeLayout.getMeasuredHeight() - 2 * relativeLayout.getPaddingTop() - 10 * (buffer);
@@ -132,7 +134,6 @@ public class StundenplanFragment extends Fragment implements SwipeRefreshLayout.
     @Override
     public void updateData(Farben farben) {
         this.farben = farben;
-        relativeLayout.removeAllViews();
         setupView(stundenplan);
     }
 
