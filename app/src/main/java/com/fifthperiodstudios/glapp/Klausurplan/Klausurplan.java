@@ -10,23 +10,14 @@ public class Klausurplan implements Serializable {
 
     public ArrayList<Klausur> klausuren;
 
-    private Date datum;
+    private String datum;
 
-    public void setDatum(Date datum) {
-        this.datum = datum;
+    public String getDatum() {
+        return datum;
     }
 
     public void setDatum(String datum) {
-        SimpleDateFormat dateparser = new SimpleDateFormat("dd.MM.yyyy kk:mm:ss");
-        try {
-            this.datum = dateparser.parse(datum);
-        } catch (ParseException e) {
-            this.datum = new Date(0);
-        }
-    }
-
-    public Date getDatum() {
-        return datum;
+        this.datum = datum;
     }
 
     public Klausurplan() {

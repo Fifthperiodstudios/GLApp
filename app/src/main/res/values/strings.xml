@@ -1,25 +1,22 @@
 <resources>
     <string name="app_name">Glapp</string>
-    <string name="connection_error">Es scheint, Sie sind nicht mit dem Internet verbunden.</string>
-    <string name="xml_error">Es gab ein Problem beim Lesen ihres Stundenplans.</string>
+    <string name="connection_error">Keine Internetverbindung</string>
+    <string name="some_error">Es ist etwas schiefgelaufen :/</string>
     <string name="title_activity_glapp">GLApp</string>
-    <string name="title_activity_settings">Einstellungen</string>
 
-
-    <string-array name="multi_select_list_preference_default_value" />
-
-    <string name="pref_title_system_sync_settings">System sync settings</string>
-
-    <!-- Example settings for Notifications -->
-    <string name="pref_header_notifications">Notifications</string>
-
-    <string name="pref_title_new_message_notifications">New message notifications</string>
-
-    <string name="pref_title_ringtone">Ringtone</string>
-    <string name="pref_ringtone_silent">Silent</string>
-
-    <string name="pref_title_vibrate">Vibrate</string>
     <string name="setting_activity_glapp">Einstellungen</string>
-    <string name="about_info">Die Glapp ist ein Assistent für Schüler der Oberstufe des Gymnasiums Lohmar. Sie zeigt dir deinen Stundenplan, Vertretungsplan und Klausurplan an. \n Achte aber bitte darauf, dass alle Angaben ohne Gewähr sind. \n Programmiert wurde die App von fifthperiodstudios. \nBei Fragen, Hilfe oder Anmerkungen eine E-Mail an: fifthperiod.studios@gmail.com senden. \nDanke</string>
+    <string name="about_info">Die Glapp ist ein Assistent für Schüler der Oberstufe des Gymnasiums Lohmar. Sie zeigt dir deinen Stundenplan, Vertretungsplan und Klausurplan an. \n (noch kurze Info: Die App zeigt immer Nachschreibetermine an, egal ob du eine Klausur nachschreiben musst oder nicht) \n\n Achte aber bitte darauf, dass alle Angaben ohne Gewähr sind. \n Programmiert wurde die App von fifthperiodstudios. \nBei Fragen, Hilfe oder Anmerkungen eine E-Mail an: fifthperiod.studios@gmail.com senden. \nDanke</string>
+    <string name="keine_klausuren_text">Es stehen momentan keine Klausuren an :)</string>
+    <string name="logindata_wrong">Benutzername oder Passwort falsch</string>
+    <string name="logindata_incomplete">Logindaten unvollständig</string>
+    <string name="connection_vplan_error">Keine Internetverbindung \\n(๑◕︵◕๑)</string>
+    <string name="keine_vertretung_text">Es fällt bei dir leider nichts aus \\n(๑◕︵◕๑)</string>
+    <string name="about_title">Über die Glapp</string>
+    <string name="show_notifications_text">Benachrichtigungen anzeigen</string>
+    <string name="update_automatically">Automatisches Aktualisieren</string>
+    <string name="set_colors_text">Farben festlegen:</string>
+    <string name="select_color_text">Farbe Wählen</string>
+    <string name="username_string">Benutzername</string>
+    <string name="password_string">Password</string>
 
 </resources>

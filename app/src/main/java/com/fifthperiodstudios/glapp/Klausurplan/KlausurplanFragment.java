@@ -1,5 +1,6 @@
 package com.fifthperiodstudios.glapp.Klausurplan;
 
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
@@ -11,24 +12,23 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.fifthperiodstudios.glapp.Downloader.DownloadKlausurplanStatusListener;
-import com.fifthperiodstudios.glapp.Downloader.KlausurplanDownloader;
+import com.fifthperiodstudios.glapp.GLAPPPresenter;
+import com.fifthperiodstudios.glapp.GLAPPViews;
 import com.fifthperiodstudios.glapp.Farben;
-import com.fifthperiodstudios.glapp.OnUpdateListener;
 import com.fifthperiodstudios.glapp.R;
 
-public class KlausurplanFragment extends Fragment implements SwipeRefreshLayout.OnRefreshListener, DownloadKlausurplanStatusListener, OnUpdateListener {
+
+public class KlausurplanFragment extends Fragment implements SwipeRefreshLayout.OnRefreshListener, GLAPPViews.KlausurplanView {
 
     private Klausurplan klausurplan;
-    private Farben farben;
-    private KlausurplanDownloader klausurplanDownloader;
+    private GLAPPPresenter glappPresenter;
 
     private RecyclerView recyclerView;
     private RecyclerView.Adapter recyclerAdapter;
     private RecyclerView.LayoutManager recyclerManager;
     private SwipeRefreshLayout mSwipeRefreshLayout;
-
     private TextView keineKlausuren;
+    private SharedPreferences sharedPreferences;
 
     public KlausurplanFragment() {
 
@@ -37,41 +37,44 @@ public class KlausurplanFragment extends Fragment implements SwipeRefreshLayout.
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState){
         View rootView = inflater.inflate(R.layout.klausurplan_fragment, container, false);
-        Bundle args = getArguments();
-
-        farben = (Farben) args.getSerializable("farben");
 
         mSwipeRefreshLayout = rootView.findViewById(R.id.swipe_container);
         mSwipeRefreshLayout.setOnRefreshListener(this);
         recyclerView = rootView.findViewById(R.id.recyc);
         keineKlausuren = rootView.findViewById(R.id.keine_klausuren_text);
-        
-        klausurplanDownloader = new KlausurplanDownloader(getActivity(), args.getString("mobilKey"), this);
-        klausurplanDownloader.downloadKlausurplan();
+
+        sharedPreferences = getActivity().getSharedPreferences("com.fifthperiodstudios.glapp", getActivity().MODE_PRIVATE);
 
         return rootView;
     }
 
     @Override
+    public void onResume() {
+        super.onResume();
+        glappPresenter.downloadKlausurplan();
+    }
+
+    @Override
     public void onRefresh() {
-        klausurplanDownloader.downloadKlausurplan();
+        glappPresenter.downloadKlausurplan();
         this.mSwipeRefreshLayout.setRefreshing(false);
     }
 
     @Override
-    public void keineInternetverbindung(Klausurplan klausurplan) {
-        setupKlausurplanFragment(klausurplan);
-        Toast.makeText(getContext(), "Keine Internetverbindung", Toast.LENGTH_SHORT).show();
+    public void keineInternetverbindung(Klausurplan klausurplan, Farben farben) {
+        setupKlausurplanFragment(klausurplan, farben);
+        Toast.makeText(getContext(), R.string.connection_error, Toast.LENGTH_SHORT).show();
     }
 
     @Override
-    public void fertigHeruntergeladen(Klausurplan klausurplan) {
+    public void fertigHeruntergeladen(Klausurplan klausurplan, Farben farben) {
+        //sharedPreferences.edit().putString("Klausurplandatum", klausurplan.getDatum()).commit();
         this.klausurplan = klausurplan;
-        setupKlausurplanFragment(klausurplan);
+        setupKlausurplanFragment(klausurplan, farben);
     }
     
     
-    public void setupKlausurplanFragment(Klausurplan klausurplan){
+    public void setupKlausurplanFragment(Klausurplan klausurplan, Farben farben){
         if(klausurplan != null && klausurplan.getKlausuren().size() != 0){
             keineKlausuren.setVisibility(View.GONE);
             recyclerView.setVisibility(View.VISIBLE);
@@ -82,17 +85,21 @@ public class KlausurplanFragment extends Fragment implements SwipeRefreshLayout.
         }else {
             recyclerView.setVisibility(View.GONE);
             keineKlausuren.setVisibility(View.VISIBLE);
-            keineKlausuren.setText("Es stehen momentan keine Klausuren an :)");
+            keineKlausuren.setText(R.string.keine_klausuren_text);
         }
     }
     @Override
     public void andererFehler() {
-        Toast.makeText(getContext(), "Es ist etwas schiefgelaufen", Toast.LENGTH_LONG).show();
+        Toast.makeText(getContext(), R.string.some_error, Toast.LENGTH_LONG).show();
     }
 
     @Override
-    public void updateData(Farben farben) {
-        this.farben = farben;
+    public void setPresenter(GLAPPPresenter presenter) {
+        this.glappPresenter = presenter;
+    }
+
+    @Override
+    public void updateFarben(Farben farben) {
         if(klausurplan != null && klausurplan.getKlausuren().size() != 0){
             ((KlausurplanViewAdapter)recyclerAdapter).setFarben(farben);
             recyclerAdapter.notifyDataSetChanged();

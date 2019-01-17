@@ -1,70 +1,51 @@
 package com.fifthperiodstudios.glapp.Vertretungsplan;
 
-import android.support.annotation.NonNull;
-
 import java.io.Serializable;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
 
 public class Vertretungsplan implements Serializable {
-    private ArrayList<Vertretungsplan.VertretungsTag> vertretungstage;
-    private ArrayList<VertretungsplanStunde> stunden;
-    private Date datum;
+    private ArrayList<Vertretungstag> vertretungstage;
+    private ArrayList<Vertretungsstunde> stunden;
+    private ArrayList<String> informationen;
+
+    private String datum;
 
     public Vertretungsplan() {
         this.vertretungstage = new ArrayList<>();
         this.stunden = new ArrayList<>();
+        informationen = new ArrayList<>();
+
     }
 
-    public ArrayList<Vertretungsplan.VertretungsTag> getVertretungstage() {
-        return vertretungstage;
+    public void setVertretungstage(ArrayList<Vertretungstag> vertretungstage) {
+        this.vertretungstage = vertretungstage;
     }
 
-    public ArrayList<VertretungsplanStunde> getStunden() {
-        return stunden;
+    public ArrayList<String> getInformationen() {
+        return informationen;
     }
 
-    public void setStunden(ArrayList<VertretungsplanStunde> neueStunden) {
-        stunden = neueStunden;
-    }
-
-    public Date getDatum() {
-        return datum;
+    public void setInformationen(ArrayList<String> informationen) {
+        this.informationen = informationen;
     }
 
     public void setDatum(String datum) {
-        SimpleDateFormat dateparser = new SimpleDateFormat("yyyy-MM-dd kk:mm:ss");
-        try {
-            this.datum = dateparser.parse(datum);
-        } catch (ParseException e) {
-            this.datum = new Date(0);
-        }
+        this.datum = datum;
     }
 
-    public static class VertretungsTag implements Serializable {
-        private ArrayList<VertretungsplanStunde> stunden;
-        private Date datum;
+    public ArrayList<Vertretungstag> getVertretungstage() {
+        return vertretungstage;
+    }
 
-        public VertretungsTag(ArrayList<VertretungsplanStunde> vertretungsplanStunde) {
-            this.stunden = vertretungsplanStunde;
-        }
+    public ArrayList<Vertretungsstunde> getStunden() {
+        return stunden;
+    }
 
-        public VertretungsTag() {
-            stunden = new ArrayList<>();
-        }
+    public void setStunden(ArrayList<Vertretungsstunde> neueStunden) {
+        stunden = neueStunden;
+    }
 
-        public ArrayList<VertretungsplanStunde> getStunden() {
-            return stunden;
-        }
-
-        public Date getDatum() {
-            return datum;
-        }
-
-        public void setDatum(Date datum) {
-            this.datum = datum;
-        }
+    public String getDatum() {
+        return datum;
     }
 }

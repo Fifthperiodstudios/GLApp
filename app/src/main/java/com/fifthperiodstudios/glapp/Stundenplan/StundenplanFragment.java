@@ -1,6 +1,6 @@
 package com.fifthperiodstudios.glapp.Stundenplan;
 
-import android.content.Context;
+import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
@@ -8,7 +8,6 @@ import android.graphics.drawable.GradientDrawable;
 import android.graphics.drawable.ShapeDrawable;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.util.Log;
@@ -19,19 +18,17 @@ import android.widget.Button;
 import android.widget.RelativeLayout;
 import android.widget.Toast;
 
-import com.fifthperiodstudios.glapp.Downloader.DownloadStundenplanStatusListener;
-import com.fifthperiodstudios.glapp.Downloader.StundenplanDownloader;
 import com.fifthperiodstudios.glapp.Farben;
-import com.fifthperiodstudios.glapp.OnUpdateListener;
+import com.fifthperiodstudios.glapp.GLAPPPresenter;
+import com.fifthperiodstudios.glapp.GLAPPViews;
 import com.fifthperiodstudios.glapp.R;
 
-
-public class StundenplanFragment extends Fragment implements SwipeRefreshLayout.OnRefreshListener, DownloadStundenplanStatusListener, OnUpdateListener {
+public class StundenplanFragment extends Fragment implements SwipeRefreshLayout.OnRefreshListener, GLAPPViews, GLAPPViews.StundenplanView {
     private SwipeRefreshLayout mSwipeRefreshLayout;
     private RelativeLayout relativeLayout;
-    private Farben farben;
+    private GLAPPPresenter glappPresenter;
     private Stundenplan stundenplan;
-    private StundenplanDownloader stundenplanDownloader;
+    private SharedPreferences sharedPreferences;
 
     public StundenplanFragment() {
 
@@ -41,54 +38,59 @@ public class StundenplanFragment extends Fragment implements SwipeRefreshLayout.
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.stundenplan_fragment, container, false);
 
-        Bundle args = getArguments();
-
         mSwipeRefreshLayout = rootView.findViewById(R.id.swipe_container);
         mSwipeRefreshLayout.setOnRefreshListener(this);
         relativeLayout = rootView.findViewById(R.id.stundenplanview);
 
-        farben = (Farben) args.getSerializable("farben");
-        stundenplanDownloader = new StundenplanDownloader(getActivity(), getArguments().getString("mobilKey"), this);
-        stundenplanDownloader.downloadStundenplan();
-
+        sharedPreferences = getActivity().getSharedPreferences("com.fifthperiodstudios.glapp", getActivity().MODE_PRIVATE);
 
         return rootView;
     }
 
+    @Override
+    public void onResume() {
+        super.onResume();
+        glappPresenter.downloadStundenplan();
+    }
 
     @Override
     public void onRefresh() {
-        stundenplanDownloader.downloadStundenplan();
+        glappPresenter.downloadStundenplan();
         mSwipeRefreshLayout.setRefreshing(false);
     }
 
     @Override
-    public void keineInternetverbindung(final Stundenplan stundenplan) {
+    public void keineInternetverbindung(final Stundenplan stundenplan, final Farben farben) {
 
         relativeLayout.post(new Runnable() {
             @Override
             public void run() {
-                setupView(stundenplan);
+                setupView(stundenplan, farben);
             }
         });
 
     }
 
     @Override
-    public void fertigHeruntergeladen(Stundenplan stundenplan) {
-
-        setupView(stundenplan);
+    public void fertigHeruntergeladen(Stundenplan stundenplan, Farben farben) {
+        sharedPreferences.edit().putString("Stundenplandatum", stundenplan.getDatum()).commit();
+        setupView(stundenplan, farben);
 
     }
 
     @Override
     public void andererFehler() {
-        Toast.makeText(getContext(), "Etwas ist schiefgelaufen :/", Toast.LENGTH_LONG).show();
+        Toast.makeText(getContext(), R.string.some_error, Toast.LENGTH_LONG).show();
     }
 
-    public void setupView(Stundenplan stundenplan) {
-        this.stundenplan = stundenplan;
+    @Override
+    public void setPresenter(@NonNull GLAPPPresenter presenter) {
+        this.glappPresenter = presenter;
+    }
+
+    public void setupView(Stundenplan stundenplan, Farben farben) {
         relativeLayout.removeAllViews();
+        this.stundenplan = stundenplan;
         int buffer = 5;
         int painting_width = relativeLayout.getMeasuredWidth() - 2 * relativeLayout.getPaddingLeft() - 10 * (buffer);
         int painting_height = relativeLayout.getMeasuredHeight() - 2 * relativeLayout.getPaddingTop() - 10 * (buffer);
@@ -115,14 +117,15 @@ public class StundenplanFragment extends Fragment implements SwipeRefreshLayout.
                     }
                 });
 
+                int c = Color.parseColor(farben.getFarbeFach(stunde.getFach()));
                 button.setBackgroundResource(R.drawable.stunde_rechteck);
                 Drawable background = button.getBackground();
                 if (background instanceof ShapeDrawable) {
-                    ((ShapeDrawable) background).getPaint().setColor(Color.parseColor(farben.getFarbeFach(stunde.getFach())));
+                    ((ShapeDrawable) background).getPaint().setColor(c);
                 } else if (background instanceof GradientDrawable) {
-                    ((GradientDrawable) background).setColor(Color.parseColor(farben.getFarbeFach(stunde.getFach())));
+                    ((GradientDrawable) background).setColor(c);
                 } else if (background instanceof ColorDrawable) {
-                    ((ColorDrawable) background).setColor(Color.parseColor(farben.getFarbeFach(stunde.getFach())));
+                    ((ColorDrawable) background).setColor(c);
                 }
                 button.setText(stunde.getFach().getVollenName());
                 button.setTextColor(Color.WHITE);
@@ -132,16 +135,7 @@ public class StundenplanFragment extends Fragment implements SwipeRefreshLayout.
     }
 
     @Override
-    public void updateData(Farben farben) {
-        this.farben = farben;
-        setupView(stundenplan);
-    }
-
-    public Farben getFarben() {
-        return farben;
-    }
-
-    public Stundenplan getStundenplan() {
-        return stundenplan;
+    public void updateFarben(Farben farben) {
+        setupView(stundenplan, farben);
     }
 }

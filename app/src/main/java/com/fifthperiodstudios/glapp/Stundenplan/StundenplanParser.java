@@ -16,7 +16,8 @@ import java.util.Date;
 public class StundenplanParser {     // We don't use namespaces
     private static final String ns = null;
 
-    public Stundenplan parseStundenplan(InputStream in) throws XmlPullParserException, IOException {
+
+public Stundenplan parseStundenplan(InputStream in) throws XmlPullParserException, IOException {
         try {
             XmlPullParser parser = Xml.newPullParser();
             parser.setFeature(XmlPullParser.FEATURE_PROCESS_NAMESPACES, false);
@@ -32,7 +33,7 @@ public class StundenplanParser {     // We don't use namespaces
         Stundenplan stundenplan = new Stundenplan();
 
         parser.require(XmlPullParser.START_TAG, ns, "Stundenplan");
-        stundenplan.setDatum(parser.getAttributeValue(null, "Datum"));
+        stundenplan.setDatum(parser.getAttributeValue(null, "Timestamp"));
         while (parser.next() != XmlPullParser.END_TAG) {
             if (parser.getEventType() != XmlPullParser.START_TAG) {
                 continue;
@@ -60,11 +61,11 @@ public class StundenplanParser {     // We don't use namespaces
 
             if (name.equals("Stunde") && !parser.getAttributeValue(null, "Kurs").equals("")) {
                 Stunde k = readStunde(parser);
-                int z = stundenplan.getFächer().indexOf(k.getFach());
+                int z = stundenplan.getFaecher().indexOf(k.getFach());
                 if (z != -1) {
-                    k.setFach(stundenplan.getFächer().get(z));
+                    k.setFach(stundenplan.getFaecher().get(z));
                 } else {
-                    stundenplan.getFächer().add(k.getFach());
+                    stundenplan.getFaecher().add(k.getFach());
                 }
                 stunden.add(k);
             } else {
@@ -80,8 +81,9 @@ public class StundenplanParser {     // We don't use namespaces
         String tag = parser.getName();
         if (tag.equals("Stunde")) {
             stunde.setStunde(parser.getAttributeValue(null, "Std"));
-            stunde.getFach().setKurs(parser.getAttributeValue(null, "Kurs"));
             stunde.setRaum(parser.getAttributeValue(null, "Raum"));
+
+            stunde.getFach().setKurs(parser.getAttributeValue(null, "Kurs"));
             stunde.getFach().setKursart(parser.getAttributeValue(null, "Kursart"));
             stunde.getFach().setLehrer(parser.getAttributeValue(null, "Lehrer"));
             stunde.getFach().setFach(parser.getAttributeValue(null, "Fach"));
@@ -108,5 +110,4 @@ public class StundenplanParser {     // We don't use namespaces
             }
         }
     }
-
 }

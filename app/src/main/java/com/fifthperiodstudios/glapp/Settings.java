@@ -19,30 +19,29 @@ public class Settings extends AppCompatActivity {
     private Toolbar toolbar;
 
     public static final String SHAREDPREFERENCES_NAME = "com.fifthperiodstudios.glapp";
-//    public static final String SHAREDPREFERENCES_MOBILEKEY = "mobilKey";
     public static final String SHAREDPREFERENCES_BENACHRICHTIGUNGEN = "benachrichtigungen";
     public static final String SHAREDPREFERENCES_AKTUALISIEREN = "autoAktualiseren";
 
     boolean benachrichtigungen;
     boolean autoAktualisieren;
     int farbeNummer;
-    String farbeName;
+    private String farbeName;
 
-    Switch swtBenachrichtigungen;
-    Switch swtAutoAktualisieren;
+    private Switch swtBenachrichtigungen;
+    private Switch swtAutoAktualisieren;
 
-    TextView tVbenachrichtigungen;
-    TextView tVanzeigen;
+    private TextView tVbenachrichtigungen;
+    private TextView tVanzeigen;
 
-    RecyclerView recyclerView;
-    RecyclerView.Adapter recyclerAdapter;
-    RecyclerView.LayoutManager recyclerManager;
+    private RecyclerView recyclerView;
+    private RecyclerView.Adapter recyclerAdapter;
+    private RecyclerView.LayoutManager recyclerManager;
 
-    SharedPreferences sharedPreferences;
-    SharedPreferences.Editor sharedPreferencesEditor;
-//    SharedPreferences helpPreferences;
-    Stundenplan stundenplan;
-    Farben farben;
+    private SharedPreferences sharedPreferences;
+    private SharedPreferences.Editor sharedPreferencesEditor;
+    //    SharedPreferences helpPreferences;
+    private Farben farben;
+    private Stundenplan stundenplan;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -52,8 +51,8 @@ public class Settings extends AppCompatActivity {
         toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
+        farben = (Farben) getIntent().getSerializableExtra("Farben");
         stundenplan = (Stundenplan) getIntent().getSerializableExtra("Stundenplan");
-        farben = (Farben) getIntent().getSerializableExtra("farben");
 
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setDisplayShowHomeEnabled(true);
@@ -61,14 +60,11 @@ public class Settings extends AppCompatActivity {
         tVbenachrichtigungen = findViewById(R.id.textView);
         tVanzeigen = findViewById(R.id.textView2);
 
-        sharedPreferences = getSharedPreferences(SHAREDPREFERENCES_NAME,0);
+        sharedPreferences = getSharedPreferences(SHAREDPREFERENCES_NAME, 0);
         sharedPreferencesEditor = sharedPreferences.edit();
 
-        benachrichtigungen = sharedPreferences.getBoolean(SHAREDPREFERENCES_BENACHRICHTIGUNGEN,true);
-        autoAktualisieren = sharedPreferences.getBoolean(SHAREDPREFERENCES_AKTUALISIEREN,true);
-
-        farbeNummer = sharedPreferences.getInt("farbeNummer",0);
-        farbeName = sharedPreferences.getString("farbeName","#54de54");
+        benachrichtigungen = sharedPreferences.getBoolean(SHAREDPREFERENCES_BENACHRICHTIGUNGEN, true);
+        autoAktualisieren = sharedPreferences.getBoolean(SHAREDPREFERENCES_AKTUALISIEREN, true);
 
         swtBenachrichtigungen = findViewById(R.id.switch1);
         swtAutoAktualisieren = findViewById(R.id.switch2);
@@ -78,7 +74,6 @@ public class Settings extends AppCompatActivity {
 
         recyclerManager = new LinearLayoutManager(this);
         recyclerAdapter = new RecyclerViewAdapter(stundenplan, farben, getSupportFragmentManager());
-        Log.d("RAGAD", "onCreate: " + (stundenplan == null));
         recyclerView = findViewById(R.id.recycler);
         recyclerView.setLayoutManager(recyclerManager);
         recyclerView.setAdapter(recyclerAdapter);
@@ -98,12 +93,16 @@ public class Settings extends AppCompatActivity {
     }
 
     private void save() {
-        sharedPreferencesEditor.putBoolean(SHAREDPREFERENCES_BENACHRICHTIGUNGEN,swtBenachrichtigungen.isChecked());
-        sharedPreferencesEditor.putBoolean(SHAREDPREFERENCES_AKTUALISIEREN,swtAutoAktualisieren.isChecked());
+        sharedPreferencesEditor.putBoolean(SHAREDPREFERENCES_BENACHRICHTIGUNGEN, swtBenachrichtigungen.isChecked());
+        sharedPreferencesEditor.putBoolean(SHAREDPREFERENCES_AKTUALISIEREN, swtAutoAktualisieren.isChecked());
         sharedPreferencesEditor.commit();
 
         Intent returnIntent = new Intent();
-        returnIntent.putExtra("farben", farben);
-        setResult(RESULT_OK, returnIntent);
+        returnIntent.putExtra("Farben", farben);
+        if (((RecyclerViewAdapter) recyclerAdapter).haveColorsChanged()) {
+            setResult(RESULT_OK, returnIntent);
+        } else {
+            setResult(0, returnIntent);
+        }
     }
 }

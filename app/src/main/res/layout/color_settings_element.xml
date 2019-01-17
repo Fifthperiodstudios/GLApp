@@ -14,7 +14,6 @@
         android:layout_centerVertical="true"
         android:layout_marginStart="30dp"
         android:layout_marginLeft="30dp"
-        android:text="Test"
         android:textSize="18sp" />
 
     <Button

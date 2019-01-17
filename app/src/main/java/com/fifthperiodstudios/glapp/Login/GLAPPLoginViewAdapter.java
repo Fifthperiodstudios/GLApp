@@ -1,4 +1,4 @@
-package com.fifthperiodstudios.glapp;
+package com.fifthperiodstudios.glapp.Login;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -13,24 +13,22 @@ import com.fifthperiodstudios.glapp.Vertretungsplan.VertretungsplanFragment;
 
 import java.util.ArrayList;
 
-public class GLAPPViewAdapter extends FragmentPagerAdapter {
+public class GLAPPLoginViewAdapter extends FragmentPagerAdapter {
 
 
     private final ArrayList<Fragment> mFragmentList = new ArrayList<>();
 
     private final ArrayList<String> mFragmentTitleList = new ArrayList<>();
 
-    public GLAPPViewAdapter(FragmentManager fm, StundenplanFragment stundenplanFragment, VertretungsplanFragment vertretungsplanFragment, KlausurplanFragment klausurplanFragment) {
+    public GLAPPLoginViewAdapter(FragmentManager fm, SchuelerLoginFragment schuelerLoginFragment, LehrerLoginFragment lehrerLoginFragment) {
         super(fm);
 
-        mFragmentList.add(stundenplanFragment);
-        mFragmentTitleList.add("Stundenplan");
+        mFragmentList.add(schuelerLoginFragment);
+        mFragmentTitleList.add("Schüler");
 
-        mFragmentList.add(vertretungsplanFragment);
-        mFragmentTitleList.add("Vertretungsplan");
+        mFragmentList.add(lehrerLoginFragment);
+        mFragmentTitleList.add("Lehrer");
 
-        mFragmentList.add(klausurplanFragment);
-        mFragmentTitleList.add("Klausurplan");
     }
 
     @Override
@@ -40,7 +38,7 @@ public class GLAPPViewAdapter extends FragmentPagerAdapter {
 
     @Override
     public int getCount() {
-        return 3;
+        return 2;
     }
 
     @Override

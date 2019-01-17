@@ -4,27 +4,31 @@ import android.app.AlarmManager;
 import android.app.PendingIntent;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentPagerAdapter;
-import android.support.v4.view.ViewPager;
+import android.support.design.widget.TabLayout;
+import android.support.v4.app.FragmentTransaction;
 import android.os.Bundle;
+import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 
-import java.util.ArrayList;
 import java.util.Calendar;
-
-import android.support.design.widget.TabLayout;
 
 import com.fifthperiodstudios.glapp.GLAPPActivity;
 import com.fifthperiodstudios.glapp.Notification.BackgroundService;
 import com.fifthperiodstudios.glapp.R;
+import com.fifthperiodstudios.glapp.Stundenplan.StundenplanFragment;
+import com.fifthperiodstudios.glapp.Vertretungsplan.VertretungsplanFragment;
 
 public class MainActivity extends AppCompatActivity{
 
-    SharedPreferences prefs;
+    private SharedPreferences prefs;
     private Toolbar toolbar;
+    private LoginPresenter loginPresenter;
+    private SchuelerLoginFragment schuelerLoginFragment;
+    private ViewPager mViewPager;
+    private LehrerLoginFragment lehrerLoginFragment;
+    private GLAPPLoginViewAdapter glappLoginViewAdapter;
+    private TabLayout tabLayout;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -34,7 +38,61 @@ public class MainActivity extends AppCompatActivity{
         toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        prefs = getSharedPreferences("com.fifthperiodstudios.glapp", MODE_PRIVATE);
+        if(getSupportFragmentManager().getFragments().isEmpty()) {
+            schuelerLoginFragment = new SchuelerLoginFragment();
+            lehrerLoginFragment = new LehrerLoginFragment();
+        }else {
+            schuelerLoginFragment = (SchuelerLoginFragment) getSupportFragmentManager().getFragments().get(0);
+            if(schuelerLoginFragment == null){
+                schuelerLoginFragment = new SchuelerLoginFragment();
+            }
+
+            lehrerLoginFragment = (LehrerLoginFragment) getSupportFragmentManager().getFragments().get(1);
+            if(lehrerLoginFragment == null){
+                lehrerLoginFragment = new LehrerLoginFragment();
+            }
+        }
+
+
+        glappLoginViewAdapter = new GLAPPLoginViewAdapter(getSupportFragmentManager(), schuelerLoginFragment, lehrerLoginFragment);
+
+        //die tabs werden eingerichtet
+        mViewPager = (ViewPager) findViewById(R.id.pager);
+        mViewPager.setOffscreenPageLimit(3);
+        mViewPager.setAdapter(glappLoginViewAdapter);
+        tabLayout = (TabLayout) findViewById(R.id.tabs);
+        tabLayout.setupWithViewPager(mViewPager);
+
+        mViewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+                                               @Override
+                                               public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+
+                                               }
+
+                                               @Override
+                                               public void onPageSelected(int position) {
+                                                   switch(position){
+                                                       case 0:
+                                                           toolbar.setBackgroundColor(getResources().getColor(R.color.colorPrimary));
+                                                           tabLayout.setBackgroundColor(getResources().getColor(R.color.colorPrimary));
+                                                           break;
+                                                       case 1:
+                                                           toolbar.setBackgroundColor(getResources().getColor(R.color.colorAccent));
+                                                           tabLayout.setBackgroundColor(getResources().getColor(R.color.colorAccent));
+                                                           break;
+                                                   }
+                                               }
+
+            @Override
+            public void onPageScrollStateChanged(int state) {
+
+            }
+
+            //Override default methods and change toolbar color inside of here
+    });
+//        createBackgroundService();
+
+    prefs = getSharedPreferences("com.fifthperiodstudios.glapp", MODE_PRIVATE);
     }
 
     private void createBackgroundService() {
@@ -57,7 +115,10 @@ public class MainActivity extends AppCompatActivity{
             intent.putExtra("mobilKey", prefs.getString("mobilKey", "DEF"));
             startActivity(intent);
             finish();
+        }else{
+            loginPresenter = new LoginPresenterImpl(new LoginRepositoryImpl(), schuelerLoginFragment, lehrerLoginFragment);
+            schuelerLoginFragment.setPresenter(loginPresenter);
+            lehrerLoginFragment.setPresenter(loginPresenter);
         }
     }
-
 }

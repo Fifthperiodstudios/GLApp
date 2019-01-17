@@ -19,8 +19,8 @@ import android.widget.Toast;
 import com.fifthperiodstudios.glapp.GLAPPActivity;
 import com.fifthperiodstudios.glapp.R;
 
-public class SchuelerLoginFragment extends Fragment implements LoginView {
-    public SchuelerLoginFragment() {
+public class LehrerLoginFragment extends Fragment implements LoginView {
+    public LehrerLoginFragment() {
 
     }
 
@@ -28,13 +28,12 @@ public class SchuelerLoginFragment extends Fragment implements LoginView {
     private Button loginButton;
     private EditText usernameTextView;
     private EditText passwordTextView;
-    private String mobilKey;
     private LoginPresenter loginPresenter;
     private ProgressBar progressBar;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        final View rootView = inflater.inflate(R.layout.student_login_layout, container, false);
+        final View rootView = inflater.inflate(R.layout.lehrer_login_layout, container, false);
 
         loginButton = (Button) rootView.findViewById(R.id.login_button);
         usernameTextView = (EditText) rootView.findViewById(R.id.username_student);
@@ -58,7 +57,7 @@ public class SchuelerLoginFragment extends Fragment implements LoginView {
                             loginButton.setAlpha(.5f);
                             progressBar.setVisibility(View.VISIBLE);
                             String key = sharedPreferences.getString("mobilKey", "DEF");
-                            loginPresenter.loginSchueler(key, username, password);
+                            loginPresenter.loginLehrer(key, username, password);
                             return true;
                         default:
                             break;
@@ -78,7 +77,7 @@ public class SchuelerLoginFragment extends Fragment implements LoginView {
                 loginButton.setAlpha(.5f);
                 progressBar.setVisibility(View.VISIBLE);
                 String key = sharedPreferences.getString("mobilKey", "DEF");
-                loginPresenter.loginSchueler(key, username, password);
+                loginPresenter.loginLehrer(key, username, password);
                 hideKeyboard(getActivity());
             }
         });
@@ -132,8 +131,8 @@ public class SchuelerLoginFragment extends Fragment implements LoginView {
         this.loginPresenter = loginPresenter;
     }
 
-    public static SchuelerLoginFragment newInstance() {
-        return new SchuelerLoginFragment();
+    public static LehrerLoginFragment newInstance() {
+        return new LehrerLoginFragment();
     }
 
     public void hideKeyboard(Activity activity) {

@@ -30,7 +30,7 @@
                 android:layout_margin="20dp"
                 android:fontFamily="sans-serif"
                 android:gravity="center"
-                android:text="Über die Glapp"
+                android:text="@string/about_title"
                 android:textSize="32sp"
                 android:textStyle="bold" />
 

@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.os.Environment;
 import android.support.design.widget.TabLayout;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
@@ -12,10 +13,13 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 
+import com.fifthperiodstudios.glapp.Klausurplan.KlausurplanFragment;
 import com.fifthperiodstudios.glapp.Login.MainActivity;
 import com.fifthperiodstudios.glapp.Stundenplan.Stundenplan;
 import com.fifthperiodstudios.glapp.Stundenplan.StundenplanFragment;
+import com.fifthperiodstudios.glapp.Vertretungsplan.VertretungsplanFragment;
 
+import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
@@ -30,10 +34,15 @@ public class GLAPPActivity extends AppCompatActivity {
     private GLAPPViewAdapter glappViewAdapter;
     private TabLayout tabLayout;
     private Toolbar toolbar;
-    private String mobilKey;
     private Farben farben;
-    public static final String SHAREDPREFERENCES_NAME = "com.fifthperiodstudios.glapp";
-    public static final String SHAREDPREFERENCES_MOBILKEY = "mobilKey";
+    public final String SHAREDPREFERENCES_NAME = "com.fifthperiodstudios.glapp";
+    public final String SHAREDPREFERENCES_MOBILKEY = "mobilKey";
+
+    private KlausurplanFragment klausurplanFragment;
+    private StundenplanFragment stundenplanFragment;
+    private VertretungsplanFragment vertretungsplanFragment;
+
+    private GLAPPPresenterImpl glappPresenter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -42,56 +51,50 @@ public class GLAPPActivity extends AppCompatActivity {
         toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
+        if(getSupportFragmentManager().getFragments().isEmpty()) {
+            klausurplanFragment = new KlausurplanFragment();
+            stundenplanFragment = new StundenplanFragment();
+            vertretungsplanFragment = new VertretungsplanFragment();
+        }else {
+            stundenplanFragment = (StundenplanFragment) getSupportFragmentManager().getFragments().get(0);
+            if(stundenplanFragment == null){
+                stundenplanFragment = new StundenplanFragment();
+            }
+            vertretungsplanFragment = (VertretungsplanFragment) getSupportFragmentManager().getFragments().get(1);
+            if(vertretungsplanFragment == null){
+                vertretungsplanFragment = new VertretungsplanFragment();
+            }
+            klausurplanFragment = (KlausurplanFragment) getSupportFragmentManager().getFragments().get(2);
+            if(klausurplanFragment == null){
+                klausurplanFragment = new KlausurplanFragment();
+            }
+        }
+
+
+        glappViewAdapter = new GLAPPViewAdapter(getSupportFragmentManager(), stundenplanFragment, vertretungsplanFragment, klausurplanFragment);
+
+        //die tabs werden eingerichtet
         mViewPager = (ViewPager) findViewById(R.id.pager);
         mViewPager.setOffscreenPageLimit(3);
-        Intent intent = getIntent();
-        mobilKey = (String) intent.getExtras().get(SHAREDPREFERENCES_MOBILKEY);
-        setupFragments();
-    }
-
-
-    //Fragmente einstellen
-    public void setupFragments() {
-        Farben farben;
-        FileInputStream fis = null;
-        try {
-            fis = getApplicationContext().openFileInput("farben");
-            ObjectInputStream is = new ObjectInputStream(fis);
-            farben = (Farben) is.readObject();
-            is.close();
-            fis.close();
-        } catch (FileNotFoundException e) {
-            farben = new Farben ();
-        } catch (IOException e) {
-            farben = new Farben ();
-        } catch (ClassNotFoundException e) {
-            farben = new Farben();
-        }
-
-        //Stellt den FragmentPagerAdapter ein
-        glappViewAdapter = new GLAPPViewAdapter(getSupportFragmentManager(), mobilKey, farben);
-        //dem ViewPager wird der Adapter übergeben
         mViewPager.setAdapter(glappViewAdapter);
-        //die tabs werden eingerichtet
         tabLayout = (TabLayout) findViewById(R.id.tabs);
         tabLayout.setupWithViewPager(mViewPager);
-    }
 
-    private void saveFarben(Farben f) {
-        FileOutputStream fos = null;
-        try {
-            fos = getApplicationContext().openFileOutput("farben", Context.MODE_PRIVATE);
-            ObjectOutputStream os = new ObjectOutputStream(fos);
-            os.writeObject(f);
-            os.close();
-            fos.close();
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
+        File stundenplanFile = new File(getApplicationContext().getExternalFilesDir(null), "Stundenplan");
+        File klausurplanFile = new File(getApplicationContext().getExternalFilesDir(null), "Klausurplan");
+        File farbenFile = new File(getApplicationContext().getExternalFilesDir(null), "Farben");
+        String mobilKey = getIntent().getStringExtra("mobilKey");
+        String vertretungsplanDatum =  getSharedPreferences("com.fifthperiodstudios.glapp", MODE_PRIVATE).getString("Vertretungsplandatum", "DEF");
+        String stundenplanDatum = getSharedPreferences("com.fifthperiodstudios.glapp", MODE_PRIVATE).getString("Stundenplandatum", "DEF");
+        String klausurplanDatum = getSharedPreferences("com.fifthperiodstudios.glapp", MODE_PRIVATE).getString("Klausurplandatum", "DEF");
 
+        GLAPPRepositoryImpl glappRepository = new GLAPPRepositoryImpl(mobilKey, stundenplanFile, klausurplanFile, farbenFile, vertretungsplanDatum, stundenplanDatum, klausurplanDatum);
+        glappPresenter = new GLAPPPresenterImpl(glappRepository,
+                                                stundenplanFragment,
+                                                vertretungsplanFragment,
+                                                klausurplanFragment);
+        glappPresenter.loadFarben();
+    }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -105,14 +108,11 @@ public class GLAPPActivity extends AppCompatActivity {
         super.onOptionsItemSelected(item);
         int id = item.getItemId();
 
-        //noinspection SimplifiableIfStatement
         switch(id){
             case R.id.action_settings:
                 Intent intent = new Intent (this, Settings.class);
-                Stundenplan stundenplan = ((StundenplanFragment) glappViewAdapter.getItem(0)).getStundenplan();
-                Farben farben = ((StundenplanFragment)glappViewAdapter.getItem(0)).getFarben();
-                intent.putExtra("Stundenplan", stundenplan);
-                intent.putExtra("farben", farben);
+                intent.putExtra("Farben", glappPresenter.getFarben());
+                intent.putExtra("Stundenplan", glappPresenter.getStundenplan());
                 this.startActivityForResult(intent, 1);
                 break;
             case R.id.action_logout:
@@ -138,14 +138,13 @@ public class GLAPPActivity extends AppCompatActivity {
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         if(requestCode == 1){
             if(resultCode == RESULT_OK){
-                farben = (Farben) data.getSerializableExtra("farben");
-                for(int i = 0; i<glappViewAdapter.getCount(); i++){
-                    ((OnUpdateListener)glappViewAdapter.getItem(i)).updateData(farben);
-                }
-                saveFarben(farben);
-            }else if(resultCode == RESULT_CANCELED){
+                farben = (Farben) data.getSerializableExtra("Farben");
+                glappPresenter.updateFarben(farben);
+            }else if(resultCode == 0){
 
             }
         }
     }
+
+
 }

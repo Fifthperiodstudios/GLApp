@@ -25,11 +25,13 @@ class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapter.ViewH
     FragmentManager mFragmentManager;
     Farben farben;
     FarbAuswahlDialog farbAuswahlDialog;
+    private boolean colorsChanged;
 
     public RecyclerViewAdapter(Stundenplan stundenplan, Farben farben, FragmentManager fragmentManager) {
         this.stundenplan = stundenplan;
         this.farben = farben;
         mFragmentManager = fragmentManager;
+        colorsChanged = false;
     }
 
     @NonNull
@@ -43,7 +45,7 @@ class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapter.ViewH
 
     public void setColor (Button b, int position){
         Drawable background = b.getBackground();
-        String farbe = farben.getFarbeFach(stundenplan.getFächer().get(position));
+        String farbe = farben.getFarbeFach(stundenplan.getFaecher().get(position));
         if (background instanceof ShapeDrawable) {
             ((ShapeDrawable) background).getPaint().setColor(Color.parseColor(farbe));
         } else if (background instanceof GradientDrawable) {
@@ -59,7 +61,7 @@ class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapter.ViewH
         setColor(holder.farbeWaehlen, position);
 
         final int pos = position;
-        holder.fachName.setText(stundenplan.getFächer().get(position).getFach());//Hier die Fächerliste einzeln aufrufen
+        holder.fachName.setText(stundenplan.getFaecher().get(position).getFach());//Hier die Fächerliste einzeln aufrufen
         holder.farbeWaehlen.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -67,7 +69,7 @@ class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapter.ViewH
                 farbAuswahlDialog.setOnNoticeListener (RecyclerViewAdapter.this);
                 // Add action buttons
                 Bundle bundle = new Bundle();
-                bundle.putSerializable("fach", stundenplan.getFächer().get(pos));
+                bundle.putSerializable("fach", stundenplan.getFaecher().get(pos));
                 bundle.putSerializable("farben", farben);
                 bundle.putInt("position", pos);
                 farbAuswahlDialog.setArguments(bundle);
@@ -79,12 +81,13 @@ class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapter.ViewH
 
     @Override
     public int getItemCount() {
-        return stundenplan.getFächer().size();
+        return stundenplan.getFaecher().size();
     }
 
     @Override
     public void onDialogPositiveClick(DialogFragment dialog, String farbe, Fach fach, int pos) {
         if(farbAuswahlDialog.getFarbe() != null){
+            colorsChanged = true;
             farben.getFarbenFaecher().put(fach, farbe);
             notifyItemChanged(pos);
         }
@@ -108,5 +111,9 @@ class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapter.ViewH
             farbeWaehlen = itemView.findViewById(R.id.colorSettingsFarbe);
 
         }
+    }
+    
+    public boolean haveColorsChanged() {
+        return colorsChanged;
     }
 }

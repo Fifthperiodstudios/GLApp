@@ -6,8 +6,6 @@ import android.content.SharedPreferences;
 import android.os.IBinder;
 import android.support.annotation.Nullable;
 
-import com.fifthperiodstudios.glapp.Downloader.VertretungsplanDownloader;
-
 public class BackgroundService extends Service {
 //    @android.annotation.Nullable
     public static final String SHAREDPREFERENCES_NAME = "com.fifthperiodstudios.glapp";

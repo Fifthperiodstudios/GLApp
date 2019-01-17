@@ -35,7 +35,7 @@ public class VertretungsplanParser {     // We don't use namespaces
         Vertretungsplan vertretungsplan = new Vertretungsplan();
 
         parser.require(XmlPullParser.START_TAG, ns, "Vertretungsplan");
-        vertretungsplan.setDatum(parser.getAttributeValue(null, "Stand"));
+        vertretungsplan.setDatum(parser.getAttributeValue(null, "Timestamp"));
         while (parser.next() != XmlPullParser.END_TAG) {
             if (parser.getEventType() != XmlPullParser.START_TAG) {
                 continue;
@@ -43,8 +43,11 @@ public class VertretungsplanParser {     // We don't use namespaces
             String name = parser.getName();
             // Starts by looking for the entry tag
             if (name.equals("Vertretungstag")) {
-                vertretungsplan.getVertretungstage().add(readVertretungsplanTag(parser, vertretungsplan, vertretungsplan.getDatum()));
-            } else {
+                String datum = parser.getAttributeValue(null, "Datum");
+                vertretungsplan.getVertretungstage().add(readVertretungsplanTag(parser, vertretungsplan, datum));
+            } else if(name.equals("Informationen")) {
+                vertretungsplan.setInformationen(readInformationen(parser));
+            }else{
                 skip(parser);
             }
         }
@@ -52,8 +55,8 @@ public class VertretungsplanParser {     // We don't use namespaces
     }
 
 
-    private Vertretungsplan.VertretungsTag readVertretungsplanTag(XmlPullParser parser, Vertretungsplan vertretungsplan, Date date) throws IOException, XmlPullParserException {
-        Vertretungsplan.VertretungsTag vertretungsTag = new Vertretungsplan.VertretungsTag();
+    private Vertretungstag readVertretungsplanTag(XmlPullParser parser, Vertretungsplan vertretungsplan, String date) throws IOException, XmlPullParserException {
+        Vertretungstag vertretungsTag = new Vertretungstag();
         vertretungsTag.setDatum(date);
         parser.require(XmlPullParser.START_TAG, ns, "Vertretungstag");
         while (parser.next() != XmlPullParser.END_TAG) {
@@ -63,7 +66,7 @@ public class VertretungsplanParser {     // We don't use namespaces
             String name = parser.getName();
             // Starts by looking for the entry tag
             if (name.equals("Stunde")) {
-                VertretungsplanStunde stunde = readVertretungsplanStunde(parser);
+                Vertretungsstunde stunde = readVertretungsstunde(parser);
                 stunde.setDatum(date);
                 vertretungsTag.getStunden().add(stunde);
                 vertretungsplan.getStunden().add(stunde);
@@ -74,21 +77,40 @@ public class VertretungsplanParser {     // We don't use namespaces
         return vertretungsTag;
     }
 
-    private VertretungsplanStunde readVertretungsplanStunde(XmlPullParser parser) throws IOException, XmlPullParserException {
-        VertretungsplanStunde stunde = new VertretungsplanStunde();
+    private ArrayList<String> readInformationen(XmlPullParser parser) throws IOException, XmlPullParserException {
+        ArrayList<String> informationen = new ArrayList<>();
+        parser.require(XmlPullParser.START_TAG, ns, "Informationen");
+        while (parser.next() != XmlPullParser.END_TAG) {
+            if (parser.getEventType() != XmlPullParser.START_TAG) {
+                continue;
+            }
+            String name = parser.getName();
+            // Starts by looking for the entry tag
+            if (name.equals("Info")) {
+                informationen.add(parser.getAttributeValue(null, "text"));
+            } else {
+                skip(parser);
+            }
+        }
+        return informationen;
+    }
+
+    private Vertretungsstunde readVertretungsstunde(XmlPullParser parser) throws IOException, XmlPullParserException {
+        Vertretungsstunde stunde = new Vertretungsstunde();
         parser.require(XmlPullParser.START_TAG, ns, "Stunde");
         String tag = parser.getName();
         if (tag.equals("Stunde")) {
-            stunde.setStunde(Integer.valueOf(parser.getAttributeValue(null, "Std")));
-            stunde.setRaum(parser.getAttributeValue(null, "Raum"));
             Fach fach = new Fach();
-            fach.setFach(parser.getAttributeValue(null, "Fach"));
-            stunde.setFach(fach);
+            stunde.setStunde(parser.getAttributeValue(null, "Std"));
+            stunde.setRaum(parser.getAttributeValue(null, "Raum"));
             stunde.setRaumNeu(parser.getAttributeValue(null, "RaumNeu"));
             stunde.setBemerkung(parser.getAttributeValue(null, "Bemerkung"));
-            stunde.setFLehrer(parser.getAttributeValue(null, "FLehrer"));
-            stunde.setVLehrer(parser.getAttributeValue(null, "VLehrer"));
-            stunde.setFachName(parser.getAttributeValue(null, "Fach"));
+            stunde.setVertretungsLehrer(parser.getAttributeValue(null, "VLehrer"));
+
+            fach.setLehrer(parser.getAttributeValue(null, "FLehrer"));
+            fach.setFach(parser.getAttributeValue(null, "Fach"));
+            stunde.setFach(fach);
+
             parser.nextTag();
         }
 

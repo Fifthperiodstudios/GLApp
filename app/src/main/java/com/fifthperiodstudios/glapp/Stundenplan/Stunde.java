@@ -5,6 +5,11 @@ import java.io.Serializable;
 public class Stunde implements Serializable{
     private String stunde;
     private String raum;
+    private Fach fach;
+
+    public Stunde (){
+        fach = new Fach();
+    }
 
     public String getRaum() {
         return raum;
@@ -12,12 +17,6 @@ public class Stunde implements Serializable{
 
     public void setRaum(String raum) {
         this.raum = raum;
-    }
-
-    private Fach fach;
-
-    public Stunde (){
-        fach = new Fach();
     }
 
     public Fach getFach() {

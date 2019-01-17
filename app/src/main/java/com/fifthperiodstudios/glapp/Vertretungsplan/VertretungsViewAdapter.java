@@ -9,6 +9,7 @@ import android.graphics.drawable.ShapeDrawable;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -18,6 +19,7 @@ import android.widget.TextView;
 import com.fifthperiodstudios.glapp.Farben;
 import com.fifthperiodstudios.glapp.R;
 import com.fifthperiodstudios.glapp.Stundenplan.Fach;
+import com.fifthperiodstudios.glapp.Stundenplan.Stunde;
 
 import java.util.ArrayList;
 
@@ -49,35 +51,33 @@ class VertretungsViewAdapter extends RecyclerView.Adapter<VertretungsViewAdapter
         TextView raumlehrerview = holder.raumlehrer;
         TextView symbolView = holder.symbol;
         TextView bemerkung = holder.bemerkung;
-        VertretungsplanStunde stunde = vertretungsplan.getStunden().get(position);
+        Vertretungsstunde stunde = vertretungsplan.getStunden().get(position);
 
-
-        Fach f = farben.getFach(stunde.getFach());
-
+        String fachfarbe = farben.getFarbeFach(stunde.getFach());
         String s = "";
-        kursnameView.setText(stunde.getDatumAlsText() + " " + stunde.getStunde() + ". " + f.getVollenName());
+        kursnameView.setText(stunde.getDatumAlsText() + " " + stunde.getStunde() + ". " + stunde.getFach().getFach());
         if (stunde.getVLehrer().isEmpty()){
-            s += "Bei " + stunde.getFLehrer();
-        }else{
-            s += "Vertretung bei" + stunde.getVLehrer();
+            s += "Bei " + stunde.getFLehrer() + " ";
+        }else if(!stunde.getVLehrer().equals(stunde.getFLehrer())){
+            s += "Vertretung bei " + stunde.getVLehrer() + " ";
         }
         if (stunde.getRaumNeu().isEmpty()){
-            s += " in Raum " + stunde.getRaum();
+            s += "in Raum " + stunde.getRaum();
         }else{
-            s += " Raumwechsel: " + stunde.getRaumNeu();
+            s += "Raumwechsel: " + stunde.getRaumNeu();
         }
 
         raumlehrerview.setText(s);
         bemerkung.setText(stunde.getBemerkung());
-        symbolView.setText(f.getVollenName());
+        symbolView.setText(stunde.getFach().getFach());
 
         Drawable background = symbolView.getBackground();
         if (background instanceof ShapeDrawable) {
-            ((ShapeDrawable)background).getPaint().setColor(Color.parseColor(farben.getFarbeFach(stunde.getFach())));
+            ((ShapeDrawable)background).getPaint().setColor(Color.parseColor(fachfarbe));
         } else if (background instanceof GradientDrawable) {
-            ((GradientDrawable)background).setColor(Color.parseColor(farben.getFarbeFach(stunde.getFach())));
+            ((GradientDrawable)background).setColor(Color.parseColor(fachfarbe));
         } else if (background instanceof ColorDrawable) {
-            ((ColorDrawable)background).setColor(Color.parseColor(farben.getFarbeFach(stunde.getFach())));
+            ((ColorDrawable)background).setColor(Color.parseColor(fachfarbe));
         }
 
     }

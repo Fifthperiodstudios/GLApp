@@ -26,7 +26,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="2"
-            android:text="Benachrichtigungen anzeigen"
+            android:text="@string/show_notifications_text"
             android:textSize="18sp" />
 
         <Switch
@@ -49,7 +49,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="2"
-            android:text="Automatisches Aktualisieren"
+            android:text="@string/update_automatically"
             android:textSize="18sp" />
 
         <Switch
@@ -64,7 +64,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textSize="20sp"
-        android:text="Farben festlegen:"
+        android:text="@string/set_colors_text"
         android:layout_marginTop="20dp"
         android:layout_marginBottom="10dp"
         android:layout_marginLeft="20dp"
