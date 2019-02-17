@@ -4,40 +4,45 @@
     android:id="@+id/swipe_container"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
-    <android.support.v4.widget.NestedScrollView
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
-        <LinearLayout
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+        <android.support.v4.widget.NestedScrollView
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:orientation="vertical">
-            <TextView
-                android:layout_marginTop="10dp"
+            android:layout_height="wrap_content">
+            <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:gravity="center"
-                android:textColor="@android:color/black"
-                app:fontFamily="sans-serif"
-                android:textSize="15sp"
-                android:visibility="gone"
-                android:id="@+id/informationen"/>
+                android:orientation="vertical">
+                <TextView
+                    android:layout_marginTop="10dp"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:textColor="@android:color/black"
+                    app:fontFamily="sans-serif"
+                    android:textSize="15sp"
+                    android:visibility="gone"
+                    android:id="@+id/informationen"/>
 
-            <android.support.v7.widget.RecyclerView
-                android:id="@+id/recyc"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:visibility="gone"/>
+                <android.support.v7.widget.RecyclerView
+                    android:id="@+id/recyc"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:visibility="gone"/>
+            </LinearLayout>
+        </android.support.v4.widget.NestedScrollView>
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:gravity="center"
+            android:textColor="@android:color/black"
+            app:fontFamily="sans-serif"
+            android:textSize="50sp"
+            android:visibility="gone"
+            android:layout_gravity="center"
+            android:id="@+id/keine_vertretung_text"/>
+    </LinearLayout>
 
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:gravity="center"
-                android:textColor="@android:color/black"
-                app:fontFamily="sans-serif"
-                android:textSize="50sp"
-                android:visibility="gone"
-                android:id="@+id/keine_vertretung_text"/>
-
-        </LinearLayout>
-    </android.support.v4.widget.NestedScrollView>
 </android.support.v4.widget.SwipeRefreshLayout>

@@ -1,16 +1,12 @@
 package com.fifthperiodstudios.glapp.Vertretungsplan;
 
-import android.util.Log;
-
-import com.fifthperiodstudios.glapp.R;
 import com.fifthperiodstudios.glapp.Stundenplan.Fach;
-
-import org.simpleframework.xml.Attribute;
 
 import java.io.Serializable;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.Locale;
 
 public class Vertretungsstunde implements Serializable {
 
@@ -89,12 +85,13 @@ public class Vertretungsstunde implements Serializable {
     }
 
     public String getDatumAlsText(){
-        SimpleDateFormat ft = new SimpleDateFormat("EE, dd.MM.yyyy");
+        SimpleDateFormat ft = new SimpleDateFormat("EE, dd.MM.yyyy", Locale.GERMANY);
         try {
             Date date = ft.parse(datum);
             ft.applyPattern("EE");
             return ft.format(date);
         } catch (ParseException e) {
+            e.printStackTrace();
             return "Etwas ist schiefgelaufen";
         }
     }

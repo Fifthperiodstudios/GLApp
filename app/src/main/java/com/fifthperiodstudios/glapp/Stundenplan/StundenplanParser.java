@@ -1,6 +1,5 @@
 package com.fifthperiodstudios.glapp.Stundenplan;
 
-import android.util.Log;
 import android.util.Xml;
 
 import org.xmlpull.v1.XmlPullParser;
@@ -8,10 +7,7 @@ import org.xmlpull.v1.XmlPullParserException;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
 
 public class StundenplanParser {     // We don't use namespaces
     private static final String ns = null;
@@ -59,7 +55,7 @@ public Stundenplan parseStundenplan(InputStream in) throws XmlPullParserExceptio
             }
             String name = parser.getName();
 
-            if (name.equals("Stunde") && !parser.getAttributeValue(null, "Kurs").equals("")) {
+            if (name.equals("Stunde") && !parser.getAttributeValue(null, "Fach").equals("")) {
                 Stunde k = readStunde(parser);
                 int z = stundenplan.getFaecher().indexOf(k.getFach());
                 if (z != -1) {

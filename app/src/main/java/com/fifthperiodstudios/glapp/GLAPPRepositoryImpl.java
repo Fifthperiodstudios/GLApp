@@ -24,7 +24,6 @@ public class GLAPPRepositoryImpl implements GLAPPRepository {
     private Vertretungsplan vertretungsplan;
     private Farben farben;
 
-
     public GLAPPRepositoryImpl(String mobilKey, File stundenplanFile, File klausurplanFile, File farbenFile, String stundenplanDatum, String vertretungsplanDatum, String klausurplanDatum) {
         appExecutors = new AppExecutors();
 
@@ -42,6 +41,31 @@ public class GLAPPRepositoryImpl implements GLAPPRepository {
 
     @Override
     public void getStundenplan(final StundenplanCallback callback) {
+        if(stundenplanFile.exists()) {
+            localDataHandler.getStundenplan(new StundenplanCallback() {
+                @Override
+                public void onStundenplanLoaded(Stundenplan stundenplan) {
+                    setStundenplan(stundenplan);
+                    callback.onNoInternetConnection(stundenplan);
+                }
+
+                @Override
+                public void onStundenplanError() {
+                    callback.onStundenplanError();
+                }
+
+                @Override
+                public void onNoInternetConnection(Stundenplan stundenplan) {
+                    //Never called
+                }
+
+                @Override
+                public void onNoNewStundenplan() {
+
+                }
+            });
+        }
+
         serverDataHandler.getStundenplan(stundenplanDatum, new StundenplanCallback() {
             @Override
             public void onStundenplanLoaded(Stundenplan stundenplan) {
@@ -57,28 +81,7 @@ public class GLAPPRepositoryImpl implements GLAPPRepository {
 
             @Override
             public void onNoInternetConnection(Stundenplan stundenplan) {
-                localDataHandler.getStundenplan(new StundenplanCallback() {
-                    @Override
-                    public void onStundenplanLoaded(Stundenplan stundenplan) {
-                        setStundenplan(stundenplan);
-                        callback.onNoInternetConnection(stundenplan);
-                    }
 
-                    @Override
-                    public void onStundenplanError() {
-                        callback.onStundenplanError();
-                    }
-
-                    @Override
-                    public void onNoInternetConnection(Stundenplan stundenplan) {
-                        //Never called
-                    }
-
-                    @Override
-                    public void onNoNewStundenplan() {
-
-                    }
-                });
             }
 
             @Override

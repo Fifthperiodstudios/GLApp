@@ -1,9 +1,5 @@
 package com.fifthperiodstudios.glapp;
 
-import android.content.Context;
-import android.os.Environment;
-import android.util.Log;
-
 import com.fifthperiodstudios.glapp.Klausurplan.KlausurenplanParser;
 import com.fifthperiodstudios.glapp.Klausurplan.Klausurplan;
 import com.fifthperiodstudios.glapp.Stundenplan.Stundenplan;
@@ -17,12 +13,9 @@ import org.xmlpull.v1.XmlPullParserException;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
-
 import java.io.UnsupportedEncodingException;
 import java.net.URL;
 import java.net.URLConnection;
-
-import static android.content.ContentValues.TAG;
 
 public class ServerDataHandler implements GLAPPRepository.Server {
     private final String STUNDENPLAN_URL = "https://mobil.gymnasium-lohmar.org/XML/stupla.php?mobilKey=";
@@ -39,7 +32,6 @@ public class ServerDataHandler implements GLAPPRepository.Server {
 
     @Override
     public void getStundenplan(final String stundenplanDatum, final GLAPPRepository.StundenplanCallback callback) {
-        Log.d(TAG, "getStundenplan: " + stundenplanDatum);
         Runnable runnable = new Runnable() {
             @Override
             public void run() {
@@ -49,7 +41,6 @@ public class ServerDataHandler implements GLAPPRepository.Server {
 
                     if(stundenplanDatum != null && !stundenplanDatum.equals("DEF")){
                         stundenplanAsString  = loadStundenplanAsStringFromNetwork(STUNDENPLAN_URL + mobilKey + "&timestamp=" + stundenplanDatum);
-                        Log.d(TAG, "getStundenplan: " + stundenplanDatum + stundenplanAsString);
                         if(stundenplanAsString != null && !stundenplanAsString.equals("0")) {
                             InputStream newstream = null;
                             try {
@@ -208,7 +199,7 @@ public class ServerDataHandler implements GLAPPRepository.Server {
 
         appExecutors.getBackgroundThread().execute(runnable);
     }
-//&lehrer=1 lehrer
+
 
     private String loadStundenplanAsStringFromNetwork(String urlString) throws IOException, XmlPullParserException {
         InputStream stream = null;

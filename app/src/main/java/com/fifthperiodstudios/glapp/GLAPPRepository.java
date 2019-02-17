@@ -1,7 +1,6 @@
 package com.fifthperiodstudios.glapp;
 
 import com.fifthperiodstudios.glapp.Klausurplan.Klausurplan;
-import com.fifthperiodstudios.glapp.Login.LoginRepository;
 import com.fifthperiodstudios.glapp.Stundenplan.Stundenplan;
 import com.fifthperiodstudios.glapp.Vertretungsplan.Vertretungsplan;
 

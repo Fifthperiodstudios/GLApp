@@ -5,12 +5,12 @@
     <string name="title_activity_glapp">GLApp</string>
 
     <string name="setting_activity_glapp">Einstellungen</string>
-    <string name="about_info">Die Glapp ist ein Assistent für Schüler der Oberstufe des Gymnasiums Lohmar. Sie zeigt dir deinen Stundenplan, Vertretungsplan und Klausurplan an. \n (noch kurze Info: Die App zeigt immer Nachschreibetermine an, egal ob du eine Klausur nachschreiben musst oder nicht) \n\n Achte aber bitte darauf, dass alle Angaben ohne Gewähr sind. \n Programmiert wurde die App von fifthperiodstudios. \nBei Fragen, Hilfe oder Anmerkungen eine E-Mail an: fifthperiod.studios@gmail.com senden. \nDanke</string>
+    <string name="about_info">Die Glapp ist ein Assistent für SchülerInnen und LehrerInnen des Gymnasiums Lohmar. Sie zeigt dir deinen Stundenplan, Vertretungsplan und Klausurplan an. \n (noch kurze Info: Die App zeigt immer Nachschreibetermine an, egal ob du eine Klausur nachschreiben musst oder nicht. Der Klausur-Teil dieser App ist auch nur wichtig für Oberstufenschüler.) \n\n Achte aber bitte darauf, dass die Benutzung der App auf eigener Gefahr geschieht. \n Programmiert wurde die App von fifthperiodstudios, das sind Ben Balci, Nils Mietchen, Roman Terhard, Philip Mader, Marvin Müller, Lucas Hahn, Hanna Müller, Fabian Reitz, Julian Thomas \n\nBei Fragen, Hilfe oder Anmerkungen eine E-Mail an: fifthperiod.studios@gmail.com senden oder unserem Instagram eine Nachricht schicken @fifthperiodstudios. \n\nDanke</string>
     <string name="keine_klausuren_text">Es stehen momentan keine Klausuren an :)</string>
     <string name="logindata_wrong">Benutzername oder Passwort falsch</string>
     <string name="logindata_incomplete">Logindaten unvollständig</string>
-    <string name="connection_vplan_error">Keine Internetverbindung \\n(๑◕︵◕๑)</string>
-    <string name="keine_vertretung_text">Es fällt bei dir leider nichts aus \\n(๑◕︵◕๑)</string>
+    <string name="connection_vplan_error">Keine Internetverbindung (๑◕︵◕๑)</string>
+    <string name="keine_vertretung_text">Es fällt bei dir leider nichts aus (๑◕︵◕๑)</string>
     <string name="about_title">Über die Glapp</string>
     <string name="show_notifications_text">Benachrichtigungen anzeigen</string>
     <string name="update_automatically">Automatisches Aktualisieren</string>
@@ -18,5 +18,15 @@
     <string name="select_color_text">Farbe Wählen</string>
     <string name="username_string">Benutzername</string>
     <string name="password_string">Password</string>
+    <string name="gen_rand_colours">Generiere zufällige Farben</string>
+    <string name="berechtigung_erklaerung">Damit die Glapp dir deinen Stundenplan, Klausurplan und die richtigen passenden Farben der Fächer auch ohne Internet anzeigen kann, musst du uns erlauben, auf deinen Speicher zuzugreifen. Die App kann ohne diese Berechtigung in vielen Fällen nicht funktionieren :/ </string>
+
+    <string-array name="intervall">
+        <item>15min</item>
+        <item>30min</item>
+        <item>45min</item>
+        <item>60min</item>
+        <item>2h</item>
+    </string-array>
 
 </resources>

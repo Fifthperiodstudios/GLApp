@@ -1,7 +1,6 @@
 package com.fifthperiodstudios.glapp.FarbAuswahlDialog;
 
 import android.app.Dialog;
-import android.content.Context;
 import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -9,16 +8,13 @@ import android.support.v4.app.DialogFragment;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
-
 
 import com.fifthperiodstudios.glapp.Farben;
 import com.fifthperiodstudios.glapp.R;
 import com.fifthperiodstudios.glapp.Stundenplan.Fach;
 
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 
 public class FarbAuswahlDialog extends DialogFragment implements FarbRecyclerViewAdapter.ItemClickListener {

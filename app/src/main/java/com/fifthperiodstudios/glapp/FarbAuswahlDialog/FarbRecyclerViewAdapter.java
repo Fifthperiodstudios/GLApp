@@ -2,11 +2,9 @@ package com.fifthperiodstudios.glapp.FarbAuswahlDialog;
 
 import android.content.Context;
 import android.graphics.Color;
-import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
 import android.graphics.drawable.DrawableContainer;
 import android.graphics.drawable.GradientDrawable;
-import android.graphics.drawable.ShapeDrawable;
 import android.graphics.drawable.StateListDrawable;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.AppCompatButton;

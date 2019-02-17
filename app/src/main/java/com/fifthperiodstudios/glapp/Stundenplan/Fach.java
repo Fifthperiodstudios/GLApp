@@ -1,7 +1,6 @@
 package com.fifthperiodstudios.glapp.Stundenplan;
 
 import java.io.Serializable;
-import java.util.Objects;
 
 public class Fach implements Serializable {
     private String kurs, kursart, lehrer, fach;
@@ -56,7 +55,7 @@ public class Fach implements Serializable {
             return false;
         }
         Fach fach = (Fach) other;
-        return this.fach.equals(fach.getFach()) || this.kurs.equals(fach.getKurs());
+        return this.fach.equals(fach.getFach()) || (this.kurs.equals(fach.getKurs()) && !this.kurs.equals(""));
     }
 
     @Override

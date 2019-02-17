@@ -61,7 +61,7 @@ class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapter.ViewH
         setColor(holder.farbeWaehlen, position);
 
         final int pos = position;
-        holder.fachName.setText(stundenplan.getFaecher().get(position).getFach());//Hier die Fächerliste einzeln aufrufen
+        holder.fachName.setText(stundenplan.getFaecher().get(position).getVollenName());//Hier die Fächerliste einzeln aufrufen
         holder.farbeWaehlen.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -96,6 +96,10 @@ class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapter.ViewH
     @Override
     public void onDialogNegativeClick(DialogFragment dialog) {
 
+    }
+
+    public void setHaveColorsChanged(boolean b) {
+        colorsChanged = b;
     }
 
     public class ViewHolderKlasse extends RecyclerView.ViewHolder {

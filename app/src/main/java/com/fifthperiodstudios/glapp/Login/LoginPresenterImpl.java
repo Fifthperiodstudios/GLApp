@@ -13,8 +13,8 @@ public class LoginPresenterImpl implements LoginPresenter {
     }
 
     @Override
-    public void loginSchueler(String key, String u, String p) {
-        loginRepository.getMobilKey(key, u, p, new LoginRepository.MobilKeyCallback() {
+    public void loginSchueler(String u, String p) {
+        loginRepository.getMobilKey(false, u, p, new LoginRepository.MobilKeyCallback() {
             @Override
             public void onConnectionError() {
                 mSchuelerLoginView.falscheDaten();
@@ -38,8 +38,8 @@ public class LoginPresenterImpl implements LoginPresenter {
     }
 
     @Override
-    public void loginLehrer(String key, String u, String p) {
-        loginRepository.getMobilKey(key, u, p, new LoginRepository.MobilKeyCallback() {
+    public void loginLehrer(String u, String p) {
+        loginRepository.getMobilKey(true, u, p, new LoginRepository.MobilKeyCallback() {
             @Override
             public void onConnectionError() {
                 mLehrerLoginView.falscheDaten();

@@ -1,10 +1,8 @@
 package com.fifthperiodstudios.glapp;
 
 import android.os.Environment;
-import android.util.Log;
 
 import com.fifthperiodstudios.glapp.Klausurplan.Klausurplan;
-import com.fifthperiodstudios.glapp.Login.LoginRepository;
 import com.fifthperiodstudios.glapp.Stundenplan.Stundenplan;
 import com.fifthperiodstudios.glapp.util.AppExecutors;
 

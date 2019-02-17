@@ -15,7 +15,6 @@ import android.widget.TextView;
 
 import com.fifthperiodstudios.glapp.Farben;
 import com.fifthperiodstudios.glapp.R;
-import com.fifthperiodstudios.glapp.Stundenplan.Fach;
 
 public class KlausurplanViewAdapter extends RecyclerView.Adapter<KlausurplanViewAdapter.ViewHolderKlasse> {
 

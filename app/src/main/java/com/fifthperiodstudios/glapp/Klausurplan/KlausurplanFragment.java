@@ -12,9 +12,9 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.fifthperiodstudios.glapp.Farben;
 import com.fifthperiodstudios.glapp.GLAPPPresenter;
 import com.fifthperiodstudios.glapp.GLAPPViews;
-import com.fifthperiodstudios.glapp.Farben;
 import com.fifthperiodstudios.glapp.R;
 
 

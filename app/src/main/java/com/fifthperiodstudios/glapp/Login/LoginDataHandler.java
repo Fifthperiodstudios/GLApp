@@ -1,15 +1,11 @@
 package com.fifthperiodstudios.glapp.Login;
 
-import android.util.Log;
-
 import com.fifthperiodstudios.glapp.util.AppExecutors;
 
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
 import java.net.URLConnection;
-
-import static android.content.ContentValues.TAG;
 
 public class LoginDataHandler implements LoginRepository.Server {
 
@@ -21,13 +17,13 @@ public class LoginDataHandler implements LoginRepository.Server {
     }
 
     @Override
-    public void getMobilKey(final String u, final String p, final LoginRepository.MobilKeyCallback callback) {
+    public void getMobilKey(final boolean istLehrer, final String u, final String p, final LoginRepository.MobilKeyCallback callback) {
         if(!checkFields(u,p)){
             Runnable runnable = new Runnable() {
                 @Override
                 public void run() {
                     try {
-                        final String mobilKey = loadMobilKeyFromNetwork(LOGIN_URL+u+"&passwort="+p);
+                        final String mobilKey = loadMobilKeyFromNetwork(LOGIN_URL+u+"&passwort="+p+"&lehrer="+(istLehrer ? "1" : "0"));
 
                         if(mobilKey != null && !mobilKey.equals("0")){
                             appExecutors.getMainThread().execute(new Runnable() {

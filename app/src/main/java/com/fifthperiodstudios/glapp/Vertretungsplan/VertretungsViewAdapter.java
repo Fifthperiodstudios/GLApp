@@ -6,22 +6,15 @@ import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
 import android.graphics.drawable.GradientDrawable;
 import android.graphics.drawable.ShapeDrawable;
-import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.fifthperiodstudios.glapp.Farben;
 import com.fifthperiodstudios.glapp.R;
-import com.fifthperiodstudios.glapp.Stundenplan.Fach;
-import com.fifthperiodstudios.glapp.Stundenplan.Stunde;
-
-import java.util.ArrayList;
 
 class VertretungsViewAdapter extends RecyclerView.Adapter<VertretungsViewAdapter.ViewHolderKlasse> {
 

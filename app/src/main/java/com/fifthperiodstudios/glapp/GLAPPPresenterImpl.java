@@ -1,7 +1,5 @@
 package com.fifthperiodstudios.glapp;
 
-import android.util.Log;
-
 import com.fifthperiodstudios.glapp.Klausurplan.Klausurplan;
 import com.fifthperiodstudios.glapp.Stundenplan.Stundenplan;
 import com.fifthperiodstudios.glapp.Vertretungsplan.Vertretungsplan;

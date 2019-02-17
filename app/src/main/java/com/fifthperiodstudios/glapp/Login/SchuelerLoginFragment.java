@@ -57,8 +57,7 @@ public class SchuelerLoginFragment extends Fragment implements LoginView {
                             loginButton.setClickable(false);
                             loginButton.setAlpha(.5f);
                             progressBar.setVisibility(View.VISIBLE);
-                            String key = sharedPreferences.getString("mobilKey", "DEF");
-                            loginPresenter.loginSchueler(key, username, password);
+                            loginPresenter.loginSchueler(username, password);
                             return true;
                         default:
                             break;
@@ -77,8 +76,7 @@ public class SchuelerLoginFragment extends Fragment implements LoginView {
                 loginButton.setClickable(false);
                 loginButton.setAlpha(.5f);
                 progressBar.setVisibility(View.VISIBLE);
-                String key = sharedPreferences.getString("mobilKey", "DEF");
-                loginPresenter.loginSchueler(key, username, password);
+                loginPresenter.loginSchueler(username, password);
                 hideKeyboard(getActivity());
             }
         });

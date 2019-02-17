@@ -1,20 +1,15 @@
 package com.fifthperiodstudios.glapp.Vertretungsplan;
 
-import android.util.Log;
 import android.util.Xml;
 
 import com.fifthperiodstudios.glapp.Stundenplan.Fach;
-import com.fifthperiodstudios.glapp.Stundenplan.Stundenplan;
 
 import org.xmlpull.v1.XmlPullParser;
 import org.xmlpull.v1.XmlPullParserException;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
 
 public class VertretungsplanParser {     // We don't use namespaces
     private static final String ns = null;

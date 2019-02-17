@@ -1,6 +1,7 @@
 package com.fifthperiodstudios.glapp.Stundenplan;
 
 import android.content.SharedPreferences;
+import android.content.res.Resources;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
@@ -10,7 +11,6 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -91,7 +91,7 @@ public class StundenplanFragment extends Fragment implements SwipeRefreshLayout.
     public void setupView(Stundenplan stundenplan, Farben farben) {
         relativeLayout.removeAllViews();
         this.stundenplan = stundenplan;
-        int buffer = 5;
+        int buffer = 5;//(relativeLayout.getMeasuredWidth() - 2 * relativeLayout.getPaddingLeft()) / (160);
         int painting_width = relativeLayout.getMeasuredWidth() - 2 * relativeLayout.getPaddingLeft() - 10 * (buffer);
         int painting_height = relativeLayout.getMeasuredHeight() - 2 * relativeLayout.getPaddingTop() - 10 * (buffer);
 

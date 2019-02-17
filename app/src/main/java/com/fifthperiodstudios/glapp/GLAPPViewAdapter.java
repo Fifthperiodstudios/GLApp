@@ -1,13 +1,10 @@
 package com.fifthperiodstudios.glapp;
 
-import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
-import android.view.ViewGroup;
 
 import com.fifthperiodstudios.glapp.Klausurplan.KlausurplanFragment;
-import com.fifthperiodstudios.glapp.Stundenplan.Stundenplan;
 import com.fifthperiodstudios.glapp.Stundenplan.StundenplanFragment;
 import com.fifthperiodstudios.glapp.Vertretungsplan.VertretungsplanFragment;
 

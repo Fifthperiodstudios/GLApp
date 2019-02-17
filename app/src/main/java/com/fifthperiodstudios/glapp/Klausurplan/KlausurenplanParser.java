@@ -1,16 +1,14 @@
 package com.fifthperiodstudios.glapp.Klausurplan;
+
 import android.util.Xml;
 
-
 import com.fifthperiodstudios.glapp.Stundenplan.Fach;
-import com.fifthperiodstudios.glapp.Stundenplan.Stundenplan;
 
 import org.xmlpull.v1.XmlPullParser;
 import org.xmlpull.v1.XmlPullParserException;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.ArrayList;
 /**
  * Created by ro_te on 07.12.2018.
  */

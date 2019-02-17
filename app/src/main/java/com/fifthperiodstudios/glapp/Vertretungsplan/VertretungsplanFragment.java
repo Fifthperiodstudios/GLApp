@@ -13,13 +13,10 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.fifthperiodstudios.glapp.Farben;
 import com.fifthperiodstudios.glapp.GLAPPPresenter;
 import com.fifthperiodstudios.glapp.GLAPPViews;
-import com.fifthperiodstudios.glapp.Farben;
-import com.fifthperiodstudios.glapp.OnUpdateListener;
 import com.fifthperiodstudios.glapp.R;
-
-import java.util.ArrayList;
 
 
 public class VertretungsplanFragment extends Fragment implements SwipeRefreshLayout.OnRefreshListener, GLAPPViews, GLAPPViews.VertretungsplanView {

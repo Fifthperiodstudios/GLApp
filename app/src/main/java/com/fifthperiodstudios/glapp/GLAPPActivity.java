@@ -1,31 +1,37 @@
 package com.fifthperiodstudios.glapp;
 
-import android.content.Context;
+import android.Manifest;
+import android.app.AlarmManager;
+import android.app.NotificationChannel;
+import android.app.NotificationManager;
+import android.app.PendingIntent;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.pm.PackageManager;
+import android.os.Build;
 import android.os.Bundle;
-import android.os.Environment;
 import android.support.design.widget.TabLayout;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
 import android.support.v4.view.ViewPager;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 
 import com.fifthperiodstudios.glapp.Klausurplan.KlausurplanFragment;
 import com.fifthperiodstudios.glapp.Login.MainActivity;
-import com.fifthperiodstudios.glapp.Stundenplan.Stundenplan;
 import com.fifthperiodstudios.glapp.Stundenplan.StundenplanFragment;
 import com.fifthperiodstudios.glapp.Vertretungsplan.VertretungsplanFragment;
 
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
+import java.util.concurrent.TimeUnit;
+
+import androidx.work.ExistingPeriodicWorkPolicy;
+import androidx.work.PeriodicWorkRequest;
+import androidx.work.WorkManager;
 
 public class GLAPPActivity extends AppCompatActivity {
 
@@ -35,14 +41,21 @@ public class GLAPPActivity extends AppCompatActivity {
     private TabLayout tabLayout;
     private Toolbar toolbar;
     private Farben farben;
-    public final String SHAREDPREFERENCES_NAME = "com.fifthperiodstudios.glapp";
-    public final String SHAREDPREFERENCES_MOBILKEY = "mobilKey";
+    private final String SHAREDPREFERENCES_NAME = "com.fifthperiodstudios.glapp";
+    private final String SHAREDPREFERENCES_MOBILKEY = "mobilKey";
+    private String SHAREDPREFERENCES_BENACHRICHTIGUNGEN = "benachrichtigungen";
+    private String SHAREDPREFERENCES_INTERVALL = "intervallbenachrichtigung";
+
+    private SharedPreferences sharedPreferences;
 
     private KlausurplanFragment klausurplanFragment;
     private StundenplanFragment stundenplanFragment;
     private VertretungsplanFragment vertretungsplanFragment;
 
     private GLAPPPresenterImpl glappPresenter;
+    private File stundenplanFile;
+    private File klausurplanFile;
+    private File farbenFile;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -51,21 +64,23 @@ public class GLAPPActivity extends AppCompatActivity {
         toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        if(getSupportFragmentManager().getFragments().isEmpty()) {
+        sharedPreferences = getSharedPreferences(SHAREDPREFERENCES_NAME, MODE_PRIVATE);
+
+        if (getSupportFragmentManager().getFragments().isEmpty()) {
             klausurplanFragment = new KlausurplanFragment();
             stundenplanFragment = new StundenplanFragment();
             vertretungsplanFragment = new VertretungsplanFragment();
-        }else {
+        } else {
             stundenplanFragment = (StundenplanFragment) getSupportFragmentManager().getFragments().get(0);
-            if(stundenplanFragment == null){
+            if (stundenplanFragment == null) {
                 stundenplanFragment = new StundenplanFragment();
             }
             vertretungsplanFragment = (VertretungsplanFragment) getSupportFragmentManager().getFragments().get(1);
-            if(vertretungsplanFragment == null){
+            if (vertretungsplanFragment == null) {
                 vertretungsplanFragment = new VertretungsplanFragment();
             }
             klausurplanFragment = (KlausurplanFragment) getSupportFragmentManager().getFragments().get(2);
-            if(klausurplanFragment == null){
+            if (klausurplanFragment == null) {
                 klausurplanFragment = new KlausurplanFragment();
             }
         }
@@ -80,20 +95,79 @@ public class GLAPPActivity extends AppCompatActivity {
         tabLayout = (TabLayout) findViewById(R.id.tabs);
         tabLayout.setupWithViewPager(mViewPager);
 
-        File stundenplanFile = new File(getApplicationContext().getExternalFilesDir(null), "Stundenplan");
-        File klausurplanFile = new File(getApplicationContext().getExternalFilesDir(null), "Klausurplan");
-        File farbenFile = new File(getApplicationContext().getExternalFilesDir(null), "Farben");
+        if (ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE)
+                != PackageManager.PERMISSION_GRANTED) {
+
+            if (ActivityCompat.shouldShowRequestPermissionRationale(this,
+                    Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
+                final AlertDialog.Builder builder = new AlertDialog.Builder(this);
+
+                builder.setMessage(R.string.berechtigung_erklaerung)
+                        .setTitle("Berechtigung");
+                builder.setPositiveButton("VERSTANDEN", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        ActivityCompat.requestPermissions(GLAPPActivity.this,
+                                new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE},
+                                1255);
+                    }
+                });
+                AlertDialog dialog = builder.create();
+                dialog.show();
+            } else {
+                // No explanation needed; request the permission
+                ActivityCompat.requestPermissions(this,
+                        new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE},
+                        1255);
+            }
+        }
+
+        stundenplanFile = new File(getApplicationContext().getExternalFilesDir(null), "Stundenplan");
+        klausurplanFile = new File(getApplicationContext().getExternalFilesDir(null), "Klausurplan");
+        farbenFile = new File(getApplicationContext().getExternalFilesDir(null), "Farben");
         String mobilKey = getIntent().getStringExtra("mobilKey");
-        String vertretungsplanDatum =  getSharedPreferences("com.fifthperiodstudios.glapp", MODE_PRIVATE).getString("Vertretungsplandatum", "DEF");
-        String stundenplanDatum = getSharedPreferences("com.fifthperiodstudios.glapp", MODE_PRIVATE).getString("Stundenplandatum", "DEF");
-        String klausurplanDatum = getSharedPreferences("com.fifthperiodstudios.glapp", MODE_PRIVATE).getString("Klausurplandatum", "DEF");
+        String vertretungsplanDatum = sharedPreferences.getString("Vertretungsplandatum", "DEF");
+        String stundenplanDatum = sharedPreferences.getString("Stundenplandatum", "DEF");
+        String klausurplanDatum = sharedPreferences.getString("Klausurplandatum", "DEF");
 
         GLAPPRepositoryImpl glappRepository = new GLAPPRepositoryImpl(mobilKey, stundenplanFile, klausurplanFile, farbenFile, vertretungsplanDatum, stundenplanDatum, klausurplanDatum);
         glappPresenter = new GLAPPPresenterImpl(glappRepository,
-                                                stundenplanFragment,
-                                                vertretungsplanFragment,
-                                                klausurplanFragment);
+                stundenplanFragment,
+                vertretungsplanFragment,
+                klausurplanFragment);
         glappPresenter.loadFarben();
+
+
+        boolean firststart = sharedPreferences.getBoolean("firstStart", true);
+        if (firststart) {
+            createNotificationChannels();
+            sharedPreferences.edit().putBoolean("firstStart", false).commit();
+        }
+
+        settings();
+    }
+
+    public void settings() {
+        boolean notification = sharedPreferences.getBoolean(SHAREDPREFERENCES_BENACHRICHTIGUNGEN, true);
+        if (notification) {
+            PeriodicWorkRequest.Builder checkVertretungsplanBuilder = new PeriodicWorkRequest.Builder(CheckVertretungsplanWorker.class, 1, TimeUnit.MINUTES);
+            PeriodicWorkRequest checkVertretungsplanWork = checkVertretungsplanBuilder.build();
+            WorkManager.getInstance().enqueueUniquePeriodicWork("fifthperiodstudios", ExistingPeriodicWorkPolicy.KEEP, checkVertretungsplanWork);
+        }
+    }
+
+    public void updateNotifications() {
+        boolean notification = sharedPreferences.getBoolean(SHAREDPREFERENCES_BENACHRICHTIGUNGEN, true);
+        int intervall = sharedPreferences.getInt(SHAREDPREFERENCES_INTERVALL, 15);
+
+        if (!notification) {
+            WorkManager.getInstance().cancelUniqueWork("fifthperiodstudios");
+        } else {
+            WorkManager.getInstance().cancelUniqueWork("fifthperiodstudios");
+            PeriodicWorkRequest.Builder checkVertretungsplanBuilder = new PeriodicWorkRequest.Builder(CheckVertretungsplanWorker.class, intervall, TimeUnit.MINUTES);
+            PeriodicWorkRequest checkVertretungsplanWork = checkVertretungsplanBuilder.build();
+            WorkManager.getInstance().enqueueUniquePeriodicWork("fifthperiodstudios", ExistingPeriodicWorkPolicy.KEEP, checkVertretungsplanWork);
+        }
     }
 
     @Override
@@ -108,15 +182,15 @@ public class GLAPPActivity extends AppCompatActivity {
         super.onOptionsItemSelected(item);
         int id = item.getItemId();
 
-        switch(id){
+        switch (id) {
             case R.id.action_settings:
-                Intent intent = new Intent (this, Settings.class);
+                Intent intent = new Intent(this, Settings.class);
                 intent.putExtra("Farben", glappPresenter.getFarben());
                 intent.putExtra("Stundenplan", glappPresenter.getStundenplan());
                 this.startActivityForResult(intent, 1);
                 break;
             case R.id.action_logout:
-                logout ();
+                logout();
                 break;
             case R.id.action_about:
                 Intent intent1 = new Intent(this, AboutInformationActivity.class);
@@ -125,10 +199,19 @@ public class GLAPPActivity extends AppCompatActivity {
         return true;
     }
 
-    private void logout(){
+    private void logout() {
         SharedPreferences prefs = getSharedPreferences(SHAREDPREFERENCES_NAME, MODE_PRIVATE);
-        this.getSharedPreferences(SHAREDPREFERENCES_NAME,MODE_PRIVATE).edit().clear().commit();
+        getSharedPreferences(SHAREDPREFERENCES_NAME, MODE_PRIVATE).edit().clear().commit();
         prefs.edit().putString(SHAREDPREFERENCES_MOBILKEY, "DEF").commit();
+        if(stundenplanFile.exists()) {
+            stundenplanFile.delete();
+        }
+        if(klausurplanFile.exists()) {
+            klausurplanFile.delete();
+        }
+        if(farbenFile.exists()) {
+            farbenFile.delete();
+        }
         Intent intent = new Intent(this, MainActivity.class);
         startActivity(intent);
         finish();
@@ -136,15 +219,28 @@ public class GLAPPActivity extends AppCompatActivity {
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if(requestCode == 1){
-            if(resultCode == RESULT_OK){
+        if (requestCode == 1) {
+            if (resultCode == RESULT_OK) {
                 farben = (Farben) data.getSerializableExtra("Farben");
                 glappPresenter.updateFarben(farben);
-            }else if(resultCode == 0){
+            } else if (resultCode == 0) {
 
             }
+            updateNotifications();
         }
     }
 
+    private void createNotificationChannels() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            NotificationChannel channel1 = new NotificationChannel(
+                    "CHANNEL_VERTRETUNG",
+                    "Vertretungs_Channel",
+                    NotificationManager.IMPORTANCE_HIGH
+            );
+            channel1.setDescription("Dieser Channel ist für die Vertretung");//hier müsste die Beschreibung des Channels rein
 
+            NotificationManager manager = getSystemService(NotificationManager.class);
+            manager.createNotificationChannel(channel1);
+        }
+    }
 }

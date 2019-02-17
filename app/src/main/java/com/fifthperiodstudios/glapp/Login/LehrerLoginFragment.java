@@ -56,8 +56,7 @@ public class LehrerLoginFragment extends Fragment implements LoginView {
                             loginButton.setClickable(false);
                             loginButton.setAlpha(.5f);
                             progressBar.setVisibility(View.VISIBLE);
-                            String key = sharedPreferences.getString("mobilKey", "DEF");
-                            loginPresenter.loginLehrer(key, username, password);
+                            loginPresenter.loginLehrer(username, password);
                             return true;
                         default:
                             break;
@@ -76,9 +75,9 @@ public class LehrerLoginFragment extends Fragment implements LoginView {
                 loginButton.setClickable(false);
                 loginButton.setAlpha(.5f);
                 progressBar.setVisibility(View.VISIBLE);
-                String key = sharedPreferences.getString("mobilKey", "DEF");
-                loginPresenter.loginLehrer(key, username, password);
+                loginPresenter.loginLehrer(username, password);
                 hideKeyboard(getActivity());
+
             }
         });
 
