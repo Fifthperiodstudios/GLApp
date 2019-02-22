@@ -11,6 +11,7 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InvalidClassException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 
@@ -48,7 +49,9 @@ public class LocalDataHandler implements GLAPPRepository.Local {
                                 callback.onStundenplanLoaded(stundenplan);
                             }
                         });
-                    } catch (FileNotFoundException e) {
+                    } catch (InvalidClassException e){
+
+                }catch (FileNotFoundException e) {
                         e.printStackTrace();
                         appExecutors.getMainThread().execute(new Runnable() {
                             @Override
@@ -99,7 +102,9 @@ public class LocalDataHandler implements GLAPPRepository.Local {
                                 callback.onKlausurplanLoaded(klausurplan);
                             }
                         });
-                    } catch (FileNotFoundException e) {
+                    }catch (InvalidClassException e) {
+
+                    }catch (FileNotFoundException e) {
                         appExecutors.getMainThread().execute(new Runnable() {
                             @Override
                             public void run() {
